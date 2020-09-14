@@ -9,7 +9,7 @@ import numpy as np
 #Globals
 Eh = 627.5094740631
 
-def qubit_adapt(geometry, basis, multiplicity, thresh = 1e-2, out_file = 'out.dat'):
+def qubit_adapt(geometry, basis, multiplicity, thresh = 1e-2, out_file = 'out.dat', factor = Eh):
     f = open(out_file, 'w')
     print("System: "+str(geometry))
     print("Building Hamiltonian...")
@@ -48,11 +48,11 @@ def qubit_adapt(geometry, basis, multiplicity, thresh = 1e-2, out_file = 'out.da
             for i in reversed(range(0, len(params))): 
                 cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
             print('-'*105)
-            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|'.format(iteration, Eh*energy, Eh*(energy-system.mol.fci_energy), max_grad, system.pool[new_idx]))
+            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.mol.fci_energy), max_grad, system.pool[new_idx]))
             f.write(system.pool[new_idx]+'\n')
     print('\n')
    
-def fixed_adapt(geometry, basis, multiplicity, thresh = 1e-2, in_file = 'out.dat'):
+def fixed_adapt(geometry, basis, multiplicity, thresh = 1e-2, in_file = 'out.dat', factor = Eh):
     print("System: "+str(geometry))
     print("Building Hamiltonian...")
     system = sm.system_data(geometry, basis, multiplicity)
@@ -64,9 +64,9 @@ def fixed_adapt(geometry, basis, multiplicity, thresh = 1e-2, in_file = 'out.dat
     params = list(np.zeros(len(ansatz)))
     E = ct.vqe(system.H, ansatz, system.ref, params)[0]
     print("VQE energy (kcal/mol):")
-    print(E*Eh)
+    print(E*factor)
     print("Error (kcal/mol):")
-    print(Eh*(E-system.mol.fci_energy))
+    print(factor*(E-system.mol.fci_energy))
 
 if __name__ == "__main__":
     geometry = [('H', (0,0,0)), ('H', (0,0,.74))]
