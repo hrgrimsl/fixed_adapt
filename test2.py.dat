@@ -1,0 +1,58 @@
+
+    -----------------------------------------------------------------------
+          Psi4: An Open-Source Ab Initio Electronic Structure Package
+                               Psi4 1.2 release
+
+                         Git: Rev {HEAD} 9d4a61c 
+
+
+    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
+    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
+    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
+    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
+    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
+    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
+    (doi: 10.1021/acs.jctc.7b00174)
+
+
+                         Additional Contributions by
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, and R. A. Shaw
+
+    -----------------------------------------------------------------------
+
+
+    Psi4 started on: Monday, 05 October 2020 03:27PM
+
+    Process ID: 3170
+    Host:       hrgrimsl-XPS-13-9370
+    PSIDATADIR: /home/hrgrimsl/psi4conda/share/psi4
+    Memory:     500.0 MiB
+    Threads:    1
+    
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+from driver import *
+from p4n_backend import *
+from of_translator import *
+import numpy as np
+geometry = """
+0 1
+    H 0 0 -1.391988561785
+    H 0 0 0.199954391039
+    H 0 0 1.199954391039
+    H 0 0 2.199954391039
+symmetry c1
+"""
+N_c = 0
+
+print("Real ADAPT:")
+E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
+N_e = int(np.trace(D))
+E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
+N_e -= N_c
+H, ref, N_qubits = of_from_arrays(E_nuc, H, I, N_e)
+qubit_adapt(H, ref, N_e, N_qubits, factor = Eh)
+
+--------------------------------------------------------------------------
