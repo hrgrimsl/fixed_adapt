@@ -22,6 +22,6 @@ def product_energy(params, H, ansatz, ref):
     return state.T.dot(H).dot(state)[0,0].real
 
 def vqe(H, ansatz, ref, params):
-    res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, args = (H, ansatz, ref))
+    res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': 1e-9})
     return res.fun, list(res.x)
         

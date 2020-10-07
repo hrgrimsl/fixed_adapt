@@ -3,16 +3,22 @@ import openfermion as of
 import openfermionpsi4 as ofp
 import scipy
 import re
+import psi4
+import numpy as np
+np.set_printoptions(edgeitems=10)
+np.core.arrayprint._line_width = 180
+from opt_einsum import contract
 class system_data:
-    def __init__(self, geometry, basis, multiplicity):
-        self.mol = of.MolecularData(geometry, basis, multiplicity)
-        self.mol = ofp.run_psi4(self.mol, run_scf = True, run_fci = True)
-        self.n_qubits = self.mol.n_qubits
-        self.H = of.transforms.get_sparse_operator(self.mol.get_molecular_hamiltonian())
-        self.ref = scipy.sparse.csc_matrix(of.jw_configuration_state(list(range(0,self.mol.n_electrons)), self.n_qubits)).transpose()
+    def __init__(self, H, ref, N_e, N_qubits):
+        self.N_qubits = N_qubits
+        self.ref = ref
+        self.H = H
+        self.N_e = N_e
         self.pool = []
+        self.ci_energy = np.linalg.eigh(H.toarray())[0][0]
+        self.hf_energy = self.ref.T.dot(self.H).dot(self.ref)[0,0] 
     def recursive_qubit_op(self, op, qubit_index):
-        if qubit_index == self.n_qubits-1:
+        if qubit_index == self.N_qubits-1:
             return [op, op + ' X' + str(qubit_index), op + ' Y' + str(qubit_index), op + ' Z' + str(qubit_index)]
         else:
             return self.recursive_qubit_op(op, qubit_index+1) + self.recursive_qubit_op(op + ' X' + str(qubit_index), qubit_index+1) + self.recursive_qubit_op(op + ' Y' + str(qubit_index), qubit_index+1) + self.recursive_qubit_op(op + ' Z' + str(qubit_index), qubit_index+1)
@@ -25,7 +31,7 @@ class system_data:
                 floor = 0
             else:
                 floor = max(cur_list)+1
-            for i in range(floor, self.n_qubits):
+            for i in range(floor, self.N_qubits):
                 self.choose_next(set_of_lists, cur_list+[i], k)
 
     def choose_paulis(self, paulis, sub_list, k):
@@ -39,9 +45,9 @@ class system_data:
     def full_qubit_pool(self):
         pool = []
         pool += self.recursive_qubit_op("", 0)
-        assert(len(pool) == 4**self.n_qubits)
+        assert(len(pool) == 4**self.N_qubits)
         self.pool += [i for i in pool if len(re.findall("Y", i))%2 == 1]
-        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.n_qubits) for i in self.pool]
+        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits) for i in self.pool]
 
     def k_qubit_pool(self, k):
         indices = []
@@ -57,7 +63,7 @@ class system_data:
                 pool.append(string)
         pool = [i for i in pool if len(re.findall("Y", i))%2 == 1]
         self.pool += pool 
-        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.n_qubits) for i in pool]
+        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits) for i in pool]
 
         
             
