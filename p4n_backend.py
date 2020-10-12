@@ -9,7 +9,8 @@ def get_integrals(geometry, basis, reference):
                       'reference': reference,
                       'scf_type': 'pk',
                       'e_convergence': 1e-8,
-                      'memory': '4GB'})
+                      'diis_max_vecs': 100,
+                      'memory': '6GB'})
     hf_energy, wfn = psi4.energy('scf', return_wfn = True)
     mints = psi4.core.MintsHelper(wfn.basisset())
     S = np.array(mints.ao_overlap())

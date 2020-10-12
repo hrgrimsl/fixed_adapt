@@ -3,7 +3,7 @@ import scipy
 import numpy as np
 from opt_einsum import contract
 
-def of_from_arrays(_0body, _1body, I, N_e):
+def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
     I = -.25*contract('pqrs->prqs', I)
     _2body = I - contract('pqrs->pqsr', I)
     n_qubits = _1body.shape[0]
@@ -18,7 +18,9 @@ def of_from_arrays(_0body, _1body, I, N_e):
 
     #Build S^2 Operator for Internal Checks
     S2 = of.transforms.get_sparse_operator(of.utils.s_squared_operator(int(n_qubits/2)), n_qubits = n_qubits).real
-
+    if S_squared != None:
+        hamiltonian += (S2.dot(S2) - 2*S_squared*S2 + S_squared**2*scipy.sparse.identity(S2.shape[0]))
+               
     #Build S_z Operator for Internal Checks
     Sz = of.transforms.get_sparse_operator(of.utils.sz_operator(int(n_qubits/2)), n_qubits = n_qubits).real
     #print("Assuming lexically first orbitals in chosen basis to be filled.")
@@ -36,4 +38,4 @@ def of_from_arrays(_0body, _1body, I, N_e):
     #print('{:.3f}'.format(soln.T.dot(S2.toarray()).dot(soln)))
     #print("S_z")
     #print('{:.2f}'.format(soln.T.dot(Sz.toarray()).dot(soln)))
-    return hamiltonian, ref, _1body.shape[0]
+    return hamiltonian, ref, _1body.shape[0], S2

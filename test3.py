@@ -5,8 +5,8 @@ import numpy as np
 import copy
 geometry = """
 0 1
-    H            0.000000000000     0.000000000000    -1.391988561785
-    LI           0.000000000000     0.000000000000     0.199954391039
+H 0 0 0
+Li 0 0 4
 symmetry c1
 """
 N_c = 2
@@ -16,19 +16,19 @@ E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
 N_e = int(np.trace(D))
 E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
 N_e -= N_c
-H, ref, N_qubits = of_from_arrays(E_nuc, H, I, N_e)
-
-E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, factor = Eh, thresh = 1e-5)
+H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e)
+E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, S_squared = 0, S_z = 0)
 params1 = copy.copy(zero_params)
 params2 = copy.copy(zero_params)
 print("Fixed ADAPT:")
+'''
 print("Scanning backward...")
-for r in reversed(range(-10,0)): 
+for r in reversed(range(10,41)): 
     geometry = """
     0 1
-    H 0 0 -1.391988561785
+    H 0 0 0
     """
-    geometry += "Li 0 0 "+str(0.199954391039+.1*r)+"\nsymmetry c1"
+    geometry += "Li 0 0 "+str(.1*r)+"\nsymmetry c1"
     N_c = 2
 
     E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
@@ -39,15 +39,16 @@ for r in reversed(range(-10,0)):
     E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
     N_e -= N_c
 
-    H, ref, N_qubits = of_from_arrays(E_nuc, H, I, N_e)
+    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_squared = 0, S_z = 0)
     E, params1 = fixed_adapt(H, ref, N_e, N_qubits, params1, factor = Eh)
+'''
 print("Scanning forward...")
-for r in range(0,31): 
+for r in range(41,46): 
     geometry = """
     0 1
-    H 0 0 -1.391988561785
+    H 0 0 0
     """
-    geometry += "Li 0 0 "+str(0.199954391039+.1*r)+"\nsymmetry c1"
+    geometry += "Li 0 0 "+str(.1*r)+"\nsymmetry c1"
     N_c = 2
 
     E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
@@ -58,7 +59,7 @@ for r in range(0,31):
     E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
     N_e -= N_c
 
-    H, ref, N_qubits = of_from_arrays(E_nuc, H, I, N_e)
+    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_quared = 0, S_z = 0)
     E, params2 = fixed_adapt(H, ref, N_e, N_qubits, params2, factor = Eh)
 
 

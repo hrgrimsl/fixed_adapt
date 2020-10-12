@@ -19,7 +19,7 @@ x = [.1*(i-10) for i in range(0, len(log_error))]
 pylab.xlabel('Displacement from equilibrium ($\AA$)')
 pylab.ylabel('$\log(E-E_{FCI})$ (log(kcal/mol))')
 pylab.title('LiH PES from Fixed ADAPT')
-pylab.scatter(x, np.array(log_error))
+pylab.plot(x, np.array(log_error))
 pylab.savefig('plot.png')
 pylab.show()
 

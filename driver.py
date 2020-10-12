@@ -9,7 +9,7 @@ import numpy as np
 #Globals
 Eh = 627.5094740631
 
-def qubit_adapt(H, ref, N_e, N_qubits, thresh = 1e-3, out_file = 'out.dat', factor = Eh):
+def qubit_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, out_file = 'out.dat', factor = Eh):
     f = open(out_file, 'w')
     system = sm.system_data(H, ref, N_e, N_qubits)
     print("Done! Generating qubit pool...")
@@ -28,7 +28,7 @@ def qubit_adapt(H, ref, N_e, N_qubits, thresh = 1e-3, out_file = 'out.dat', fact
     Done = False
     iteration = 0
     print('\n')
-    print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Energy (kcal/mol)', 'Error (kcal/mol)', 'Last |∇| (a.u.)', 'Newest Operator'))
+    print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Energy (kcal/mol)', 'Error (kcal/mol)', 'Last del (a.u.)', 'Newest Operator', '<S^2>'))
     while Done == False:
         iteration += 1
         max_grad = 0
@@ -49,8 +49,9 @@ def qubit_adapt(H, ref, N_e, N_qubits, thresh = 1e-3, out_file = 'out.dat', fact
             cur_state = copy.copy(system.ref)
             for i in reversed(range(0, len(params))): 
                 cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
+            S2_state = cur_state.T.dot(S2).dot(cur_state)[0,0].real
             print('-'*105)
-            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.ci_energy), max_grad, system.pool[new_idx]))
+            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.ci_energy), max_grad, system.pool[new_idx], S2_state))
             #print(str(factor*energy)+' '+str(factor*(energy-system.ci_energy)))
             f.write(system.pool[new_idx]+'\n')
     print('\n')
