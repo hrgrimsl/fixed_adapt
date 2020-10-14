@@ -15,7 +15,9 @@ class system_data:
         self.H = H
         self.N_e = N_e
         self.pool = []
-        self.ci_energy = np.linalg.eigh(H.toarray())[0][0]
+        energies, wfns = np.linalg.eigh(H.toarray())
+        self.ci_energy = energies[0]
+        self.ci_soln = wfns[:,0]
         self.hf_energy = self.ref.T.dot(self.H).dot(self.ref)[0,0] 
     def recursive_qubit_op(self, op, qubit_index):
         if qubit_index == self.N_qubits-1:

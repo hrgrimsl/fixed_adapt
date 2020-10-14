@@ -70,11 +70,15 @@ def fixed_adapt(H, ref, N_e, N_qubits, params, thresh = 1e-3, in_file = 'out.dat
 
     E, params = ct.vqe(system.H, ansatz, system.ref, params)
     #print("VQE energy (kcal/mol):")
-
-    print(str(E*factor)+' '+str(factor*(E-system.ci_energy)))
+    cur_state = copy.copy(system.ref)
+    for i in reversed(range(0, len(params))): 
+        cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
+    exact_overlap = cur_state.T.dot(system.ci_soln)[0].real
+    print(str(E*factor)+' '+str(factor*(E-system.ci_energy))+' '+str(exact_overlap))
     #print("Error (kcal/mol):")
     #print(factor*(E-system.ci_energy))
     return E, params
+
 if __name__ == "__main__":
     geometry = [('H', (0,0,0)), ('H', (0,0,.74))]
     basis = 'sto-3g'

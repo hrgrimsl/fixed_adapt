@@ -28,10 +28,10 @@ def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
     #print("Reference Product State Energy:")
     #E_ref = ref.T.dot(hamiltonian).dot(ref)[0,0]
     #print(E_ref)
-    ci_spectrum, ci_vecs = np.linalg.eigh(hamiltonian.toarray())
+    #ci_spectrum, ci_vecs = np.linalg.eigh(hamiltonian.toarray())
     #print("CASCI Energy:")
     #print(ci_spectrum[0])
-    soln = ci_vecs[:,0]
+    #soln = ci_vecs[:,0]
     #print("Particle number")
     #print(round(soln.T.dot(number_operator.toarray()).dot(soln)))
     #print("S^2")

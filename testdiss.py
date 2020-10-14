@@ -18,7 +18,8 @@ E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
 N_e -= N_c
 H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_squared = 0, S_z = 0)
 
-E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, out_file = 'dissb.dat')
+#E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, out_file = 'dissb.dat')
+zero_params = np.zeros(43)
 params1 = copy.copy(zero_params)
 params2 = copy.copy(zero_params)
 print("Fixed ADAPT:")
@@ -58,8 +59,8 @@ for r in range(41,46):
     E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
     N_e -= N_c
 
-    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e)
-    E, params2 = fixed_adapt(H, ref, N_e, N_qubits, params2, factor = Eh, in_file = 'dissb.dat', S_squared = 0, S_z = 0)
+    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_squared = 0, S_z = 0)
+    E, params2 = fixed_adapt(H, ref, N_e, N_qubits, params2, factor = Eh, thresh = 5e-5, in_file = 'dissb.dat')
 
 
 

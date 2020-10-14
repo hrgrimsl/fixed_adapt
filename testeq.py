@@ -9,6 +9,7 @@ H 0 0 0
 Li 0 0 1.6
 symmetry c1
 """
+
 N_c = 2
 
 print("Real ADAPT:")
@@ -18,7 +19,9 @@ E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
 N_e -= N_c
 H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_squared = 0, S_z = 0)
 
-E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, out_file = 'eq2storage.dat')
+#E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, out_file = 'eq2storage.dat')
+
+zero_params = np.zeros(41)
 params1 = copy.copy(zero_params)
 params2 = copy.copy(zero_params)
 print("Fixed ADAPT:")
@@ -58,7 +61,7 @@ for r in range(17,46):
     E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
     N_e -= N_c
 
-    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_quared = 0, S_z = 0)
+    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e, S_squared = 0, S_z = 0)
     E, params2 = fixed_adapt(H, ref, N_e, N_qubits, params2, factor = Eh, in_file = 'eq2storage.dat')
 
 
