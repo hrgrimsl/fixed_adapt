@@ -1,23 +1,48 @@
 from driver import *
-from p4n_backend import *
+from pyscf_backend import *
 from of_translator import *
 import numpy as np
 import copy
-geometry = """
-0 1
-    H            0.000000000000     0.000000000000    3.5
-    LI           0.000000000000     0.000000000000    0
-symmetry c1
-"""
-N_c = 2
 
-print("Real ADAPT:")
+
+print("Spin-unconstrained GSD")
+geometry = 'Li 0 0 0; H 0 0 1.6'
+N_c = 0
 E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
 N_e = int(np.trace(D))
 E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
 N_e -= N_c
-H, ref, N_qubits = of_from_arrays(E_nuc, H, I, N_e)
+H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e)
+E, zero_params = uccgsd_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 1e-3, spin_adapt =  True)
+print("Fixed ansatze")
+for i in range(10, 46):
+    geometry = 'Li 0 0 0; H 0 0 '+str(i*.1)
+    N_c = 0
+    E_nuc, H, I, D, C_ao_mo = get_integrals(geometry, "sto-3g", "rhf")
+    N_e = int(np.trace(D))
+    E_nuc, H, I, D = freeze_core(E_nuc, H, I, D, N_c)
+    N_e -= N_c
+    H, ref, N_qubits, S2 = of_from_arrays(E_nuc, H, I, N_e)
+    E, params = fixed_fermionic(H, ref, N_e, N_qubits, zero_params, factor = Eh, spin_adapt = False)
 
-E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, factor = Eh, thresh = 5e-5)
+
+
+
+
+'''
+E, zero_params = uccgsd_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, spin_adapt =  False, out_file = 'out.dat')
+print("Fixed ADAPT:")
+E, params1 = fixed_fermionic(H, ref, N_e, N_qubits, zero_params, factor = Eh)
+E, zero_params = uccsd_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 5e-5, spin_adapt =  True, out_file = 'out.dat')
+print("Fixed ADAPT:")
+E, params1 = fixed_fermionic(H, ref, N_e, N_qubits, zero_params, factor = Eh)
+
+E, zero_params = qubit_adapt(H, ref, N_e, N_qubits, S2, factor = Eh, thresh = 1e-2)
+print("Fixed ADAPT:")
+E, params1 = fixed_adapt(H, ref, N_e, N_qubits, zero_params, factor = Eh)
+
+print("Fixed ADAPT:")
+'''
+
 
 
