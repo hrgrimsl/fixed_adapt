@@ -9,7 +9,7 @@ import numpy as np
 #Globals
 Eh = 627.5094740631
 
-def qubit_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, out_file = 'out.dat', factor = Eh):
+def qubit_adapt(H, ref, N_e, N_qubits, S2, depth = None, thresh = 1e-3, out_file = 'out.dat', factor = Eh):
     f = open(out_file, 'w')
     system = sm.system_data(H, ref, N_e, N_qubits)
     print("Done! Generating qubit pool...")
@@ -41,7 +41,7 @@ def qubit_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, out_file = 'out.dat', 
                 max_grad = copy.copy(grad)
                 new_op = copy.copy(op)
                 new_idx = copy.copy(i)
-        if max_grad < thresh:
+        if (max_grad < thresh and depth == None) or (depth != None and depth == iteration-1):
             Done = True 
         else:
             ansatz = [new_op] + ansatz
