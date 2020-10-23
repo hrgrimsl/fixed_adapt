@@ -80,7 +80,7 @@ def fixed_adapt(H, ref, N_e, N_qubits, params, thresh = 1e-3, in_file = 'out.dat
     #print(factor*(E-system.ci_energy))
     return E, params
 
-def uccgsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, out_file = 'out.dat', factor = Eh, spin_adapt = False):
+def uccgsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, depth = None, out_file = 'out.dat', factor = Eh, spin_adapt = False):
     system = sm.system_data(H, ref, N_e, N_qubits)
     pool = []
     if spin_adapt == False:
@@ -144,7 +144,7 @@ def uccgsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, out_file = 'out.dat',
                 max_grad = copy.copy(grad)
                 new_op = copy.copy(op)
                 new_idx = copy.copy(i)
-        if max_grad < thresh:
+        if (max_grad < thresh and depth == None) or (depth != None and depth == iteration-1):
             Done = True 
         else:
             ansatz = [new_op] + ansatz
@@ -258,7 +258,7 @@ def uccsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, depth = None, out_file
             ansatz = [new_op] + ansatz
             params = [0] + params
             energy, params = ct.vqe(system.H, ansatz, system.ref, params)
-            cur_state = copy.copy(system.ref)
+            cur_state = copy.deepcopy(system.ref)
             for i in reversed(range(0, len(params))): 
                 cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
             S2_state = cur_state.T.dot(S2).dot(cur_state)[0,0].real
