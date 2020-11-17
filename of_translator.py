@@ -3,7 +3,7 @@ import scipy
 import numpy as np
 from opt_einsum import contract
 
-def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
+def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None, unpaired = 0):
     I = -.25*contract('pqrs->prqs', I)
     _2body = I - contract('pqrs->pqsr', I)
     n_qubits = _1body.shape[0]
@@ -14,7 +14,9 @@ def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
     number_operator = of.ops.FermionOperator()
     for p in range(0, _1body.shape[0]):
         number_operator += of.ops.FermionOperator(term = ((p,1),(p,0)))
+
     number_operator = of.transforms.get_sparse_operator(number_operator, n_qubits = n_qubits).real
+
 
     #Build S^2 Operator for Internal Checks
     S2 = of.transforms.get_sparse_operator(of.utils.s_squared_operator(int(n_qubits/2)), n_qubits = n_qubits).real
@@ -24,7 +26,14 @@ def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
     #Build S_z Operator for Internal Checks
     Sz = of.transforms.get_sparse_operator(of.utils.sz_operator(int(n_qubits/2)), n_qubits = n_qubits).real
     #print("Assuming lexically first orbitals in chosen basis to be filled.")
-    ref = scipy.sparse.csc_matrix(of.jw_configuration_state(list(range(0, N_e)), _1body.shape[0])).T
+    if unpaired == 0:
+        ref = scipy.sparse.csc_matrix(of.jw_configuration_state(list(range(0, N_e)), _1body.shape[0])).T
+    else:
+        occs = list(range(0, N_e-unpaired))
+        for i in range(0, unpaired):
+            occs += [2*i + len(occs)]
+        ref = scipy.sparse.csc_matrix(of.jw_configuration_state(occs, _1body.shape[0])).T
+        
     #print("Reference Product State Energy:")
     #E_ref = ref.T.dot(hamiltonian).dot(ref)[0,0]
     #print(E_ref)
@@ -38,4 +47,4 @@ def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None):
     #print('{:.3f}'.format(soln.T.dot(S2.toarray()).dot(soln)))
     #print("S_z")
     #print('{:.2f}'.format(soln.T.dot(Sz.toarray()).dot(soln)))
-    return hamiltonian, ref, _1body.shape[0], S2
+    return hamiltonian, ref, _1body.shape[0], S2, Sz, number_operator

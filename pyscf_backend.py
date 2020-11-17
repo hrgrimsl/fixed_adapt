@@ -3,15 +3,16 @@ import numpy as np
 from opt_einsum import contract
 
 def get_integrals(geometry, basis, reference, charge = 0, spin = 0):
+
     mol = gto.M(atom = geometry, basis = basis)
     mol.charge = charge
     mol.spin = spin
     mol.symmetry = False
     mol.max_memory = 8e3
     mol.build()
-    if reference == 'rhf' or reference == 'RHF':
+    if reference == 'rhf':
         mf = scf.RHF(mol)
-    elif reference == 'rohf' or reference == 'ROHF':
+    elif reference == 'rohf':
         mf = scf.ROHF(mol)
     else:
         print('Reference not supported.')
@@ -27,6 +28,8 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0):
             mo_a[i] = 1
         if mo_occ[i] > 1:
             mo_b[i] = 1
+
+
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
     N_e = np.trace(Da) + np.trace(Db)
@@ -43,8 +46,6 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0):
     Fa = .5*H + Ja + Jb - Ka
     Fb = .5*H + Ja + Jb - Kb
     hf_energy = E_nuc + contract('pq,pq', .5*H + Fa, Da) + contract('pq,pq', .5*H + Fb, Db)
-
-
 
     idensor = np.array([[[[1,0],[0,1]],[[0,0],[0,0]]],[[[0,0],[0,0]],[[1,0],[0,1]]]])
     I = np.kron(I, idensor)

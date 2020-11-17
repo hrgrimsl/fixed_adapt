@@ -5,276 +5,232 @@ import scipy
 import copy
 import openfermion as of
 import numpy as np
+import warnings
 
+warnings.filterwarnings('ignore')
 #Globals
 Eh = 627.5094740631
 
-def qubit_adapt(H, ref, N_e, N_qubits, S2, depth = None, thresh = 1e-3, out_file = 'out.dat', factor = Eh):
-    f = open(out_file, 'w')
-    system = sm.system_data(H, ref, N_e, N_qubits)
-    print("Done! Generating qubit pool...")
-    pool = []
-    for i in range(1, 5):
-        pool += system.k_qubit_pool(i)
-    print("SCF Energy:")
-    print(system.hf_energy)
-    print("FCI Energy:")
-    print(system.ci_energy)
-
-    print("Done! Performing ADAPT calculation...")
-
-    cur_state = system.ref
-    ansatz = []
-    params = []
-    Done = False
-    iteration = 0
-    print('\n')
-    print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Energy (kcal/mol)', 'Error (kcal/mol)', 'Last del (a.u.)', 'Newest Operator', '<S^2>'))
-    while Done == False:
-        iteration += 1
-        max_grad = 0
-        new_op = None
-        for i in range(len(pool)):
-            op = copy.copy(pool[i])
-            grad = 2*abs(cur_state.T.dot(system.H).dot(op).dot(cur_state)[0,0].real)
-            if grad > max_grad:
-                max_grad = copy.copy(grad)
-                new_op = copy.copy(op)
-                new_idx = copy.copy(i)
-        if (max_grad < thresh and depth == None) or (depth != None and depth == iteration-1):
-            Done = True 
-        else:
-            ansatz = [new_op] + ansatz
-            params = [0] + params
-            energy, params = ct.vqe(system.H, ansatz, system.ref, params)
-            cur_state = copy.copy(system.ref)
-            for i in reversed(range(0, len(params))): 
-                cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
-            S2_state = cur_state.T.dot(S2).dot(cur_state)[0,0].real
-            print('-'*105)
-            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.ci_energy), max_grad, system.pool[new_idx], S2_state))
-            #print(str(factor*energy)+' '+str(factor*(energy-system.ci_energy)))
-            f.write(str(system.pool[new_idx])+'\n')
-    print('\n')
-    return energy, params
-
-def fixed_adapt(H, ref, N_e, N_qubits, params, thresh = 1e-3, in_file = 'out.dat', factor = Eh):
-    system = sm.system_data(H, ref, N_e, N_qubits)
-    #print("Performing VQE on pre-specified ansatz...\n")
-    ansatz = []
-
-    f = open(in_file, 'r')
-    count = 0
-    for line in f.readlines():
-        ansatz = [of.get_sparse_operator(1j * of.ops.QubitOperator(line), system.N_qubits)] + ansatz
-
-
-    E, params = ct.vqe(system.H, ansatz, system.ref, params)
-    #print("VQE energy (kcal/mol):")
-    cur_state = copy.copy(system.ref)
-    for i in reversed(range(0, len(params))): 
-        cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
-    exact_overlap = cur_state.T.dot(system.ci_soln)[0].real
-    print(str(E*factor)+' '+str(factor*(E-system.ci_energy))+' '+str(exact_overlap))
-    #print("Error (kcal/mol):")
-    #print(factor*(E-system.ci_energy))
-    return E, params
-
-def uccgsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, depth = None, out_file = 'out.dat', factor = Eh, spin_adapt = False):
-    system = sm.system_data(H, ref, N_e, N_qubits)
-    pool = []
-    if spin_adapt == False:
-        for i in range(0, N_qubits):
-            for a in range(i, N_qubits):
-                if (i+a)%2 == 0 and a != i:
-                    pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
-                for j in range(i+1, N_qubits):
-                    for b in range(a+1, N_qubits):
-                        if i%2+j%2 == a%2+b%2 and (i,j) != (a,b) and (b>j or a>i):
-                            pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
- 
-    elif spin_adapt == True:
-       M = int(N_qubits/2)
-       for i in range(0, M):
-           for a in range(i, M):
-               if i!= a:
-                   pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
-               for j in range(i, M):
-                   for b in range(a, M):
-                       if (i, j) != (a, b) and (i<a or j<b):
-                           if i == j and a == b:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
-                           elif i == j:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
-                           elif a == b:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
-                           else: 
-                               pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 2/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 2/np.sqrt(12))+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), -1/np.sqrt(12))+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), -1/np.sqrt(12)) )
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
-    print('Operators:')
-    print(len(pool))
-    prepool = [of.transforms.get_sparse_operator(i, n_qubits = N_qubits).real for i in pool]
+def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out.dat', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False):
     
-    jw_pool = [] 
-    for i in prepool:
-        op = i - i.T
-        jw_pool.append(op)
-
-
-    print("SCF Energy:")
-    print(system.hf_energy)
-    print("FCI Energy:")
-    print(system.ci_energy)
-    f = open(out_file, 'w')
-    cur_state = system.ref
-    ansatz = []
-    params = []
-    Done = False
-    iteration = 0
-    print('\n')
-    print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Energy (kcal/mol)', 'Error (kcal/mol)', 'Last del (a.u.)', 'Newest Operator', '<S^2>'))
-    while Done == False:
-        iteration += 1
-        max_grad = 0
-        new_op = None
-        for i in range(len(jw_pool)):
-            op = copy.copy(jw_pool[i])
-            grad = 2*abs(cur_state.T.dot(system.H).dot(op).dot(cur_state)[0,0].real)
-            if grad > max_grad:
-                max_grad = copy.copy(grad)
-                new_op = copy.copy(op)
-                new_idx = copy.copy(i)
-        if (max_grad < thresh and depth == None) or (depth != None and depth == iteration-1):
-            Done = True 
-        else:
-            ansatz = [new_op] + ansatz
-            params = [0] + params
-            energy, params = ct.vqe(system.H, ansatz, system.ref, params)
-            cur_state = copy.copy(system.ref)
-            for i in reversed(range(0, len(params))): 
-                cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
-            S2_state = cur_state.T.dot(S2).dot(cur_state)[0,0].real
-            print('-'*105)
-            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.ci_energy), max_grad, new_idx, S2_state))
-            print(pool[new_idx])
-            #print(str(factor*energy)+' '+str(factor*(energy-system.ci_energy)))
-            f.write(str(pool[new_idx]).replace('\n','')+'\n')
-    print('\n')
-    return energy, params
-
-
-
-def fixed_fermionic(H, ref, N_e, N_qubits, params, in_file = 'out.dat', factor = Eh, spin_adapt = False):
+    if L == None:
+        L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)
-    cur_state = copy.copy(ref)
-    pool = []
-    Done = False
-    iteration = 0
-    f = open(in_file, 'r')
-    for line in f.readlines():
-        pool = [of.FermionOperator(line)] + pool
-    prepool = [of.transforms.get_sparse_operator(i, n_qubits = N_qubits).real for i in pool]
-    jw_pool = [] 
-    for i in prepool:
-        op = i - i.T
-        jw_pool.append(op)
-    ansatz = jw_pool
-    E, params = ct.vqe(H, ansatz, ref, list(params))
-    #print("VQE energy (kcal/mol):")
-    cur_state = copy.copy(ref)
-    for i in reversed(range(0, len(params))): 
-        cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
-    exact_overlap = cur_state.T.dot(system.ci_soln)[0].real
-    print(str(E*factor)+' '+str(factor*(E-system.ci_energy))+' '+str(exact_overlap))
-    return E, params
+    exact_E = scipy.sparse.linalg.eigsh(L, k = 1, which = 'SA')[0][0]
 
-def uccsd_adapt(H, ref, N_e, N_qubits, S2, thresh = 1e-3, depth = None, out_file = 'out.dat', factor = Eh, spin_adapt = False):
-    system = sm.system_data(H, ref, N_e, N_qubits)
-    pool = []
-    if spin_adapt == False:
-        for i in range(0, N_e):
-            for a in range(N_e, N_qubits):
-                if (i+a)%2 == 0:
-                    pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
-                for j in range(i+1, N_e):
-                    for b in range(a+1, N_qubits):
-                        if i%2+j%2 == a%2+b%2:
-                            pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
+    if thresh is None:
+        thresh = 0
  
-    elif spin_adapt == True:
-       M = int(N_qubits/2)
-       N = int(N_e/2)
-       for i in range(0, N):
-           for a in range(N, M):
-               pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
-               for j in range(i, N):
-                   for b in range(a, M):
-                       if (i, j) != (a, b):
-                           if i == j and a == b:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
-                           elif i == j:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
-                           elif a == b:
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
-                           else: 
-                               pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 2/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 2/np.sqrt(12))+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), -1/np.sqrt(12))+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), -1/np.sqrt(12)) )
-                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
-    print('Operators:')
-    print(len(pool))
-    prepool = [of.transforms.get_sparse_operator(i, n_qubits = N_qubits).real for i in pool]
-    
-    jw_pool = [] 
-    for i in prepool:
-        op = i - i.T
-        jw_pool.append(op)
 
 
-    print("SCF Energy:")
-    print(system.hf_energy)
-    print("FCI Energy:")
-    print(system.ci_energy)
-    f = open(out_file, 'w')
-    cur_state = system.ref
-    ansatz = []
-    params = []
+    if units == 'kcal/mol':
+        factor = Eh
+        unit_str = '(kcal/mol)'
+    elif units == 'Eh':
+        factor = 1
+        unit_str = '(a.u.)'
+    else:
+        print("Units not recognized.")
+        exit()
+ 
+    #Fetch pool
+    if pool == "4qubit":
+        pool = []
+        for i in range(1, 5):
+            pool += system.k_qubit_pool(i)
+    elif pool == "uccsd":
+        pool = system.uccsd_pool(spin_adapt = spin_adapt)        
+    else:
+        print("Pool not recognized.")
+        exit()
+
+
+    K = [ref]
+    ops = [[]]
+    params = [[]]
+    full_ops = [[]]
+    full_params = [[]]
     Done = False
-    iteration = 0
-    print('\n')
-    print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Energy (kcal/mol)', 'Error (kcal/mol)', 'Last del (a.u.)', 'Newest Operator', '<S^2>'))
+    iters = 0
+
+    if verbose == True:
+         print('-'*170)
+         if subspace_algorithm == 'xiphos':
+             print(" "*50+"XIPHOS: eXpressive Interpolation by Parallel Handling of Operator Selection")
+         elif subspace_algorithm == 'aegis':
+             print(" "*52+"AEGIS: Aces & Eights Generation of Interpolative Subspace")
+         else:
+             print("Algorithm not recognized.")
+             exit()
+         print(" "*75+"H.R. Grimsley")
+         print('-'*170)
+         print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Iteration', 'Old   |New   |All   ', 'Energy '+unit_str, 'Error '+unit_str, '<S^2>', '<S_z>', '<N>'))
+
+    qse_L, E, s2v, szv, nv, v = ct.qse(K, L, H, S2, Sz, Nop)
+    if verbose == True:
+        print('{:<20}|{:<6}|{:<6}|{:<6}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(iters, len(K)-len(ops), len(ops), len(K), factor*E, factor*(E-exact_E), s2v, szv, nv))
+
     while Done == False:
-        iteration += 1
-        max_grad = 0
-        new_op = None
-        for i in range(len(jw_pool)):
-            op = copy.copy(jw_pool[i])
-            grad = 2*abs(cur_state.T.dot(system.H).dot(op).dot(cur_state)[0,0].real)
-            if grad > max_grad:
-                max_grad = copy.copy(grad)
-                new_op = copy.copy(op)
-                new_idx = copy.copy(i)
-        if (max_grad < thresh and depth == None) or (depth != None and depth == iteration-1):
-            Done = True 
+        iters += 1
+        new_ops = []
+        new_params = []
+        Ks = []
+        for i in range(0, len(ops)):
+            grad = np.array([2*abs(K[i].T.dot(L).dot(op).dot(K[i]))[0,0] for op in pool])
+            sort = np.argsort(grad)[::-1]
+
+            if subspace_algorithm == 'xiphos':
+                new_ops += [[sort[j]]+ops[i] for j in range(0, xiphos_no) if (grad[sort[j]] > thresh or (persist == False and xiphos_no > 1))] 
+                new_params += [[0]+params[i] for j in range(0, xiphos_no) if (grad[sort[j]] > thresh or (persist == False and xiphos_no > 1))] 
+                Ks += [K[i] for j in range(0, xiphos_no) if (grad[sort[j]] > thresh or (persist == False and xiphos_no > 1))]
+               
+
+            if subspace_algorithm == 'aegis':
+                new_ops += [[sort[j]]+ops[i] for j in range(0, len(sort)) if grad[sort[0]]-grad[sort[j]] < eps] 
+                new_params += [[0]+params[i] for j in range(0, len(sort)) if grad[sort[0]]-grad[sort[j]] < eps] 
+                Ks += [K[i] for j in range(0, len(sort)) if grad[sort[0]]-grad[sort[j]] < eps] 
+        
+        if len(new_ops) == 0 or (depth != None and iters == depth+1) or ((E-exact_E)*Eh < 1 and chem_acc == True):
+            log = open(out_file, "w")
+            for i in range(0, len(full_ops)):
+                for j in full_ops[i]:
+                    log.write(str(j)+" ")
+                log.write("\n")
+                for j in full_params[i]:
+                    log.write(str(j)+" ") 
+                log.write("\n")
+            return E, params[0]
+
+        #One-param Screening- if one-parameter optimization doesn't give a linearly independent vector, kick it.                 
+        if screen == True:                 
+            scrn = [] 
+            for k in range(0, len(new_ops)):
+                scrn_L, scrn_params = ct.vqe(L, [pool[new_ops[k][0]]], Ks[k], [0])
+                scrn.append(scipy.sparse.linalg.expm_multiply(pool[new_ops[k][0]]*scrn_params[0], Ks[k]))    
+
+            scrn2 = []
+            new_ops2 = []
+            new_params2 = []
+            for i in range(0, len(scrn)):
+                for j in range(0, len(scrn2)):
+                    scrn[i] -= scrn2[j].T.dot(scrn[i])[0,0]*scrn2[j]/scrn2[j].T.dot(scrn2[j])[0,0] 
+                if scrn[i].T.dot(scrn[i])[0,0] > eps:
+                    scrn2.append(scrn[i]/np.sqrt(scrn[i].T.dot(scrn[i])[0,0]))
+                    new_ops2.append(new_ops[i])
+                    new_params2.append(new_params[i]) 
+            new_ops = copy.copy(new_ops2)
+            new_params = copy.copy(new_params2)
+
+
+        #Rigorous Independence Screening
+        new_K = []
+        old_K = copy.copy(K)
+        prev_ops = copy.copy(full_ops)
+        prev_params = copy.copy(full_params)
+        preold_K = copy.copy(K)
+        for i in range(0, len(new_params)):    
+            L_val, new_params[i] = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i])
+            state = ct.prep_state([pool[j] for j in new_ops[i]], system.ref, new_params[i])
+            new_K.append(state) 
+            E_val = state.T.dot(H).dot(state).real[0,0]
+
+        preK = copy.copy(new_K)         
+        K2 = []
+        ops = []
+        params = []
+
+        for i in range(0, len(new_K)):
+            for j in range(0, len(K2)):
+                new_K[i] -= K2[j].T.dot(new_K[i])[0,0]*K2[j]/K2[j].T.dot(K2[j])[0,0] 
+            if new_K[i].T.dot(new_K[i])[0,0] > eps:
+                K2.append(new_K[i]/np.sqrt(new_K[i].T.dot(new_K[i])[0,0]))
+                ops.append(new_ops[i])
+                params.append(new_params[i])
+
+        full_ops = copy.copy(ops)                
+        full_params = copy.copy(params)                 
+
+        K = [preK[i] for i in range(0, len(new_K)) if new_K[i].T.dot(new_K[i])[0,0] > eps]
+
+        if persist == True:
+            for i in range(0, len(old_K)):
+                for j in range(0, len(K2)):
+                    old_K[i] -= K2[j].T.dot(old_K[i])[0,0]*K2[j]
+                if old_K[i].T.dot(old_K[i])[0,0] > eps:
+                    K2.append(old_K[i]/np.sqrt(old_K[i].T.dot(old_K[i])[0,0]))
+                    K.append(preold_K[i])
+                    full_ops.append(prev_ops[i])
+                    full_params.append(prev_params[i])
+
+        new_ks = len(ops)
+        old_ks = len(K)-len(ops)
+        qse_L, E, s2v, szv, nv, v = ct.qse(K2, L, H, S2, Sz, Nop)
+
+        if qse_cull == True:
+            save_new = [i for i in range(0, new_ks) if abs(v[i]) > 1e-3] 
+            save_old = [i for i in range(new_ks, len(v)) if abs(v[i]) > 1e-3]
+            ops = [ops[i] for i in save_new]
+            params = [params[i] for i in save_new]
+            K = [K[i] for i in save_new + save_old]
+            full_ops = [full_ops[i] for i in save_new + save_old]
+            full_params = [full_params[i] for i in save_new + save_old]
+ 
+        if verbose == True:
+            print('{:<20}|{:<6}|{:<6}|{:<6}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(iters, len(K)-len(ops), len(ops), len(K), factor*E, factor*(E-exact_E), s2v, szv, nv))
+
+def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out.dat', units = 'kcal/mol', verbose = True, eps = 1e-8, guess = None):    
+    if L == None:
+        L = copy.copy(H)
+    system = sm.system_data(H, ref, N_e, N_qubits)
+    exact_E = scipy.sparse.linalg.eigsh(L, k = 1, which = 'SA')[0][0]
+ 
+
+
+    if units == 'kcal/mol':
+        factor = Eh
+        unit_str = '(kcal/mol)'
+    elif units == 'Eh':
+        factor = 1
+        unit_str = '(a.u.)'
+    else:
+        print("Units not recognized.")
+        exit()
+ 
+    #Fetch pool
+    if pool == "4qubit":
+        pool = []
+        for i in range(1, 5):
+            pool += system.k_qubit_pool(i)
+    elif pool == "uccsd":
+        pool = system.uccsd_pool(spin_adapt = spin_adapt)        
+    else:
+        print("Pool not recognized.")
+        exit()
+    log = open(in_file, "r")
+    K = []
+    ops = []
+    params = []
+
+    parity = 0
+    for line in log.readlines():
+        line = line.split()
+        if parity == 0:
+            parity = 1
+            ops.append([int(i) for i in line])
         else:
-            ansatz = [new_op] + ansatz
-            params = [0] + params
-            energy, params = ct.vqe(system.H, ansatz, system.ref, params)
-            cur_state = copy.deepcopy(system.ref)
-            for i in reversed(range(0, len(params))): 
-                cur_state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], cur_state)
-            S2_state = cur_state.T.dot(S2).dot(cur_state)[0,0].real
-            print('-'*105)
-            print('{:<20}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20}|{:<20}|'.format(iteration, factor*energy, factor*(energy-system.ci_energy), max_grad, new_idx, S2_state))
-            print(pool[new_idx])
-            #print(str(factor*energy)+' '+str(factor*(energy-system.ci_energy)))
-            f.write(str(pool[new_idx]).replace('\n','')+'\n')
-
-    print('\n')
-    return energy, params
-
-if __name__ == "__main__":
-    geometry = [('H', (0,0,0)), ('H', (0,0,.74))]
-    basis = 'sto-3g'
-    multiplicity = 1
-    system = sm.system_data(geometry, basis, multiplicity)
-    pool = system.full_qubit_pool()
-
+            parity = 0
+            params.append([float(i) for i in line])
+    new_params = copy.copy(params)
+    if guess == None:
+        guess = [list(np.array(i)) for i in new_params]
+    else:
+        np.random.seed(seed = guess)
+        guess = [list(np.random.rand(len(i))) for i in new_params]
+    for i in range(0, len(ops)):
+        L_val, new_params[i] = ct.vqe(L, [pool[j] for j in ops[i]], system.ref, guess, gtol = 1e-5)
+        K.append(ct.prep_state([pool[j] for j in ops[i]], system.ref, new_params[i]))
+    qse_L, E, s2v, szv, nv, v = ct.no_qse(K, L, H, S2, Sz, Nop)
+    if verbose == True:
+        print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Energy '+unit_str, 'Error '+unit_str, '<S^2>', '<S_z>', '<N>'))
+    print('{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(factor*E, factor*(E-exact_E), s2v, szv, nv))
+    return factor*(E-exact_E), new_params
