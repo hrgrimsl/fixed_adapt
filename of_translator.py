@@ -4,12 +4,11 @@ import numpy as np
 from opt_einsum import contract
 
 def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None, unpaired = 0):
-    I = -.25*contract('pqrs->prqs', I)
-    _2body = I - contract('pqrs->pqsr', I)
+    _2body = I
     n_qubits = _1body.shape[0]
     hamiltonian = of.ops.InteractionOperator(_0body, _1body, _2body)
     hamiltonian = of.transforms.get_sparse_operator(hamiltonian, n_qubits = n_qubits).real
-
+    H = np.array(hamiltonian)
     #Build Number Operator for Internal Checks
     number_operator = of.ops.FermionOperator()
     for p in range(0, _1body.shape[0]):

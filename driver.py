@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 #Globals
 Eh = 627.5094740631
 
-def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out.dat', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False):
+def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out.dat', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-6, chem_acc = False):
     
     if L == None:
         L = copy.copy(H)
@@ -167,8 +167,8 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         qse_L, E, s2v, szv, nv, v = ct.qse(K2, L, H, S2, Sz, Nop)
 
         if qse_cull == True:
-            save_new = [i for i in range(0, new_ks) if abs(v[i]) > 1e-3] 
-            save_old = [i for i in range(new_ks, len(v)) if abs(v[i]) > 1e-3]
+            save_new = [i for i in range(0, new_ks) if abs(v[i]) > 5e-3] 
+            save_old = [i for i in range(new_ks, len(v)) if abs(v[i]) > 5e-3]
             ops = [ops[i] for i in save_new]
             params = [params[i] for i in save_new]
             K = [K[i] for i in save_new + save_old]
@@ -234,3 +234,6 @@ def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", s
         print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Energy '+unit_str, 'Error '+unit_str, '<S^2>', '<S_z>', '<N>'))
     print('{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(factor*E, factor*(E-exact_E), s2v, szv, nv))
     return factor*(E-exact_E), new_params
+
+
+
