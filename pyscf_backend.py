@@ -2,7 +2,7 @@ from pyscf import *
 import numpy as np
 from opt_einsum import contract
 
-def get_integrals(geometry, basis, reference, charge = 0, spin = 0):    
+def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk'):    
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge)
     mol.symmetry = False
     mol.max_memory = 8e3
@@ -15,10 +15,16 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0):
         mf = scf.UHF(mol)
     else:
         print('Reference not understood.')
+    mf.chkfile = chkfile
     mf.conv_tol = 1e-12
-    mf.max_cycle = 1000
-    mf.verbose = 0
+    mf.max_cycle = 10000
+    mf.verbose = 1
     mf.conv_check = True
+    if read == True:
+        mf.init_guess = 'chkfile'
+    else:
+        mf.init_guess = 'atom'
+
     hf_energy = mf.kernel()
     assert mf.converged == True
     mo_occ = mf.mo_occ
@@ -61,7 +67,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0):
                 Ob += 1
             else:
                 Vb += 1
-    
+    print(Ca)    
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
     S = mol.intor('int1e_ovlp_sph')
@@ -198,9 +204,7 @@ def get_F(geometry, basis, reference, charge = 0, spin = 0):
     F = np.kron(Fa, A) + np.kron(Fb, B)
     g -= contract('pqrs->pqsr', g)
     g *= -.25
-
     return F
-
 
 def freeze_core(E_nuc, H, I, D, N_c):
     D_core = D[:N_c,:N_c]

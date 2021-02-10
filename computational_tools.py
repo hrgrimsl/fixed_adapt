@@ -154,6 +154,7 @@ def EN_UCC3_energy(x, E0, deriv, hess, jerk):
 
 def vqe(H, ansatz, ref, params, gtol = 1e-6):
     res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': gtol})
+    assert res.success == True
     return res.fun, list(res.x)
 
 def qse(K, L, H, S2, Sz, N):

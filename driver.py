@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 #Globals
 Eh = 627.5094740631
 
-def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out.dat', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-6, chem_acc = False):
+def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out.dat', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False):
     
     if L == None:
         L = copy.copy(H)
@@ -99,7 +99,7 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
                 for j in full_params[i]:
                     log.write(str(j)+" ") 
                 log.write("\n")
-            return E, params[0]
+            return factor*E, params[0], factor*(exact_E - E)
 
         #One-param Screening- if one-parameter optimization doesn't give a linearly independent vector, kick it.                 
         if screen == True:                 
@@ -178,7 +178,8 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         if verbose == True:
             print('{:<20}|{:<6}|{:<6}|{:<6}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(iters, len(K)-len(ops), len(ops), len(K), factor*E, factor*(E-exact_E), s2v, szv, nv))
 
-def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out.dat', units = 'kcal/mol', verbose = True, eps = 1e-8, guess = None):    
+
+def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out.dat', units = 'kcal/mol', verbose = True, eps = 1e-6, guess = None):    
     if L == None:
         L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)
@@ -221,19 +222,21 @@ def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", s
             parity = 0
             params.append([float(i) for i in line])
     new_params = copy.copy(params)
-    if guess == None:
+    if guess is None:
         guess = [list(np.array(i)) for i in new_params]
-    else:
+    if guess is 'hf':
+        guess = [list(np.zeros(len(i))) for i in new_params]
+    if isinstance(guess, int):
         np.random.seed(seed = guess)
-        guess = [list(np.random.rand(len(i))) for i in new_params]
+        guess = [list(np.random.uniform(-1,1,np.array(new_params[0]).shape))]
     for i in range(0, len(ops)):
-        L_val, new_params[i] = ct.vqe(L, [pool[j] for j in ops[i]], system.ref, guess, gtol = 1e-5)
+        L_val, new_params[i] = ct.vqe(L, [pool[j] for j in ops[i]], system.ref, guess, gtol = eps)
         K.append(ct.prep_state([pool[j] for j in ops[i]], system.ref, new_params[i]))
     qse_L, E, s2v, szv, nv, v = ct.no_qse(K, L, H, S2, Sz, Nop)
     if verbose == True:
         print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Energy '+unit_str, 'Error '+unit_str, '<S^2>', '<S_z>', '<N>'))
     print('{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(factor*E, factor*(E-exact_E), s2v, szv, nv))
-    return factor*(E-exact_E), new_params
+    return factor*E, factor*(E-exact_E), new_params
 
 
 
