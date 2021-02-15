@@ -1,9 +1,12 @@
-from pyscf import *
+
+from pyscf import fci, gto, scf
+from pyscf.lib import logger
 import numpy as np
 from opt_einsum import contract
 
 def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk'):    
-    mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge)
+    mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge, verbose = True)
+    mol.verbose = 4
     mol.symmetry = False
     mol.max_memory = 8e3
     mol.build()
@@ -18,7 +21,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     mf.chkfile = chkfile
     mf.conv_tol = 1e-12
     mf.max_cycle = 10000
-    mf.verbose = 1
+    mf.verbose = 4
     mf.conv_check = True
     if read == True:
         mf.init_guess = 'chkfile'
@@ -67,7 +70,9 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
                 Ob += 1
             else:
                 Vb += 1
-    print(Ca)    
+    
+
+
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
     S = mol.intor('int1e_ovlp_sph')
@@ -105,6 +110,9 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
 
     g -= contract('pqrs->pqsr', g)
     g *= -.25
+    cisolver = fci.FCI(mol, mf.mo_coeff)
+    print("PYSCF FCI:")
+    print(cisolver.kernel(verbose=logger.DEBUG)[0])
     return E_nuc, H_core, g, D, C, hf_energy
 
 def get_F(geometry, basis, reference, charge = 0, spin = 0):
@@ -166,7 +174,7 @@ def get_F(geometry, basis, reference, charge = 0, spin = 0):
                 Ob += 1
             else:
                 Vb += 1
-    
+
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
     S = mol.intor('int1e_ovlp_sph')
