@@ -4,8 +4,6 @@ import copy
 from opt_einsum import contract
 
 
-
-
 def product_hessian(params, H, ansatz, ref):
     #Can this be made faster by just storing things?
     global vqe_cache
@@ -124,17 +122,20 @@ def sum_energy(params, H, ansatz, ref):
 def analytical_hess(H, ansatz, ref):
     hess = np.zeros((len(ansatz), len(ansatz)))
     for i in range(0, len(ansatz)):
-        for j in range(0, len(ansatz)): 
-            hess[i,j] = ref.T.dot(H).dot(ansatz[i].dot(ansatz[j])+ansatz[j].dot(ansatz[i])).dot(ref)[0,0].real - 2*ref.T.dot(ansatz[i]).dot(H).dot(ansatz[j]).dot(ref)[0,0].real
+        for j in range(i, len(ansatz)): 
+            #hess[i,j] = hess[j,i] = ref.T.dot(H).dot(ansatz[i].dot(ansatz[j])+ansatz[j].dot(ansatz[i])).dot(ref)[0,0].real - ref.T.dot(ansatz[i]).dot(H).dot(ansatz[j]).dot(ref)[0,0].real - ref.T.dot(ansatz[j]).dot(H).dot(ansatz[i]).dot(ref)[0,0].real
+            hess[i,j] = hess[j,i] = (ref.T@H@ansatz[i]@ansatz[j]@ref)[0,0] + (ref.T@H@ansatz[j]@ansatz[i]@ref)[0,0] - (ref.T@ansatz[j]@H@ansatz[i]@ref)[0,0] - (ref.T@ansatz[i]@H@ansatz[j]@ref)[0,0]
+             
     return hess
     
 def analytical_grad(H, ansatz, ref):
     grad = np.zeros((len(ansatz)))
     for i in range(0, len(ansatz)):
-        grad[i] = 2*ref.T.dot(H).dot(ansatz[i]).dot(ref)[0,0].real
+        grad[i] = ref.T.dot(H.dot(ansatz[i])-ansatz[i].dot(H)).dot(ref)[0,0].real
     return grad
 
 def diagonal_hess(h, H, ansatz, ref):
+
     #Find the diagonal part of the Hessian one parameter from equilibrium w/ commutators
     hess = []
     for op in ansatz:
@@ -143,6 +144,7 @@ def diagonal_hess(h, H, ansatz, ref):
     return np.array(hess)
 
 def diag_jerk(h, H, ansatz, ref):
+
     jerk = []
     plus2 = diagonal_hess(2*h, H, ansatz, ref)
     plus = diagonal_hess(h, H, ansatz, ref)
@@ -153,6 +155,7 @@ def diag_jerk(h, H, ansatz, ref):
     for i in range(0, len(ansatz)):
         en_jerk[i,i,i] = jerk[i]
     return en_jerk
+
 
 def F3(F, ansatz, ref):
     F3 = np.zeros((len(ansatz), len(ansatz), len(ansatz)))
@@ -174,7 +177,7 @@ def F3(F, ansatz, ref):
 
 def deriv(params, H, ansatz, ref):
     deriv = []
-    h = 1e-4
+    h = 1e-3
     for i in range(0, len(params)):
         forw = copy.copy(params)
         forw[i] += h
@@ -193,7 +196,7 @@ def deriv(params, H, ansatz, ref):
 
 def hess(params, H, ansatz, ref):
     hess = []
-    h = 1e-4
+    h = 1e-3
     for i in range(0, len(params)):
         forw = copy.copy(params)
         forw[i] += h
@@ -230,7 +233,8 @@ def jerk(params, H, ansatz, ref):
     return np.array(jerk)
 
 def UCC2_energy(x, E0, deriv, hess):
-    return E0 + deriv.dot(x) + .5*x.T.dot(hess).dot(x)
+    E = E0 + deriv.dot(x) + .5*x.T.dot(hess).dot(x)
+    return E
 
 def UCC3_energy(x, E0, deriv, hess, jerk):
     return E0 + deriv.dot(x) + .5*x.T.dot(hess).dot(x) + (1/6)*contract('ijk,i,j,k->', jerk, x, x, x) 

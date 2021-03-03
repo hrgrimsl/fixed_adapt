@@ -1,10 +1,12 @@
-
+import copy
 from pyscf import fci, gto, scf
 from pyscf.lib import logger
 import numpy as np
 from opt_einsum import contract
 
-def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk'):    
+def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', frozen_core = 0, frozen_vir = 0):    
+    N_c = frozen_core
+    N_v = frozen_vir
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge, verbose = True)
     mol.verbose = 4
     mol.symmetry = False
@@ -19,7 +21,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     else:
         print('Reference not understood.')
     mf.chkfile = chkfile
-    mf.conv_tol = 1e-12
+    mf.conv_tol = 1e-14
     mf.max_cycle = 10000
     mf.verbose = 4
     mf.conv_check = True
@@ -70,11 +72,10 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
                 Ob += 1
             else:
                 Vb += 1
-    
-
 
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
+
     S = mol.intor('int1e_ovlp_sph')
     E_nuc = mol.energy_nuc()
     H_core = mol.intor('int1e_nuc_sph') + mol.intor('int1e_kin_sph')
@@ -85,7 +86,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     Iab = contract('pqrs,pi,qj,rk,sl->ikjl', I, Ca, Ca, Cb, Cb)
     Iba = contract('pqrs->qpsr', Iab)
     Ibb = contract('pqrs,pi,qj,rk,sl->ikjl', I, Cb, Cb, Cb, Cb)
-
+  
     Ja = contract('pqrs,qs->pr', Iaa, Da)+contract('pqrs,qs->pr', Iab, Db)
     Jb = contract('pqrs,qs->pr', Ibb, Db)+contract('pqrs,pr->qs', Iab, Da)
     Ka = contract('pqrs,qr->ps', Iaa, Da)
@@ -93,8 +94,9 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
 
     Fa = Ha + Ja - Ka
     Fb = Hb + Jb - Kb
+
     manual_energy = E_nuc + .5*contract('pq,pq', Ha + Fa, Da) + .5*contract('pq,pq', Hb + Fb, Db)
-    assert abs(manual_energy - hf_energy) < 1e-12
+    #assert abs(manual_energy - hf_energy) < 1e-12
 
     A = np.array([[1,0],[0,0]])
     B = np.array([[0,0],[0,1]])
@@ -107,13 +109,30 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     D = np.kron(Da, A) + np.kron(Db, B)
     C = np.kron(Ca, A) + np.kron(Cb, B)
     g = np.kron(Iaa, AA) + np.kron(Iab, AB) + np.kron(Iba, BA) + np.kron(Ibb, BB)
-
     g -= contract('pqrs->pqsr', g)
+
+    print("Freezing core")
+    D_core = D[:N_c,:N_c]
+    J_core = contract('pqrs,rs->pq', g[:N_c, :N_c, :N_c, :N_c], D_core) 
+    K_core = contract('psrq,rs->pq', g[:N_c, :N_c, :N_c, :N_c], D_core)
+    E_nuc += .5*contract('pq,pq->', (2*H_core[:N_c,:N_c] + J_core - K_core), D_core)
+    J_mix = contract('pqrs,rs->pq', g[N_c:, N_c:, :N_c, :N_c], D_core)
+    K_mix = contract('psrq,rs->pq', g[N_c:, :N_c, :N_c, N_c:], D_core)
+    H_core = H_core[N_c:, N_c:] + J_mix - K_mix   
+    g = g[N_c:, N_c:, N_c:, N_c:] 
+    D = D[N_c:, N_c:]     
+
+    if N_v != 0:
+        H_core = H_core[:-N_v,:-N_v]
+        D = D[:-N_v,:-N_v]
+        g = g[:-N_v,:-N_v,:-N_v,:-N_v]
+    
+    #OpenFermion needs a factor of -1/4 because of the way it sums over all of the elements of the 2-body tensor you feed it
     g *= -.25
     cisolver = fci.FCI(mol, mf.mo_coeff)
     print("PYSCF FCI:")
     print(cisolver.kernel(verbose=logger.DEBUG)[0])
-    return E_nuc, H_core, g, D, C, hf_energy
+    return E_nuc, H_core, g, D, manual_energy
 
 def get_F(geometry, basis, reference, charge = 0, spin = 0):
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge)
