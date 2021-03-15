@@ -3,7 +3,7 @@ import openfermion as of
 import openfermionpsi4 as ofp
 import scipy
 import re
-import psi4
+#import psi4
 import numpy as np
 import copy
 

@@ -202,7 +202,7 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
                 print(f"{k:5d}     {p[k]:20.8f}     {str(string_pool[o[k]]).split('+')[0]}")
     
 
-def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out', units = 'kcal/mol', verbose = True, eps = 1e-10, guess = 'hf'):    
+def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out', units = 'kcal/mol', verbose = True, eps = 1e-8, guess = 'hf'):    
     if L == None:
         L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)

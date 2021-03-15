@@ -295,7 +295,7 @@ def ML_X(params, H, ansatz, ref):
 
     
 
-def VQITE(H, ansatz, ref, params, dt = .1, tol = 1e-12):
+def VQITE(H, ansatz, ref, params, dt = .5, tol = 1e-8):
     print("Doing a McLachlan Imaginary Time Evolution")
     V = -product_gradient(params, H, ansatz, ref)
     iter = 0
@@ -308,14 +308,12 @@ def VQITE(H, ansatz, ref, params, dt = .1, tol = 1e-12):
         E = product_energy(params, H, ansatz, ref)
         dE = E - old_E
         old_E = copy.copy(E)
-        print(f"Iter.       |Energy              |dE        ")
-        print(f"{iter:12d}|{E:20.16f}|{dE:20.8e}")
+        print(f"Iter.       |Energy              |dE                  |Grad Norm")
+        print(f"{iter:12d}|{E:20.16f}|{dE:20.8e}|{np.linalg.norm(V):20.8e}")
     return E, list(params)
          
 
-def vqe(H, ansatz, ref, params, gtol = 1e-12):
-    E, x = McLachlan_Optimizer(H, ansatz, ref, np.array(params).astype('float'))
-    return E, x, None, None
+def vqe(H, ansatz, ref, params, gtol = 1e-8):
     print("Doing VQE...")
     global iters 
     iters = 1
@@ -328,7 +326,7 @@ def vqe(H, ansatz, ref, params, gtol = 1e-12):
     Done = False
     res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4})
     if res.success != True:
-        res.fun, res.x = VQITE(H, ansatz, res.x, tol = gtol)
+        res.fun, res.x = VQITE(H, ansatz, ref, res.x, tol = gtol)
     grad = vqe_cache[tuple(res.x)][1]
     hess = vqe_cache[tuple(res.x)][2]
     if grad is None:
