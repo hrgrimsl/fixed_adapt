@@ -116,7 +116,7 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         if screen == True:                 
             scrn = [] 
             for k in range(0, len(new_ops)):
-                scrn_L, scrn_params = ct.vqe(L, [pool[new_ops[k][0]]], Ks[k], [0])
+                scrn_L, scrn_params, gnorm, hcond = ct.vqe(L, [pool[new_ops[k][0]]], Ks[k], [0])
                 scrn.append(scipy.sparse.linalg.expm_multiply(pool[new_ops[k][0]]*scrn_params[0], Ks[k]))    
 
             scrn2 = []
@@ -140,7 +140,7 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         prev_params = copy.copy(full_params)
         preold_K = copy.copy(K)
         for i in range(0, len(new_params)):    
-            L_val, new_params[i] = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i])
+            L_val, new_params[i], gnorm, hcond = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i])
             state = ct.prep_state([pool[j] for j in new_ops[i]], system.ref, new_params[i])
             new_K.append(state) 
             E_val = state.T.dot(H).dot(state).real[0,0]
@@ -255,14 +255,14 @@ def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", s
         np.random.seed(seed = guess)
         guess = [list(np.random.uniform(-1,1,np.array(new_params[0]).shape))]
     for i in range(0, len(ops)):
-        L_val, new_params[i] = ct.vqe(L, [pool[j] for j in ops[i]], system.ref, guess[i], gtol = eps)
+        L_val, new_params[i], gnorm, hcond = ct.vqe(L, [pool[j] for j in ops[i]], system.ref, guess[i], gtol = eps)
         K.append(ct.prep_state([pool[j] for j in ops[i]], system.ref, new_params[i]))
     qse_L, E, s2v, szv, nv, v = ct.no_qse(K, L, H, S2, Sz, Nop)
 
     if verbose == True:
         print('{:<20}|{:<20}|{:<20}|{:<20}|{:<20}|'.format('Energy '+unit_str, 'Error '+unit_str, '<S^2>', '<S_z>', '<N>'))
     print('{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(factor*E, factor*(E-exact_E), s2v, szv, nv))
-    return factor*E, factor*(E-exact_E), new_params
+    return factor*E, factor*(E-exact_E), new_params, gnorm, hcond
 
 
 

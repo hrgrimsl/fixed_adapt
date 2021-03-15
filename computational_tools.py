@@ -27,7 +27,7 @@ def product_hessian(params, H, ansatz, ref):
     for i in reversed(range(0, len(ansatz))):
         state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], state)
     hket = H@state
-
+     
     #hket = H...|0>
     #state = ...|0>
 
@@ -60,9 +60,40 @@ def product_hessian(params, H, ansatz, ref):
         vqe_cache[tuple(params)][2] = hessian
     except:
         pass
-    
     return hessian
-         
+
+def ML_M(params, H, ansatz, ref):       
+    #Can this be made faster by just storing things?
+    N = len(ansatz)
+    M = np.zeros((N, N))
+    
+
+
+    state = copy.copy(ref)
+    for i in reversed(range(0, len(ansatz))):
+        state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], state)
+     
+    term2s = []    
+    for b in range(0, M.shape[0]):
+        ebket = copy.copy(ref)  
+        for i in reversed(range(b, len(ansatz))):
+            ebket = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], ebket)
+        fket = copy.copy(ebket)
+        ebket = ansatz[b]@ebket
+        term2s.append((ebket.T@ebket).todense()[0,0])
+        for i in reversed(range(0, b)):
+            ebket = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], ebket)
+        eket = copy.copy(state)
+
+        for a in range(0, b+1):
+            M[a,b] = M[b,a] = -2*(eket.T@ansatz[a]@ebket).todense()[0,0]
+            targ = scipy.sparse.hstack([ebket, eket])
+            res = scipy.sparse.linalg.expm_multiply(-params[a]*ansatz[a], targ).tocsr()
+            ebket = res[:,0]
+            eket = res[:,1]
+    term2s = np.array(term2s)
+    M += 2*np.outer(term2s, term2s)
+    return M
 
 def product_gradient(params, H, ansatz, ref):
     grad = []
@@ -238,20 +269,76 @@ def UCC3_energy(x, E0, deriv, hess, jerk):
 def EN_UCC3_energy(x, E0, deriv, hess, jerk):
     return E0 + deriv.dot(x) + .5*x.T.dot(hess).dot(x) + (1/6)*contract('iii,i,i,i->', jerk, x, x, x) 
 
-def vqe(H, ansatz, ref, params, gtol = 1e-10):
+
+
+
+def brute_force_energy(param, x0, grad, H, ansatz, ref):
+    return product_energy(param[0]*grad + x0, H, ansatz, ref)
+
+def ML_X(params, H, ansatz, ref):
+    X = np.zeros((H.shape[0], len(params)))
+    mat = scipy.sparse.identity(H.shape[0])
+    vec = copy.copy(ref)
+
+    for i in reversed(range(0, len(ansatz))):
+        vec = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], vec)
+        ket = copy.copy(vec)
+
+    for i in range(0, len(ansatz)):
+
+        vec = scipy.sparse.linalg.expm_multiply(-params[i]*ansatz[i], vec)
+
+        mat = scipy.sparse.linalg.expm_multiply(-params[i]*ansatz[i], mat.T).T
+        X[:,i] = (mat@ansatz[i]@vec).todense().reshape((H.shape[0]))
+
+    return X, ket
+
+    
+
+def VQITE(H, ansatz, ref, params, dt = .1, tol = 1e-12):
+    print("Doing a McLachlan Imaginary Time Evolution")
+    V = -product_gradient(params, H, ansatz, ref)
+    iter = 0
+    old_E = product_energy(params, H, ansatz, ref)
+    while np.linalg.norm(V) > tol:
+        iter += 1
+        M = ML_M(params, H, ansatz, ref)
+        V = -product_gradient(params, H, ansatz, ref)
+        params += (dt*np.linalg.inv(M)@V)
+        E = product_energy(params, H, ansatz, ref)
+        dE = E - old_E
+        old_E = copy.copy(E)
+        print(f"Iter.       |Energy              |dE        ")
+        print(f"{iter:12d}|{E:20.16f}|{dE:20.8e}")
+    return E, list(params)
+         
+
+def vqe(H, ansatz, ref, params, gtol = 1e-12):
+    E, x = McLachlan_Optimizer(H, ansatz, ref, np.array(params).astype('float'))
+    return E, x, None, None
     print("Doing VQE...")
     global iters 
-    iters= 1
+    iters = 1
     global xk 
     xk = copy.copy(params)
     #Stores data as params: [E, grad, hess]
     global vqe_cache
     vqe_cache = {}
     vqe_cache['tuple(params)'] = [None, None, None]
+    Done = False
+    res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4})
+    if res.success != True:
+        res.fun, res.x = VQITE(H, ansatz, res.x, tol = gtol)
+    grad = vqe_cache[tuple(res.x)][1]
+    hess = vqe_cache[tuple(res.x)][2]
+    if grad is None:
+        grad = product_gradient(res.x, H, ansatz, ref)
+    if hess is None:
+        hess = product_hessian(res.x, H, ansatz, ref)
+    s, V = scipy.linalg.eigh(hess)
+    print(f"Smallest singular value: {s[0]:20.8e}")
 
-    res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, hess = product_hessian, method = 'Newton-CG', callback = prod_cb, args = (H, ansatz, ref), options = {'xtol': gtol, 'disp': True, 'verbose': 4})
-    assert res.success == True
-    return res.fun, list(res.x)
+    return res.fun, list(res.x), np.linalg.norm(grad), np.linalg.cond(hess)
 
 def resid(x, H, ansatz, ref):
     grad = product_gradient(x, H, ansatz, ref)
@@ -312,10 +399,13 @@ def prod_cb(params):
     E = vqe_cache[tuple(params)][0]
     grad = vqe_cache[tuple(params)][1]
     hess = vqe_cache[tuple(params)][2]
-    print(f"VQE Iter.:              {iters}")
-    print(f"Energy:                 {E:20.16f}")
-    print(f"Norm of dx:             {np.linalg.norm(params-xk):20.16e}")
-    print(f"Norm of grad.:          {np.linalg.norm(grad):20.16e}")
+    try:
+        print(f"VQE Iter.:              {iters}")
+        print(f"Energy:                 {E:20.16f}")
+        print(f"Norm of dx:             {np.linalg.norm(params-xk):20.16e}")
+        print(f"Norm of grad.:          {np.linalg.norm(grad):20.16e}")
+    except:
+        pass
     if hess is not None:
         print(f"Cond. no. of Hessian:   {np.linalg.cond(hess):20.16e}")
     iters += 1
