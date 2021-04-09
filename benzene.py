@@ -1,20 +1,33 @@
 from pyscf_backend import *
 from of_translator import *
 
-#Geometry in angstroms
-geometry = "Li 0 0 0; H 0 0 1"
+#Geometry in angstroms, optimized with Psi4.
+#(B3LYP DFT calculation with a 6-311G(d,p) basis set)
+geometry = """
+    C           -1.200649405854     0.707888282790     0.000000000000
+    C           -1.213422696760    -0.685836804691     0.000000000000
+    C           -0.012744802332    -1.393703415845     0.000000000000
+    C            1.200649405854    -0.707888282790     0.000000000000
+    C            1.213422696760     0.685836804691     0.000000000000
+    C            0.012744802332     1.393703415845     0.000000000000
+    H            0.022631937859     2.478034113756     0.000000000000
+    H           -2.134744664412     1.258650527007     0.000000000000
+    H            2.134744664412    -1.258650527007     0.000000000000
+    H            2.157428775620     1.219431010435     0.000000000000
+    H           -2.157428775620    -1.219431010435     0.000000000000
+    H           -0.022631937859    -2.478034113756     0.000000000000
+"""
 
-#Basis set has to be something recognized by PySCF.  (sto-3g, 6-31g, etc.)
 basis = "sto-3g"
 
 #I only trust RHF right now- I can debug open-shell refs if you need them though.
 reference = "rhf"
 
 #Number of frozen electrons.  Probably an even number.
-frozen_core = 2
+frozen_core = 36
 
 #Number of frozen virtual orbitals.
-frozen_vir = 2
+frozen_vir = 24
 
 
 '''

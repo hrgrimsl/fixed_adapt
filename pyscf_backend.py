@@ -4,7 +4,7 @@ from pyscf.lib import logger
 import numpy as np
 from opt_einsum import contract
 
-def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', frozen_core = 0, frozen_vir = 0):    
+def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', frozen_core = 0, frozen_vir = 0, feed_C = None):    
     N_c = frozen_core
     N_v = frozen_vir
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge, verbose = True)
@@ -73,6 +73,10 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
             else:
                 Vb += 1
 
+    if feed_C is not None:
+        print("Loading C")
+        Ca = Cb = np.load(feed_C)
+    
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
 
@@ -130,8 +134,8 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     #OpenFermion needs a factor of -1/4 because of the way it sums over all of the elements of the 2-body tensor you feed it
     g *= -.25
     cisolver = fci.FCI(mol, mf.mo_coeff)
-    print("PYSCF FCI:")
-    print(cisolver.kernel(verbose=logger.DEBUG)[0])
+    #print("PYSCF FCI:")
+    #print(cisolver.kernel(verbose=logger.DEBUG)[0])
     return E_nuc, H_core, g, D, manual_energy
 
 def get_F(geometry, basis, reference, charge = 0, spin = 0):

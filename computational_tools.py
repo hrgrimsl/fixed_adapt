@@ -3,6 +3,44 @@ import numpy as np
 import copy
 from opt_einsum import contract
 
+def comm(A, B):
+    return A@B - B@A
+
+def gen(params, ansatz):
+    g = params[0]*ansatz[0]
+    for i in range(1, len(ansatz)):
+        g += params[i]*ansatz[i]
+    return g
+
+def ucc_2_E(params, H, ref, ansatz):
+    g = gen(params, ansatz)
+    E = (ref.T@(H + comm(H, g) + .5*comm(comm(H, g), g))@ref).todense()[0,0]
+    print(E)
+    return E
+
+def enucc_E(params, H, ref, ansatz):
+    g = gen(params, ansatz)
+    E = (ref.T@(H + comm(H, g) + .5*comm(comm(H, g), g))@ref).todense()[0,0]
+    for i in range(0, len(ansatz)):
+        op = ansatz[i]*params[i]
+        E += (1/6)*(ref.T@(comm(comm(comm(H, op), op), op))@ref).todense()[0,0]
+    print(E)
+    return E
+
+def diag_E(params, H, ref, ansatz, hf):
+    H_N = H - scipy.sparse.identity(H.shape[0])*hf
+    E = hf
+    for i in range(0, len(ansatz)):
+        state = scipy.sparse.linalg.expm_multiply(ansatz[i]*params[i], ref)
+        E += (state.T@H_N@state).todense()[0,0]
+    return E
+
+def ucc_3_E(params, H, ref, ansatz):
+    g = gen(params, ansatz)
+    E = (ref.T@(H + comm(H, g) + .5*comm(comm(H, g), g) + (1/6)*comm(comm(comm(H, g), g), g))@ref).todense()[0,0]
+    print(E)
+    return E
+
 
 def product_hessian(params, H, ansatz, ref):
     #Can this be made faster by just storing things?
@@ -111,6 +149,71 @@ def product_energy(params, H, ansatz, ref):
     #print(E)
     return E
 
+def pt_E(params, H, generators, ref):
+    #generators should be a list of operators with separate parameters in the same exponent for a partially trotterized ansatz.  Params structure should match
+    for i in reversed(range(0, len(generators))):
+        gen = 0*generators[0][0]
+        for op_no in range(len(generators[i])):
+            if params[i][op_no] != 0:
+                gen += generators[i][op_no]*params[i][op_no]
+        ref = scipy.sparse.linalg.expm_multiply(gen, ref)
+    E = (ref.T@H@ref).todense()[0,0]
+    return E
+
+def pt_num_der(params, h, H, generators, ref):
+    N = len(params[0]) + len(params[1])
+    grad = np.zeros((N))
+    for j in range(0, 2):
+        for i in range(0, len(params[j])):
+            x1 = copy.deepcopy(params)
+            x2 = copy.deepcopy(params)
+            x1[j][i] += h
+            x2[j][i] += -h
+
+           
+            grad[j*len(params[0]) + i] = (pt_E(x1, H, generators, ref)-pt_E(x2, H, generators, ref))/(2*h)
+    return grad 
+    
+def pt_num_hess(params, h, H, generators, ref):
+    N = len(params[0]) + len(params[1])
+    hess = np.zeros((N, N))
+    for j in range(0, 2):
+        for i in range(0, len(params[j])):
+            x1 = copy.deepcopy(params)
+            x2 = copy.deepcopy(params)
+            x1[j][i] += h
+            x2[j][i] += -h
+
+            hess[:,j*len(params[0]) + i] = (pt_num_der(x1, h, H, generators, ref)-pt_num_der(x2, h, H, generators, ref))/(2*h)
+    return hess 
+
+def pt_num_jerk(params, h, H, generators, ref):
+    N = len(params[0]) + len(params[1])
+    jerk = np.zeros((N, N, N))
+    for j in range(0, 2):
+        for i in range(0, len(params[j])):
+            x1 = copy.deepcopy(params)
+            x2 = copy.deepcopy(params)
+            x1[j][i] += h
+            x2[j][i] += -h
+            jerk[:,:,j*len(params[0]) + i] = (pt_num_hess(x1, h, H, generators, ref)-pt_num_hess(x2, h, H, generators, ref))/(2*h)
+    return jerk
+
+def pt_min(x, hf_energy, grad, hess, jerk):
+    return hf_energy + grad.T@x + .5*contract('ij, i, j', hess, x, x) + (1/6)*contract('iii,i,i,i', jerk, x, x, x)
+
+def partial_diag_jerk(h, H, generators, ref):
+    jerk = []
+    plus2 = partial_diagonal_hess(2*h, H, generators, ref)
+    plus = partial_diagonal_hess(h, H, generators, ref)
+    minus = partial_diagonal_hess(-h, H, generators, ref)
+    minus2 = partial_diagonal_hess(-2*h, H, generators, ref)
+    jerk = (-plus2+8*plus-8*minus+minus2)/(12*h)
+    en_jerk = np.zeros((len(jerk), len(jerk), len(jerk)))
+    for i in range(len(jerk)):
+        en_jerk[i,i,i] = jerk[i]
+    return en_jerk
+
 def sum_energy(params, H, ansatz, ref):
     state = copy.deepcopy(ref)
     gen = params[0]*ansatz[0]
@@ -124,14 +227,13 @@ def analytical_hess(H, ansatz, ref):
     for i in range(0, len(ansatz)):
         for j in range(i, len(ansatz)): 
             #hess[i,j] = hess[j,i] = ref.T.dot(H).dot(ansatz[i].dot(ansatz[j])+ansatz[j].dot(ansatz[i])).dot(ref)[0,0].real - ref.T.dot(ansatz[i]).dot(H).dot(ansatz[j]).dot(ref)[0,0].real - ref.T.dot(ansatz[j]).dot(H).dot(ansatz[i]).dot(ref)[0,0].real
-            hess[i,j] = hess[j,i] = (ref.T@H@ansatz[i]@ansatz[j]@ref)[0,0] + (ref.T@H@ansatz[j]@ansatz[i]@ref)[0,0] - (ref.T@ansatz[j]@H@ansatz[i]@ref)[0,0] - (ref.T@ansatz[i]@H@ansatz[j]@ref)[0,0]
-             
+            hess[i,j] = hess[j,i] = (ref.T@H@ansatz[i]@ansatz[j]@ref)[0,0] + (ref.T@H@ansatz[j]@ansatz[i]@ref)[0,0] - 2*(ref.T@ansatz[j]@H@ansatz[i]@ref)[0,0] 
     return hess
     
 def analytical_grad(H, ansatz, ref):
     grad = np.zeros((len(ansatz)))
     for i in range(0, len(ansatz)):
-        grad[i] = ref.T.dot(H.dot(ansatz[i])-ansatz[i].dot(H)).dot(ref)[0,0].real
+        grad[i] = 2*(ref.T@H@ansatz[i]@ref)[0,0].real
     return grad
 
 def diagonal_hess(h, H, ansatz, ref):
@@ -140,11 +242,11 @@ def diagonal_hess(h, H, ansatz, ref):
     hess = []
     for op in ansatz:
         ket = scipy.sparse.linalg.expm_multiply(h*op, ref)
-        hess.append(2*ket.T.dot(H.dot(op)-op.dot(H)).dot(op.dot(ket))[0,0].real)
+        hess.append(ket.T.dot(H.dot(op).dot(op)-2*op.dot(H).dot(op)+op.dot(op).dot(H)).dot(ket)[0,0].real)
     return np.array(hess)
 
-def diag_jerk(h, H, ansatz, ref):
 
+def diag_jerk(h, H, ansatz, ref):
     jerk = []
     plus2 = diagonal_hess(2*h, H, ansatz, ref)
     plus = diagonal_hess(h, H, ansatz, ref)
@@ -155,6 +257,7 @@ def diag_jerk(h, H, ansatz, ref):
     for i in range(0, len(ansatz)):
         en_jerk[i,i,i] = jerk[i]
     return en_jerk
+
 
 
 def F3(F, ansatz, ref):
@@ -177,7 +280,7 @@ def F3(F, ansatz, ref):
 
 def deriv(params, H, ansatz, ref):
     deriv = []
-    h = 1e-3
+    h = 1e-4
     for i in range(0, len(params)):
         forw = copy.copy(params)
         forw[i] += h
@@ -196,7 +299,7 @@ def deriv(params, H, ansatz, ref):
 
 def hess(params, H, ansatz, ref):
     hess = []
-    h = 1e-3
+    h = 1e-4
     for i in range(0, len(params)):
         forw = copy.copy(params)
         forw[i] += h
@@ -211,6 +314,46 @@ def hess(params, H, ansatz, ref):
         minus = deriv(back, H, ansatz, ref)
         minus2 = deriv(back2, H, ansatz, ref)
         hess.append((-plus2+8*plus-8*minus+minus2)/(12*h))
+    return np.array(hess)
+
+def partial_deriv(params, H, generators, ref):
+    deriv = []
+    h = 1e-3
+    for i in range(len(generators)):
+        for j in range(len(generators[i])):
+            forw = copy.deepcopy(params)
+            forw[i][j] += h
+            forw2 = copy.deepcopy(params)
+            forw2[i][j] += 2*h
+            back = copy.deepcopy(params)
+            back[i][j] -= h
+            back2 = copy.deepcopy(params)
+            back2[i][j] -= 2*h
+            plus2 = partial_trotter_energy(forw2, H, generators, ref)
+            plus = partial_trotter_energy(forw, H, generators, ref)
+            minus = partial_trotter_energy(back, H, generators, ref)
+            minus2 = partial_trotter_energy(back2, H, generators, ref)
+            deriv.append((-plus2 + 8*plus - 8*minus + minus2)/(12*h))
+    return np.array(deriv)
+
+def partial_hess(params, H, generators, ref):
+    hess = []
+    h = 1e-3
+    for i in range(len(generators)):
+        for j in range(len(generators[i])):
+            forw = copy.deepcopy(params)
+            forw[i][j] += h
+            forw2 = copy.deepcopy(params)
+            forw2[i][j] += 2*h
+            back = copy.deepcopy(params)
+            back[i][j] -= h
+            back2 = copy.deepcopy(params)
+            back2[i][j] -= 2*h
+            plus2 = partial_deriv(forw2, H, generators, ref)
+            plus = partial_deriv(forw, H, generators, ref)
+            minus = partial_deriv(back, H, generators, ref)
+            minus2 = partial_deriv(back2, H, generators, ref)
+            hess.append((-plus2 + 8*plus - 8*minus + minus2)/(12*h))
     return np.array(hess)
 
 def jerk(params, H, ansatz, ref):

@@ -80,18 +80,25 @@ class system_data:
                 for a in range(N_e, N_qubits):
                     if (i+a)%2 == 0:
                         pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
+                        v_pool.append([i,a])
+            for i in range(0, N_e):
+                for a in range(N_e, N_qubits):
                     for j in range(i+1, N_e):
                         for b in range(a+1, N_qubits):
                             if i%2+j%2 == a%2+b%2:
                                 pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
-              
+                                v_pool.append([i,j,a,b]) 
         elif spin_adapt == True:
+
            M = int(N_qubits/2)
            N = int(N_e/2)
            for i in range(0, N):
                for a in range(N, M):
                    pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
                    v_pool.append(f"{i}->{a}")
+           for i in range(0, N):
+               for a in range(N, M):
+
                    for j in range(i, N):
                        for b in range(a, M):
                            if (i, j) != (a, b):
