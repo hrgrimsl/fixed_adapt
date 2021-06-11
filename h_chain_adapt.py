@@ -46,10 +46,12 @@ for i in range(1, chain_length):
 print("Geometry:")
 print(geom)
 
-E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = hf_file, read = False)
+E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = hf_file, read = True)
 N_e = int(np.trace(D))
 H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
-E, params, error = xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = None, chem_acc = True, subspace_algorithm = "adapt", units = "Eh", pool = "uccsd", out_file = adapt_file)
+E, params, error = xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = None, depth = 100, chem_acc = False, subspace_algorithm = "adapt", units = "Eh", pool = "uccsd", out_file = adapt_file)
+#Following line used for CF, to determine depth to get chemical accuracy
+#E, params, error = xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = None, chem_acc = True, subspace_algorithm = "adapt", units = "Eh", pool = "uccsd", out_file = adapt_file)
 
 print(f"HF Energy:           {hf_energy:20.16f}")
 print(f"ADAPT Energy:        {E:20.16f}")

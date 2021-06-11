@@ -5,7 +5,8 @@ import numpy as np
 import copy
 from sys import argv
 
-script, chain_length, bond_distance, hf_file, adapt_file = argv
+script, chain_length, bond_distance, hf_file, adapt_file, seed = argv
+
 
 chain_length = int(chain_length)
 bond_distance = float(bond_distance)
@@ -13,7 +14,10 @@ print("Doing HF across PES to ensure continuity...")
 d = .7
 guess = "atom"
 
+np.random.seed(int(seed))
+afile = f"{adapt_file}_params.npy"
 
+guess_vec = [list(2*np.random.random_sample(len(np.load(afile)))-1)]
 while d < bond_distance - .025:
    geom = "H 0 0 0"
    for j in range(1, chain_length):
@@ -46,10 +50,10 @@ for i in range(1, chain_length):
 print("Geometry:")
 print(geom)
 
-E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = hf_file, read = False)
+E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = hf_file, read = True)
 N_e = int(np.trace(D))
 H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
-E, error, params, gnorm, hcond = fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, pool = "uccsd", in_file = adapt_file, units = "Eh", guess = "hf")
+E, error, params, gnorm, hcond = fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, pool = "uccsd", in_file = adapt_file, units = "Eh", guess = guess_vec)
 
 print(f"HF Energy:           {hf_energy:20.16f}")
 print(f"Fixed ADAPT Energy:  {E:20.16f}")

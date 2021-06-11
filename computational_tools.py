@@ -11,31 +11,25 @@ from num2words import num2words
 
 
 
-def oo_vqe(H, ansatz, singles, ref, params, knorm = 1e-8, tnorm = 1e-8, Etol = 1e-12):
-
-    #Could be generalized so that no singles corresponds to normal VQE, no doubles is UCCSD?
-    times = [time.time()]
-    print("\n Orbital-optimized VQE:")
+def oo_vqe(params, H, ansatz, ref, singles, knorm = 1e-8, tnorm = 1e-8):
+    print("Orbital-optimized VQE")
     H_eff = copy.copy(H) #H transformed by the orbital optimization
     psi = copy.copy(ref) #|0> transformed by the actual unitary in the VQE
-    Done = False
-
+    Done = False:
+    times = [time.time()]
     E_history = []
-    E_history.append(simple_energy(params, H_eff, ansatz, ref))
+    E_history.append(psi.T@(H_eff)@psi.to_dense()[0,0])
     k_history = [] #list of previous orbital optimization params
-
     k_history.append(np.zeros(len(singles)))
     t_history = []
     t_history.append(params)
     iters = 0
-    times.append(time.time())
-    print(f"Initial energy: {E_history[-1]}")
+    print("Initial energy: E_history[-1]")
     while Done == False:
         iters += 1
-        print(f"\n Iteration {iters}:")
+        print(f"Iteration {iters}:")
         print("Performing VQE with current orbitals:")
-
-        E_vqe, t, g, E0, Na = simple_vqe(H_eff, ansatz, ref, t_history[-1])
+        E_vqe, t, g, E0  = simple_vqe(t_history[-1], H_eff, ansatz, ref)
         print(f"Energy:   {E_vqe}")
         print(f"dE:       {E_vqe-E_history[-1]}")
         print(f"dt norm:  {np.linalg.norm(t-t_history[-1])}")
@@ -43,10 +37,10 @@ def oo_vqe(H, ansatz, singles, ref, params, knorm = 1e-8, tnorm = 1e-8, Etol = 1
         t_history.append(t)
         psi = copy.deepcopy(ref)
         for i in reversed(range(0, len(ansatz))):
-            psi = scipy.sparse.linalg.expm_multiply(ansatz[i]*t[i], psi)
+            psi = scipy.linalg.sparse.expm_multiply(ansatz[i]*t[i], psi)
         print(f"Reoptimizing Orbitals")
-        E_oo, k, g_oo, E0 = simple_uccsd(H, singles, psi, k_history[-1])
-        print(f"Energy: {E_oo}")
+        E_oo, k, g_oo, E0 = simple_uccsd(k_history[-1], H, singles, psi)
+        print(f"Energy: {E_00}")
         print(f"dE:       {E_oo - E_vqe}")
         print(f"dk norm:  {np.linalg.norm(k-k_history[-1])}")
         print(f"gnorm:    {np.linalg.norm(g_oo)}")
@@ -55,15 +49,10 @@ def oo_vqe(H, ansatz, singles, ref, params, knorm = 1e-8, tnorm = 1e-8, Etol = 1
         gen = 0*ansatz[0]
         for i in range(0, len(singles)):
             gen += singles[i]*k[i]
-        U = scipy.sparse.linalg.expm(gen)
+        U = scipy.sparse.expm(gen)
         H_eff = U.T@(H)@U
-        if np.linalg.norm(k-k_history[-2]) < knorm and np.linalg.norm(t-t_history[-2]) < tnorm and np.linalg.norm(E_oo - E_history[-2]) < Etol:
-            print("Converged.")
-            Done = True
-        times.append(time.time())
-        print(f"Iteration completed in {times[-1]-times[-2]} seconds.")
-    print(f"\nOO-VQE completed in {times[-1]-times[0]} seconds.\n")
-    return E_history[-1], list(t_history[-1]), g, E_history[0], U
+        if np.linalg.norm(k-k_history[-2]) < knorm and np.linalg.norm(t-t_history[-2]) and E_oo - E_history[-2]:
+            print("Converged.") 
          
         
     
@@ -500,7 +489,7 @@ def best_vqe(results, dump_dir = 'dump'):
     print(f"Energy max: {Es[idx[-1]]}")
     print(f"Energy mean:  {np.mean(np.array(Es))}") 
     print(f"Energy StdDev:  {np.std(np.array(Es))}")     
-    return Es[idx[0]], list(xs[idx[0]]), np.array(gs[idx[0]]), E0s[idx[0]], None
+    return Es[idx[0]], list(xs[idx[0]]), np.array(gs[idx[0]]), E0s[idx[0]]
 
 def pre_sample(H, ansatz, ref, params, seeds = 10000, norm = 1):
     Es = []
@@ -552,7 +541,6 @@ def sample_uccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = '
     print("Optimized parameters:")
     print(best_params)
     return best[0], best[1]
-
 def sample_vqe(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'dump_disentangled'):
     if os.path.exists(dump_dir):
         os.system(f'rm -r {dump_dir}')
@@ -587,7 +575,7 @@ def simple_vqe(H, ansatz, ref, params, gtol = 1e-16):
     E0 = simple_energy(params, H, ansatz, ref) 
     res = scipy.optimize.minimize(simple_energy, np.array(params), jac = simple_gradient, method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': gtol})
     grad = simple_gradient(res.x, H, ansatz, ref)
-    return res.fun, res.x, grad, E0, None
+    return res.fun, res.x, grad, E0
 
 def simple_uccsd(H, ansatz, ref, params, gtol = 1e-16):
     E0 = simple_energy(params, H, ansatz, ref) 
@@ -595,16 +583,71 @@ def simple_uccsd(H, ansatz, ref, params, gtol = 1e-16):
     grad = res.jac
     return res.fun, res.x, grad, E0
 
-def vqe(H, ansatz, ref, params, gtol = 1e-16, singles = []):
+def vqe(H, ansatz, ref, params, gtol = 1e-16):
     with Pool(1) as p:
-        if len(singles) == 0:
-            L = p.starmap(simple_vqe, iterable = [*zip([H], [ansatz], [ref], list([params]))])
-        else:
-            return oo_vqe(H, ansatz, singles, ref, params)
-            
+        L = p.starmap(simple_vqe, iterable = [*zip([H], [ansatz], [ref], list([params]))])
     return best_vqe(L)
+    '''
+    print("Doing VQE...")
+    global iters 
+    iters = 0
+    global xk 
+    xk = copy.copy(params)
+    #Stores data as params: [E, grad, hess]
+    global vqe_cache
+    vqe_cache = {}
+    #vqe_cache['tuple(params)'] = [None, None, None]
+
+    E0 = product_energy(params, H, ansatz, ref) 
+    print(f"Initial E: {E0}")
+
+    converged = False
+    while converged == False:
+        res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4 })
+
+        y = res.fun
+        x = res.x
+        #y, x = VQITE(H, ansatz, ref, xk, dt = .05, tol = gtol)
+        if vqe_cache[tuple(x)][1] is None:
+            vqe_cache[tuple(x)][1] = product_gradient(x, H, ansatz, ref)
+        print(f"Grad norm: {np.linalg.norm(vqe_cache[tuple(x)][1])}")
 
 
+        if np.linalg.norm(vqe_cache[tuple(x)][1]) < gtol:
+            converged = True 
+        else:
+            print("Optimizing single largest parameter individually.")
+            params = copy.copy(x)
+            idx = np.argsort(abs(vqe_cache[tuple(x)][1]))
+            res = scipy.optimize.minimize(one_param_energy, np.array(params[idx[-1]]), jac = one_param_grad, method = 'bfgs', args = (H, ansatz, ref, idx[-1], params), options = {'gtol':1e-16, 'disp': True, 'verbose': 4})
+            if abs(res.fun - y) < 1e-16:
+                converged = True
+            print(f"Single parameter improved energy by {res.fun - y}")
+            y = res.fun
+            x[idx[-1]] = res.x[0]
+            params[idx[-1]] = res.x[0]
+
+        #else:
+        #    y = res.fun
+        #    x = res.x
+        #    converged = True
+
+        converged = True
+    #res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4 })
+
+        
+    #x = res.x
+    #y = res.fun
+    #y, x = VQITE(H, ansatz, ref, x, dt = .001, tol = gtol)
+    try:  
+        grad = vqe_cache[tuple(x)][1]
+        hess = vqe_cache[tuple(x)][2]
+    except:
+        grad = product_gradient(x, H, ansatz, ref)
+        hess = None
+
+    return y, list(x), np.linalg.norm(grad), 0
+    '''
 def resid(x, H, ansatz, ref):
     grad = product_gradient(x, H, ansatz, ref)
     return grad

@@ -68,7 +68,7 @@ class system_data:
                 pool.append(string)
         pool = [i for i in pool if len(re.findall("Y", i))%2 == 1]
         self.pool += pool 
-        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits) for i in pool]
+        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits) for i in pool], pool
 
     def uccsd_pool(self, spin_adapt = False):
         N_qubits = self.N_qubits
@@ -127,5 +127,229 @@ class system_data:
 
         jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
 
-        self.pool = pool 
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+
+
+
+
+    def uccgsd_pool(self, spin_adapt = False):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+        if spin_adapt == False:
+            for i in range(0, N_qubits):
+                for a in range(i+1, N_qubits):
+                    if (i+a)%2 == 0:
+                        pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
+                    for j in range(i+1, N_qubits):
+                        for b in range(a+1, N_qubits):
+                            if i%2+j%2 == a%2+b%2:
+                                pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
+              
+        elif spin_adapt == True:
+           M = int(N_qubits/2)
+           N = int(N_e/2)
+           for p in range(0, M):
+               pa = 2*p
+               pb = 2*p+1
+
+               for q in range(p, M):
+                    qa = 2*q
+                    qb = 2*q+1
+                    termA =  of.ops.FermionOperator(((pa,1),(qa,0)))
+                    termA += of.ops.FermionOperator(((pb,1),(qb,0)))
+
+                    if of.normal_ordered(termA-of.hermitian_conjugated(termA)).many_body_order() > 0:
+                        pool.append(termA)
+                        v_pool.append(f"{p}->{q}")
+
+           pq = -1
+           for p in range(0,M):
+                pa = 2*p
+                pb = 2*p+1
+    
+                for q in range(p,M):
+                    qa = 2*q
+                    qb = 2*q+1
+    
+                    pq += 1
+    
+                    rs = -1
+                    for r in range(0,M):
+                        ra = 2*r
+                        rb = 2*r+1
+    
+                        for s in range(r,M):
+                            
+                            sa = 2*s
+                            sb = 2*s+1
+                       
+                            rs += 1
+    
+                            if(pq > rs):
+                                continue
+    
+                            termA =  of.ops.FermionOperator(((ra,1),(pa,0),(sa,1),(qa,0)), 2/np.sqrt(12))
+                            termA += of.ops.FermionOperator(((rb,1),(pb,0),(sb,1),(qb,0)), 2/np.sqrt(12))
+                            termA += of.ops.FermionOperator(((ra,1),(pa,0),(sb,1),(qb,0)), 1/np.sqrt(12))
+                            termA += of.ops.FermionOperator(((rb,1),(pb,0),(sa,1),(qa,0)), 1/np.sqrt(12))
+                            termA += of.ops.FermionOperator(((ra,1),(pb,0),(sb,1),(qa,0)), 1/np.sqrt(12))
+                            termA += of.ops.FermionOperator(((rb,1),(pa,0),(sa,1),(qb,0)), 1/np.sqrt(12))
+    
+                            termB =  of.ops.FermionOperator(((ra,1),(pa,0),(sb,1),(qb,0)),  1/2.0)
+                            termB += of.ops.FermionOperator(((rb,1),(pb,0),(sa,1),(qa,0)),  1/2.0)
+                            termB += of.ops.FermionOperator(((ra,1),(pb,0),(sb,1),(qa,0)), -1/2.0)
+                            termB += of.ops.FermionOperator(((rb,1),(pa,0),(sa,1),(qb,0)), -1/2.0)
+
+                            if of.normal_ordered(termA-of.hermitian_conjugated(termA)).many_body_order() > 0:
+                                pool.append(termA)
+                                v_pool.append(f"{p}{q}->{r}{s} (Type 1)")
+    
+                            if of.normal_ordered(termB-of.hermitian_conjugated(termB)).many_body_order() > 0:
+                                pool.append(termB)
+                                v_pool.append(f"{p}{q}->{r}{s} (Type 2)")
+    
+
+        print("UCCGSD Pool:")
+        for v in v_pool: 
+            print(v)
+        #Adding normalization
+        for i in range(0, len(pool)):
+             op = copy.copy(pool[i])
+             op -= of.hermitian_conjugated(op)
+             op = of.normal_ordered(op)
+             try: 
+                 assert(op.many_body_order() > 0)
+             except:
+                 print(f"{v_pool[i]} has order 0.")
+             coeff = 0
+             for t in op.terms:                 
+                 coeff_t = op.terms[t]
+                 coeff += coeff_t * coeff_t
+             op = op/np.sqrt(coeff)
+             pool[i] = copy.copy(op)
+
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+
+
+    def uccgs_pool(self, spin_adapt = True):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+        if spin_adapt == False:
+            for i in range(0, N_qubits):
+                for a in range(i+1, N_qubits):
+                    if (i+a)%2 == 0:
+                        pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
+
+        elif spin_adapt == True:
+           M = int(N_qubits/2)
+           N = int(N_e/2)
+           for p in range(0, M):
+               pa = 2*p
+               pb = 2*p+1
+
+               for q in range(p, M):
+                    qa = 2*q
+                    qb = 2*q+1
+                    termA =  of.ops.FermionOperator(((pa,1),(qa,0)))
+                    termA += of.ops.FermionOperator(((pb,1),(qb,0)))
+
+                    if of.normal_ordered(termA-of.hermitian_conjugated(termA)).many_body_order() > 0:
+                        pool.append(termA)
+                        v_pool.append(f"{p}->{q}")
+
+        print("UCCGS Operators:")
+        for v in v_pool: 
+            print(v)
+        #Adding normalization
+        for i in range(0, len(pool)):
+             op = copy.copy(pool[i])
+             op -= of.hermitian_conjugated(op)
+             op = of.normal_ordered(op)
+             try: 
+                 assert(op.many_body_order() > 0)
+             except:
+                 print(f"{v_pool[i]} has order 0.")
+             coeff = 0
+             for t in op.terms:                 
+                 coeff_t = op.terms[t]
+                 coeff += coeff_t * coeff_t
+             op = op/np.sqrt(coeff)
+             pool[i] = copy.copy(op)
+
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+
+    def uccd_pool(self, spin_adapt = True):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+        if spin_adapt == False:
+            for i in range(0, N_e):
+                for a in range(N_e, N_qubits):
+                    for j in range(i+1, N_e):
+                        for b in range(a+1, N_qubits):
+                            if i%2+j%2 == a%2+b%2:
+                                pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
+              
+        elif spin_adapt == True:
+           M = int(N_qubits/2)
+           N = int(N_e/2)
+           for i in range(0, N):
+               for a in range(N, M):
+                   for j in range(i, N):
+                       for b in range(a, M):
+                           if (i, j) != (a, b):
+                               if i == j and a == b:
+                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
+                                   v_pool.append(f"{i}{j}->{a}{b}")
+                               elif i == j:
+                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
+                                   v_pool.append(f"{i}{j}->{a}{b}")
+                               elif a == b:
+                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
+                                   v_pool.append(f"{i}{j}->{a}{b}")
+                               else:
+                                   pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 2/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 2/np.sqrt(12))+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), -1/np.sqrt(12))+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), -1/np.sqrt(12)) )
+                                   v_pool.append(f"{i}{j}->{a}{b} (Type 1)")
+                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
+                                   v_pool.append(f"{i}{j}->{a}{b} (Type 2)")
+            
+        #Adding normalization
+        for i in range(0, len(pool)):
+             op = copy.copy(pool[i])
+             op -= of.hermitian_conjugated(op)
+             op = of.normal_ordered(op)
+             assert(op.many_body_order() > 0)
+             coeff = 0
+             for t in op.terms:                 
+                 coeff_t = op.terms[t]
+                 coeff += coeff_t * coeff_t
+             op = op/np.sqrt(coeff)
+             pool[i] = copy.copy(op)
+
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        print("UCCD Operators:")
+        for v in v_pool: 
+            print(v)
         return jw_pool, v_pool

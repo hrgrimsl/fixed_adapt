@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 #Globals
 Eh = 627.5094740631
 
-def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False):
+def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False, sample_vqe = False, sample_uccsd = False, oo = False):
     if L is None:
         L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)
@@ -37,18 +37,30 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
     #Fetch pool
     if pool == "4qubit":
         pool = []
+        string_pool = []
         for i in range(1, 5):
-            pool += system.k_qubit_pool(i)
+            ops, strings = system.k_qubit_pool(i)
+            pool += ops
+            string_pool += strings
+
     elif pool == "uccsd":
         pool, string_pool = system.uccsd_pool(spin_adapt = spin_adapt)        
+    elif pool == "uccgsd":
+        pool, string_pool = system.uccgsd_pool(spin_adapt = spin_adapt)        
+    elif pool == "uccd":
+        pool, string_pool = system.uccd_pool(spin_adapt = spin_adapt)
     else:
         print("Pool not recognized.")
         exit()
-
+    if oo == True:
+        singles, v_singles = system.uccgs_pool(spin_adapt = True)
+    else:
+        singles = []
 
     K = [ref]
     ops = [[]]
     params = [[]]
+    uccsd_params = []
     full_ops = [[]]
     full_params = [[]]
     Done = False
@@ -72,6 +84,11 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
     qse_L, E, s2v, szv, nv, v = ct.qse(K, L, H, S2, Sz, Nop)
     #if verbose == True:
         #print('{:<20}|{:<6}|{:<6}|{:<6}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(iters, len(K)-len(ops), len(ops), len(K), factor*E, factor*(E-exact_E), s2v, szv, nv))
+    print(f"Current full energy: {E:20.16f} {units}")
+    print(f"Current error:       {E-exact_E:20.16f} {units}")
+    print(f"Current <S^2>:        {s2v}")
+    print(f"Current <S_z>:        {szv}")
+    print(f"Current <N>:          {nv}")
 
     while Done == False:
         iters += 1
@@ -139,11 +156,21 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         prev_ops = copy.copy(full_ops)
         prev_params = copy.copy(full_params)
         preold_K = copy.copy(K)
-        for i in range(0, len(new_params)):    
-            L_val, new_params[i], gnorm, hcond = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i])
+        for i in range(0, len(new_params)):
+            if sample_vqe == False:    
+                L_val, new_params[i], gnorm, hcond, U = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles)
+            else:
+                L_val, new_params[i], gnorm, hcond, U = ct.sample_vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles)
+            if U is not None:
+                L = U.T@(L)@U
+                H = U.T@(H)@U
+            if sample_uccsd == True:
+                dummy, uccsd_params = ct.sample_uccsd(L, [pool[j] for j in new_ops[i]], system.ref, [0]+uccsd_params, singles = singles)
+
             state = ct.prep_state([pool[j] for j in new_ops[i]], system.ref, new_params[i])
             new_K.append(state) 
             E_val = state.T.dot(H).dot(state).real[0,0]
+            print(f"GNORM from BFGS:  {np.linalg.norm(np.array(gnorm))}")      
 
         preK = copy.copy(new_K)         
         K2 = []
@@ -192,17 +219,21 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
             #print('{:<20}|{:<6}|{:<6}|{:<6}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|{:<20.12}|'.format(iters, len(K)-len(ops), len(ops), len(K), factor*E, factor*(E-exact_E), s2v, szv, nv))
         print(f"Current full energy: {E:20.16f} {units}")
         print(f"Current error:       {E-exact_E:20.16f} {units}")
+        print(f"Current <S^2>:        {s2v}")
+        print(f"Current <S_z>:        {szv}")
+        print(f"Current <N>:          {nv}")
         print("Current ansatz (1st op closest to H):")
-
         for j in range(0, len(full_ops)):
             p = full_params[j]
             o = full_ops[j]
 
             for k in range(0, len(o)):
                 print(f"{k:5d}     {p[k]:20.8f}     {str(string_pool[o[k]]).split('+')[0]}")
-    
 
-def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out', units = 'kcal/mol', verbose = True, eps = 1e-8, guess = 'hf'):    
+
+
+
+def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", spin_adapt = True, in_file = 'out', units = 'kcal/mol', verbose = True, eps = 1e-9, guess = 'hf'):    
     if L == None:
         L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)
@@ -232,6 +263,8 @@ def fixed_adapt(H, ref, N_e, N_qubits, S2, Sz, Nop, L = None, pool = "4qubit", s
             pool += system.k_qubit_pool(i)
     elif pool == "uccsd":
         pool, string_pool = system.uccsd_pool(spin_adapt = spin_adapt)        
+    elif pool == "uccgsd":
+        pool, string_pool = system.uccgsd_pool(spin_adapt = spin_adapt)        
     else:
         print("Pool not recognized.")
         exit()

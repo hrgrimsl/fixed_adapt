@@ -19,7 +19,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     else:
         print('Reference not understood.')
     mf.chkfile = chkfile
-    mf.conv_tol = 1e-12
+    mf.conv_tol_grad = 1e-10
     mf.max_cycle = 10000
     mf.verbose = 4
     mf.conv_check = True
