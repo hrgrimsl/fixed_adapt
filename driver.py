@@ -6,12 +6,15 @@ import copy
 import openfermion as of
 import numpy as np
 import warnings
+import os
 
-warnings.filterwarnings('ignore')
 #Globals
 Eh = 627.5094740631
 
-def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False, sample_vqe = False, sample_uccsd = False, oo = False):
+def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False, sample_vqe = False, seeds = 125, sample_uccsd = False, sample_vccsd = False, oo = False, dump_dir = 'dumpdir', seed_offset = 0, state_analysis = False, load = False, gimbal = False, rscale = 1):
+    if os.path.exists(dump_dir):
+        os.system(f'rm -r {dump_dir}')
+    os.makedirs(dump_dir)
     if L is None:
         L = copy.copy(H)
     system = sm.system_data(H, ref, N_e, N_qubits)
@@ -33,7 +36,9 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
     else:
         print("Units not recognized.")
         exit()
- 
+    
+
+        
     #Fetch pool
     if pool == "4qubit":
         pool = []
@@ -49,23 +54,36 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         pool, string_pool = system.uccgsd_pool(spin_adapt = spin_adapt)        
     elif pool == "uccd":
         pool, string_pool = system.uccd_pool(spin_adapt = spin_adapt)
+    elif pool == "sc_uccsd":
+        pool, string_pool = system.sc_uccsd_pool()
     else:
         print("Pool not recognized.")
         exit()
+    if sample_vccsd == True:
+        vccsd_pool, vcc_string_pool = system.vccsd_pool(spin_adapt = spin_adapt)
     if oo == True:
         singles, v_singles = system.uccgs_pool(spin_adapt = True)
     else:
         singles = []
-
-    K = [ref]
-    ops = [[]]
-    params = [[]]
-    uccsd_params = []
-    full_ops = [[]]
-    full_params = [[]]
-    Done = False
-    iters = 0
-
+    if load == False:
+        K = [ref]
+        ops = [[]]
+        params = [[]]
+        uccsd_params = []
+        vccsd_params = []
+        full_ops = [[]]
+        full_params = [[]]
+        Done = False
+        iters = 0
+    else:
+        params = [list(np.load(f"{load}_params.npy"))]
+        ops = [list(np.load(f"{load}_ops.npy"))]
+        state = ct.prep_state([pool[j] for j in ops[0]], system.ref, params[0])
+        K = [state]
+        Done = False
+        iters = len(ops)
+        full_ops = copy.copy(ops)
+        full_params = copy.copy(params)
     if verbose == True:
          print('-'*170)
          if subspace_algorithm == 'xiphos':
@@ -90,6 +108,7 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
     print(f"Current <S_z>:        {szv}")
     print(f"Current <N>:          {nv}")
 
+    
     while Done == False:
         iters += 1
         new_ops = []
@@ -118,15 +137,16 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
                 print(f"Largest gradient:        {grad[sort[0]]:20.16e}")
                 print(f"Associated operator:     {sort[0]:20d}")
                 print(string_pool[sort[0]])
-
+        print("Saving current ops and params.")
+        pfile = f"{out_file}_params"
+        ofile = f"{out_file}_ops"
+        np.save(pfile, np.array(full_params[0]))
+        np.save(ofile, np.array(full_ops[0]))
         if len(new_ops) == 0 or (depth != None and iters == depth+1) or ((E-exact_E)*Eh < 1 and chem_acc == True):
 
             print(f"Final energy:     {factor*E:20.16f}")
             print(f"Final error:      {factor*(E-exact_E):20.16f}")
-            pfile = f"{out_file}_params"
-            ofile = f"{out_file}_ops"
-            np.save(pfile, np.array(full_params[0]))
-            np.save(ofile, np.array(full_ops[0]))
+
             return factor*E, params[0], factor*(E-exact_E)
 
         #One-param Screening- if one-parameter optimization doesn't give a linearly independent vector, kick it.                 
@@ -158,17 +178,23 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         preold_K = copy.copy(K)
         for i in range(0, len(new_params)):
             if sample_vqe == False:    
-                L_val, new_params[i], gnorm, hcond, U = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles)
+                L_val, new_params[i], gnorm, hcond, U = ct.vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles, dump_dir = dump_dir)
             else:
-                L_val, new_params[i], gnorm, hcond, U = ct.sample_vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles)
-            if U is not None:
+                L_val, new_params[i], gnorm, hcond, U = ct.sample_vqe(L, [pool[j] for j in new_ops[i]], system.ref, new_params[i], singles = singles, dump_dir = dump_dir, seeds = seeds, seed_offset = seed_offset, gimbal = gimbal, rscale = rscale)
+            if isinstance(U, type(3)):
+                pass
+                
+            elif isinstance(U, type(None)) == False:
                 L = U.T@(L)@U
                 H = U.T@(H)@U
+            
             if sample_uccsd == True:
-                dummy, uccsd_params = ct.sample_uccsd(L, [pool[j] for j in new_ops[i]], system.ref, [0]+uccsd_params, singles = singles)
-
+                dummy, uccsd_params = ct.sample_uccsd(L, [pool[j] for j in new_ops[i]], system.ref, [0]+uccsd_params, singles = singles, dump_dir = dump_dir + '_uccsd')
+            if sample_vccsd == True:
+                dummy2, vccsd_params = ct.sample_vccsd(L, [vccsd_pool[j] for j in new_ops[i]], system.ref, [0]+vccsd_params, dump_dir = dump_dir + '_vccsd')
             state = ct.prep_state([pool[j] for j in new_ops[i]], system.ref, new_params[i])
-            new_K.append(state) 
+
+            new_K.append(state.real) 
             E_val = state.T.dot(H).dot(state).real[0,0]
             print(f"GNORM from BFGS:  {np.linalg.norm(np.array(gnorm))}")      
 

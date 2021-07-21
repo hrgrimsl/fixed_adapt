@@ -1,10 +1,10 @@
-
+import system_methods as sm
 from pyscf import fci, gto, scf
 from pyscf.lib import logger
 import numpy as np
 from opt_einsum import contract
 
-def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk'):    
+def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', feed_C = False):    
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge, verbose = True)
     mol.verbose = 4
     mol.symmetry = False
@@ -19,7 +19,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     else:
         print('Reference not understood.')
     mf.chkfile = chkfile
-    mf.conv_tol_grad = 1e-10
+    mf.conv_tol_grad = 1e-14
     mf.max_cycle = 10000
     mf.verbose = 4
     mf.conv_check = True
@@ -72,6 +72,9 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
                 Vb += 1
     
 
+    if feed_C != False:
+        print("Loading C")
+        Ca = Cb = np.load(feed_C)
 
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
@@ -94,7 +97,6 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     Fa = Ha + Ja - Ka
     Fb = Hb + Jb - Kb
     manual_energy = E_nuc + .5*contract('pq,pq', Ha + Fa, Da) + .5*contract('pq,pq', Hb + Fb, Db)
-    assert abs(manual_energy - hf_energy) < 1e-12
 
     A = np.array([[1,0],[0,0]])
     B = np.array([[0,0],[0,1]])
@@ -115,7 +117,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     print(cisolver.kernel(verbose=logger.DEBUG)[0])
     return E_nuc, H_core, g, D, C, hf_energy
 
-def get_F(geometry, basis, reference, charge = 0, spin = 0):
+def get_F(geometry, basis, reference, charge = 0, spin = 0, feed_C = False):
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge)
     mol.symmetry = False
     mol.max_memory = 8e3
@@ -174,7 +176,9 @@ def get_F(geometry, basis, reference, charge = 0, spin = 0):
                 Ob += 1
             else:
                 Vb += 1
-
+    if feed_C != False:
+        print("Loading C")
+        Ca = Cb = np.load(feed_C)
     Da = np.diag(mo_a)
     Db = np.diag(mo_b)
     S = mol.intor('int1e_ovlp_sph')
@@ -196,7 +200,7 @@ def get_F(geometry, basis, reference, charge = 0, spin = 0):
     Fa = Ha + Ja - Ka
     Fb = Hb + Jb - Kb
     manual_energy = E_nuc + .5*contract('pq,pq', Ha + Fa, Da) + .5*contract('pq,pq', Hb + Fb, Db)
-    assert abs(manual_energy - hf_energy) < 1e-12
+
 
     A = np.array([[1,0],[0,0]])
     B = np.array([[0,0],[0,1]])

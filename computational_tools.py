@@ -1,7 +1,9 @@
 import scipy
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
 import numpy as np
 import copy
-
+import math
 import time
 import os
 from opt_einsum import contract
@@ -15,7 +17,7 @@ def oo_vqe(params, H, ansatz, ref, singles, knorm = 1e-8, tnorm = 1e-8):
     print("Orbital-optimized VQE")
     H_eff = copy.copy(H) #H transformed by the orbital optimization
     psi = copy.copy(ref) #|0> transformed by the actual unitary in the VQE
-    Done = False:
+    Done = False
     times = [time.time()]
     E_history = []
     E_history.append(psi.T@(H_eff)@psi.to_dense()[0,0])
@@ -54,10 +56,6 @@ def oo_vqe(params, H, ansatz, ref, singles, knorm = 1e-8, tnorm = 1e-8):
         if np.linalg.norm(k-k_history[-2]) < knorm and np.linalg.norm(t-t_history[-2]) and E_oo - E_history[-2]:
             print("Converged.") 
          
-        
-    
-    
-
 def product_hessian(params, H, ansatz, ref):
     #Can this be made faster by just storing things?
     global vqe_cache
@@ -138,7 +136,54 @@ def ML_M(params, H, ansatz, ref):
             if u != v:
                 M[v,u] += 2*vec[u]*vec[v]
     return M
-    
+
+def Gradient_S(params, H, ansatz, ref):
+    #Does heavy analysis of a state, particularly the dimension spanned by its derivatives.
+    N = len(ansatz)
+    g = copy.copy(ref)
+    for i in reversed(range(0, N)):
+        g = scipy.sparse.hstack([g, ansatz[i]@g[:,0]]).tocsr()
+        g = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i],g)
+    g = g.todense().real
+    E = (g[:,0].T@(H@g[:,0]).real)[0,0]
+    grad = 2*(g[:,0].T@(H@g[:,1:]))
+    S = contract('ki,kj->ij', g[:,1:], g[:,1:])
+    print("Dependency Analysis:")
+    print(f"Solution energy: {E}") 
+    print(f"Solution gradient norm: {np.linalg.norm(grad)}") 
+    if np.linalg.norm(S-np.eye(N)) < 1e-8:
+        print("All derivatives of the wavefunction are orthonormal.")
+    else:
+        print("Derivatives of wavefunction not orthonormal.")
+    w, v = np.linalg.eigh(S)
+    idx = w.argsort()
+    cond = w[idx][-1]/w[idx][0]
+    singular_v = [v[i] for i in range(0, len(w)) if abs(w[i])<1e-8]
+    print(f"Condition number of S_g: {cond}")
+    print(f"Largest singular value: {w[idx[-1]]}")
+    print(f"Smallest singular value: {w[idx[0]]}")
+    print(f"Number of singular values of S_g (Cutoff = 1e-8): {len(singular_v)}")
+    return len(singular_v)
+
+def soln_analysis(params, H, ansatz, ref, label):
+    N = len(ansatz)
+    g = copy.copy(ref)
+    for i in reversed(range(0, N)):
+        g = scipy.sparse.hstack([g, ansatz[i]@g[:,0]]).tocsr()
+        g = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i],g)
+    E = (g[:,0].T@(H@g[:,0]).real)[0,0]
+    J = g[:,1:].todense().real
+    psi = g[:,0]
+    u, s, vt = np.linalg.svd(J)
+    for i in range(0, len(s)):
+        #if abs(s[i]) < 0.1:
+        if 1 == 1:
+            print(f"SVD {label} | 1st op is closest", flush = True)
+            print(f"s {i} ({s.shape}):", flush = True)
+            print(f"s: {s[i]}", flush = True)
+            print(f"v: {vt[i,:]}", flush = True)
+    return np.amin(abs(s)) 
+ 
 def ML_M_dumb(params, H, ansatz, ref):       
     #Can this be made faster by just storing things?
     N = len(ansatz)
@@ -173,7 +218,6 @@ def ML_M_dumb(params, H, ansatz, ref):
 def product_gradient(params, H, ansatz, ref):
     grad = []
     ket = copy.copy(ref)
-
     for i in reversed(range(0, len(ansatz))):
         ket = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], ket)
 
@@ -224,7 +268,7 @@ def simple_energy(params, H, ansatz, ref):
     for i in reversed(range(0, len(ansatz))):
         state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], state)
     E = (state.T@(H)@state).todense()[0,0]
-    return E
+    return np.real(E)
 
 def simple_uccsd_energy(params, H, ansatz, ref):
     gen = params[0]*ansatz[0]
@@ -233,6 +277,14 @@ def simple_uccsd_energy(params, H, ansatz, ref):
     state = scipy.sparse.linalg.expm_multiply(gen, ref)
     E = (state.T@(H)@state).todense()[0,0]
     return E
+
+def simple_vccsd_energy(params, H, ansatz, ref):
+    gen = params[0]*ansatz[0]
+    for i in range(1, len(ansatz)):
+        gen += params[i]*ansatz[i]
+    state = scipy.sparse.linalg.expm_multiply(gen, ref)
+    E = (state.T@(H)@state).todense()[0,0]
+    return E/((state.T@state).todense()[0,0])
 
 def simple_gradient(params, H, ansatz, ref):
     grad = []
@@ -249,7 +301,7 @@ def simple_gradient(params, H, ansatz, ref):
         hbra = res[:,0].T
         ket = res[:,1]
 
-    return np.array(grad)
+    return np.real(np.array(grad))
 
 def sum_energy(params, H, ansatz, ref):
     state = copy.deepcopy(ref)
@@ -333,6 +385,7 @@ def hess(params, H, ansatz, ref):
     hess = []
     h = 1e-4
     for i in range(0, len(params)):
+        print(f"{i+1}/{len(params)} Done.", flush = True)
         forw = copy.copy(params)
         forw[i] += h
         forw2 = copy.copy(params)
@@ -346,6 +399,7 @@ def hess(params, H, ansatz, ref):
         minus = deriv(back, H, ansatz, ref)
         minus2 = deriv(back2, H, ansatz, ref)
         hess.append((-plus2+8*plus-8*minus+minus2)/(12*h))
+  
     return np.array(hess)
 
 def jerk(params, H, ansatz, ref):
@@ -465,31 +519,58 @@ def one_param_grad(param, H, ansatz, ref, param_no, params):
 
 
 
-def best_vqe(results, dump_dir = 'dump'):
+def best_vqe(results, H, ansatz, ref, dump_dir = 'dump', gimbal = False):
     Es = [i[0] for i in results]
     xs = [i[1] for i in results]
     gs = [i[2] for i in results]
     E0s = [i[3] for i in results]
-
-    recycled = f"{len(xs[0])} {Es[0]} {np.linalg.norm(np.array(gs[0]))} {E0s[0]}"       
+    x0s = [i[4] for i in results]
+    singularities = []
+    #for i in range(0, len(xs)):
+        #singularities.append(soln_analysis(xs[i], H, ansatz, ref, i))
+    for i in range(0, len(xs)):
+        if gimbal == True and (i == 0 or Es[i]-Es[0]<-1e-6):
+            print("Before optimization:")
+            soln_analysis(x0s[i], H, ansatz, ref, i)
+            print("After optimization:")
+            singularities.append(soln_analysis(xs[i], H, ansatz, ref, i))
+        else:
+            singularities.append(0)
+        
+    recycled = f"{len(xs[0])} {Es[0]} {np.linalg.norm(np.array(gs[0]))} {E0s[0]}, {singularities[0]}"       
     dump = f"./{dump_dir}/converged_recycled_{len(xs[0])}"
     np.save(dump, np.array(xs[0]))
-    print(f"Random Initializations ({dump_dir}):")   
-    print("Seed | Operators | Energy | Gradient | Initial E | Recycled Data")
-    for e in range(1, len(Es)):
-        print(f"{e-1} {len(xs[0])} {Es[e]} {np.linalg.norm(np.array(gs[e]))} {E0s[e]} {recycled}")
+    print(f"Random Initializations ({dump_dir}) (1st is recycled):")   
+    print("Initialization | Ops | E | gnorm | E0")
+    for e in range(0, len(Es)):
+        print(f"{e} {len(xs[0])} {Es[e]} {np.linalg.norm(np.array(gs[e]))} {E0s[e]}, {singularities[e]}")
         dump = f"./{dump_dir}/converged_seed_{e}_{len(xs[0])}"
         np.save(dump, np.array(xs[e]))
-
     idx = np.argsort(Es)
     print(f"Summary of Multi-initialized VQE with {len(xs[0])} operators:")
     print(f"Recycled parameters give the {num2words(list(idx).index(0)+1, to='ordinal_num')} best energy.")
-    print(f"This energy is worse than the best one by:  {Es[idx[0]]- Es[0]}")
+    print(f"This energy is worse than the best one by:  {Es[idx[0]] - Es[0]}")
+
+    idx2 = np.argsort(np.array(singularities)) 
+
     print(f"Energy min: {Es[idx[0]]}")
     print(f"Energy max: {Es[idx[-1]]}")
     print(f"Energy mean:  {np.mean(np.array(Es))}") 
     print(f"Energy StdDev:  {np.std(np.array(Es))}")     
-    return Es[idx[0]], list(xs[idx[0]]), np.array(gs[idx[0]]), E0s[idx[0]]
+
+    #print(f"E0,x0")
+    #for i in range(0, len(Es)):
+    #    string = f"{E0s[i]},"
+    #    for j in x0s[i]:
+    #        string += f"{j},"
+    #    print(string)
+    #print(f"Final_E,x")
+    #for i in range(0, len(Es)):
+    #    string = f"{Es[i]},"
+    #    for j in xs[i]:
+    #        string += f"{j},"
+    #    print(string)
+    return Es[idx[0]], list(xs[idx[0]]), np.array(gs[idx[0]]), E0s[idx[0]], None
 
 def pre_sample(H, ansatz, ref, params, seeds = 10000, norm = 1):
     Es = []
@@ -498,15 +579,17 @@ def pre_sample(H, ansatz, ref, params, seeds = 10000, norm = 1):
     print("Pre-sampling energies about the given parameters:") 
     for i in range(0, seeds):
 
-        guess_vec = list(params + 20*np.random.random_sample(len(ansatz))-10)
-        new_params.append(guess_vec)
+        rstate = np.random.RandomState(i)
+        guess_vec = list(2*math.pi*rstate.random_sample(size = len(ansatz)) - math.pi)
+        #guess_vec = list(params + 20*np.random.rand(len(ansatz))-10)
+        #new_params.append(guess_vec)
         E = simple_energy(guess_vec, H, ansatz, ref)
         Es.append(E)
         print(f"Seed {i}: {E}")
     idx = np.argsort(np.array(Es))
     return [Es[i] for i in idx][:125], [new_params[i] for i in idx][:125]
 
-def sample_uccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'dump_entangled'):
+def sample_uccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'dump_entangled', singles = False):
     print("UCCSD ansatz sampling")
     print("Recycled parameters:")
     print(params)
@@ -526,8 +609,10 @@ def sample_uccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = '
     #pre_Es, new_params = pre_sample(H, ansatz, ref, hf)
     #param_tuple += new_params
     for i in range(0, 125):
-        np.random.seed(i)
-        guess_vec = list(2*np.random.random_sample(len(ansatz))-1)
+        rstate = np.random.RandomState(seed = i+(seeds*len(ansatz)))
+        guess_vec = list(2*rstate.random_sample(size = len(ansatz)) - 1)
+        #np.random.seed(i)
+        #guess_vec = list(2*math.pi*np.random.rand(len(ansatz))-math.pi)
         param_tuple.append(guess_vec)
         #guess_vec = param_tuple[i+1]
         dump = f"./{dump_dir}/guess_{i}_{len(ansatz)}"
@@ -541,7 +626,9 @@ def sample_uccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = '
     print("Optimized parameters:")
     print(best_params)
     return best[0], best[1]
-def sample_vqe(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'dump_disentangled'):
+
+def sample_vccsd(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = "dump_vcc"):
+    print("VCCSD ansatz sampling")
     if os.path.exists(dump_dir):
         os.system(f'rm -r {dump_dir}')
     os.makedirs(dump_dir)
@@ -558,96 +645,99 @@ def sample_vqe(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'du
     #pre_Es, new_params = pre_sample(H, ansatz, ref, hf)
     #param_tuple += new_params
     for i in range(0, 125):
-        np.random.seed(i)
-        guess_vec = list(2*np.random.random_sample(len(ansatz))-1)
+        rstate = np.random.RandomState(seed = i+(seeds*len(ansatz)))
+        guess_vec = list(2*rstate.random_sample(size = len(ansatz))-1)
         param_tuple.append(guess_vec)
-        #guess_vec = param_tuple[i+1]
         dump = f"./{dump_dir}/guess_{i}_{len(ansatz)}"
         np.save(dump, np.array(guess_vec))
     with Pool(127) as p:
-        L = p.starmap(simple_vqe, iterable = [*zip([H for i in range(0, 126)], [ansatz for i in range(0, 126)], [ref for i in range(0, 126)], param_tuple)])
+        L = p.starmap(simple_vccsd, iterable = [*zip([H for i in range(0, 126)], [ansatz for i in range(0, 126)], [ref for i in range(0, 126)], param_tuple)])
+    assert(len(param_tuple) == len(L))
+    print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
+    best = best_vqe(L, dump_dir = dump_dir)
+    best_params = best[1]
+    print("Optimized parameters:")
+    print(best_params)
+    return best[0], best[1]
+
+
+
+def sample_vqe(H, ansatz, ref, params, gtol = 1e-16, seeds = 125, dump_dir = 'dump_disentangled', singles = None, seed_offset = 0, gimbal = False, rscale = 1):
+    start = time.time()
+    Es = []
+    gnorms = []
+    opt_params = []
+    os.system('export OPENBLAS_NUM_THREADS=1')
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    param_tuple = [list(copy.copy(params))]
+    dump = f"./{dump_dir}/recycled_{len(ansatz)}"
+    np.save(dump, np.array(params))
+    dump = f"./{dump_dir}/ops_{len(ansatz)}"
+    np.save(dump, np.array(ansatz))
+    hf = np.zeros(len(ansatz))
+    #pre_Es, new_params = pre_sample(H, ansatz, ref, hf)
+    #param_tuple += new_params
+    print("ADAPT-style optimization:")
+    tradapt_E, tradapt_x, tradapt_grad, dummy, dummy2 = adapt_vqe(H, ansatz, ref, [0], include = 1, gtol = gtol)
+    param_tuple.append(list(tradapt_x))
+    dump = f"./{dump_dir}/adapt_style_{len(ansatz)}"
+    np.save(dump, np.array(param_tuple[-1]))
+    for i in range(0, seeds):
+        seed = (seed_offset+1)*(i+(seeds*len(ansatz)))
+        rstate = np.random.RandomState(seed = seed)
+        guess_vec = list(2*rscale*rstate.random_sample(size = len(ansatz))-rscale)
+        param_tuple.append(guess_vec)
+        dump = f"./{dump_dir}/guess_{seed}_{len(ansatz)}"
+        np.save(dump, np.array(guess_vec))
+    with Pool(127) as p:
+        L = p.starmap(simple_vqe, iterable = [*zip([H for i in range(0, seeds+2)], [ansatz for i in range(0, seeds+2)], [ref for i in range(0, seeds+2)], param_tuple)])
     assert(len(param_tuple) == len(L))
 
+
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
-    return best_vqe(L, dump_dir = dump_dir)
+    return best_vqe(L, H, ansatz, ref, dump_dir = dump_dir, gimbal = gimbal)
 
-def simple_vqe(H, ansatz, ref, params, gtol = 1e-16):
-    E0 = simple_energy(params, H, ansatz, ref) 
-    res = scipy.optimize.minimize(simple_energy, np.array(params), jac = simple_gradient, method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': gtol})
-    grad = simple_gradient(res.x, H, ansatz, ref)
-    return res.fun, res.x, grad, E0
+def sd_energy(step, grad, H, ansatz, ref, params):
+    E = simple_energy(step*grad + params, H, ansatz, ref)
+    return E
 
-def simple_uccsd(H, ansatz, ref, params, gtol = 1e-16):
-    E0 = simple_energy(params, H, ansatz, ref) 
-    res = scipy.optimize.minimize(simple_uccsd_energy, np.array(params), jac = None, method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': gtol})
+def simple_vqe(H, ansatz, ref, params, gtol = 1e-14, gimbal = False):
+    E0 = simple_energy(params, H, ansatz, ref)
+    x = copy.copy(params)
+    old_E = copy.copy(E0)
+    res = scipy.optimize.minimize(simple_energy, np.array(x), jac = simple_gradient, method = "bfgs", args = (H, ansatz, ref), options = {"gtol": gtol, "disp": False})
+    x = copy.copy(res.x)
+    Done = True 
+    #return res.fun, res.x, res.jac, E0, params
+
+    return res.fun, res.x, res.jac, E0, params
+    
+def adapt_vqe(H, ansatz, ref, params, include = 1, gtol = 1e-14):
+    res = scipy.optimize.minimize(simple_energy, np.array(params), jac = simple_gradient, method = "bfgs", args = (H, ansatz[-include:], ref), options = {"gtol": gtol, "disp": False})
+    print(f"{include}-parameter energy: {res.fun}")
+    if include < len(ansatz):
+        return adapt_vqe(H, ansatz, ref, [0] + list(res.x), include = include + 1, gtol = gtol)
+    else:
+        return res.fun, res.x, res.jac, None, None 
+
+def simple_uccsd(H, ansatz, ref, params, gtol = 1e-15):
+    E0 = simple_uccsd_energy(params, H, ansatz, ref) 
+    print(f"{params[0]} {E0}")
+    res = scipy.optimize.minimize(simple_uccsd_energy, np.array(params), jac = '3-point', method = 'bfgs', args = (H, ansatz, ref), options = {'gtol': gtol})
     grad = res.jac
-    return res.fun, res.x, grad, E0
+    return res.fun, res.x, grad, E0, params
 
-def vqe(H, ansatz, ref, params, gtol = 1e-16):
+def simple_vccsd(H, ansatz, ref, params, gtol = 1e-15):
+    E0 = simple_vccsd_energy(params, H, ansatz, ref)
+    print(f"{params[0]} {E0}")
+    res = scipy.optimize.minimize(simple_vccsd_energy, np.array(params), jac = '3-point', method = "bfgs", args = (H, ansatz, ref), options = {"gtol": gtol})
+    return res.fun, res.x, res.jac, E0, params
+
+def vqe(H, ansatz, ref, params, gtol = 1e-15, singles = None, dump_dir = None):
     with Pool(1) as p:
         L = p.starmap(simple_vqe, iterable = [*zip([H], [ansatz], [ref], list([params]))])
     return best_vqe(L)
-    '''
-    print("Doing VQE...")
-    global iters 
-    iters = 0
-    global xk 
-    xk = copy.copy(params)
-    #Stores data as params: [E, grad, hess]
-    global vqe_cache
-    vqe_cache = {}
-    #vqe_cache['tuple(params)'] = [None, None, None]
 
-    E0 = product_energy(params, H, ansatz, ref) 
-    print(f"Initial E: {E0}")
-
-    converged = False
-    while converged == False:
-        res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4 })
-
-        y = res.fun
-        x = res.x
-        #y, x = VQITE(H, ansatz, ref, xk, dt = .05, tol = gtol)
-        if vqe_cache[tuple(x)][1] is None:
-            vqe_cache[tuple(x)][1] = product_gradient(x, H, ansatz, ref)
-        print(f"Grad norm: {np.linalg.norm(vqe_cache[tuple(x)][1])}")
-
-
-        if np.linalg.norm(vqe_cache[tuple(x)][1]) < gtol:
-            converged = True 
-        else:
-            print("Optimizing single largest parameter individually.")
-            params = copy.copy(x)
-            idx = np.argsort(abs(vqe_cache[tuple(x)][1]))
-            res = scipy.optimize.minimize(one_param_energy, np.array(params[idx[-1]]), jac = one_param_grad, method = 'bfgs', args = (H, ansatz, ref, idx[-1], params), options = {'gtol':1e-16, 'disp': True, 'verbose': 4})
-            if abs(res.fun - y) < 1e-16:
-                converged = True
-            print(f"Single parameter improved energy by {res.fun - y}")
-            y = res.fun
-            x[idx[-1]] = res.x[0]
-            params[idx[-1]] = res.x[0]
-
-        #else:
-        #    y = res.fun
-        #    x = res.x
-        #    converged = True
-
-        converged = True
-    #res = scipy.optimize.minimize(product_energy, np.array(params), jac = product_gradient, method = 'bfgs', callback = prod_cb, args = (H, ansatz, ref), options = {'gtol': gtol, 'disp': True, 'verbose': 4 })
-
-        
-    #x = res.x
-    #y = res.fun
-    #y, x = VQITE(H, ansatz, ref, x, dt = .001, tol = gtol)
-    try:  
-        grad = vqe_cache[tuple(x)][1]
-        hess = vqe_cache[tuple(x)][2]
-    except:
-        grad = product_gradient(x, H, ansatz, ref)
-        hess = None
-
-    return y, list(x), np.linalg.norm(grad), 0
-    '''
 def resid(x, H, ansatz, ref):
     grad = product_gradient(x, H, ansatz, ref)
     return grad
