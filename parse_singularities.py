@@ -10,10 +10,11 @@ import os
 script, fname = argv
 
 chem = 1/627.5094740631
-
+scf = -1.97060224603216
+ci = -2.8009588996544403
 
 hessians = []
-os.system(f"grep -A1 \"Hessian spectrum\" {fname} > temp.dat")
+os.system(f"grep -A1 \"Hessian \" {fname} > temp.dat")
 
 f = open("temp.dat", "r")
 for line in f.readlines():
@@ -23,7 +24,7 @@ for line in f.readlines():
 
 max_length = len(hessians[-1])
 sorted_hessians = []
-for i in range(1, max_length):
+for i in range(1, max_length+1):
     sorted_hessians.append([])
     for j in hessians:
         if len(j) == i:
@@ -32,7 +33,7 @@ for i in range(1, max_length):
 
 print("Ops,VQE Steps")
 for i in range(0, len(sorted_hessians)):
-    print(f"{i+1},{len(sorted_hessians[i])},{abs(sorted_hessians[i][0][-1]/sorted_hessians[i][0][0])}")
+    print(f"{i},{len(sorted_hessians[i])},{abs(sorted_hessians[i][0][-1]/sorted_hessians[i][0][0])}")
     for j in range(0, len(sorted_hessians[i])):
         idx = np.argsort(sorted_hessians[i][j])
         idx = np.argsort(idx)  
@@ -64,7 +65,7 @@ plt.show()
 
 
 hessians = []
-os.system(f"grep -A1 \"Jacobian spectrum\" {fname} > temp.dat")
+os.system(f"grep -A1 \"Jacobian \" {fname} > temp.dat")
 
 f = open("temp.dat", "r")
 for line in f.readlines():
@@ -83,7 +84,6 @@ for i in range(1, max_length):
 
 print('----')
 for i in range(0, len(sorted_hessians)):
-    print(f"{i+1},{len(sorted_hessians[i])},{sorted_hessians[i][0][0]/sorted_hessians[i][0][-1]}")
 
 
     for j in range(0, len(sorted_hessians[i])):
@@ -121,10 +121,12 @@ os.system(f"grep -A1 \"VQE Iter.\" {fname} > temp.dat")
 f = open("temp.dat", "r")
 Es = []
 for line in f.readlines():
-    if "VQE" in line and line.split()[-1] == "1":
+    if "VQE Iter." in line and line.split()[-1] == "0":
         Es.append([])
-    if "VQE" not in line and "--" not in line:
+    if "VQE Iter." not in line and "--" not in line:
         Es[-1].append(float(line.split()[-1]))
+
+
 
 for i in range(0, len(Es)):
     plt.axvline(x = i+.5, linewidth = .25, color = "black")
@@ -133,7 +135,7 @@ for i in range(0, len(Es)):
         E = [E[-1]]
     else:
         x = [.6]
-        E = [-1.97060224603216]
+        E = [scf]
     for j in range(0, len(Es[i])):
         x.append(i+.6 + .8*(j+1)/(len(Es[i])))
         E.append(Es[i][j])
@@ -149,10 +151,10 @@ plt.show()
 os.system(f"grep -A1 \"VQE Iter.\" {fname} > temp.dat")
 
 f = open("temp.dat", "r")
-ci = -2.8009588996544403
+
 Es = []
 for line in f.readlines():
-    if "VQE" in line and line.split()[-1] == "1":
+    if "VQE" in line and line.split()[-1] == "0":
         Es.append([])
     if "VQE" not in line and "--" not in line:
         Es[-1].append(float(line.split()[-1])-ci)
@@ -164,7 +166,7 @@ for i in range(0, len(Es)):
         E = [E[-1]]
     else:
         x = [.6]
-        E = [-1.97060224603216-ci]
+        E = [scf-ci]
     for j in range(0, len(Es[i])):
         x.append(i+.6 + .8*(j+1)/(len(Es[i])))
         E.append(Es[i][j])
