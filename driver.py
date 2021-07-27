@@ -1,15 +1,261 @@
-#Driver for new ADAPT project with Bryan
 import system_methods as sm
 import computational_tools as ct
-import scipy
-import copy
 import openfermion as of
 import numpy as np
-import warnings
+import scipy
+import copy
 import os
+import logging
+import time
 
 #Globals
 Eh = 627.5094740631
+
+class Xiphos:
+    """Class representing an individual XIPHOS calculation"""
+    def __init__(self, H, ref, system, pool, v_pool, H_adapt = None, H_vqe = None, verbose = "INFO", sym_ops = None, sym_break = None):
+
+        """Initialize a XIPHOS Solver Object.
+
+        :param H: Molecular Hamiltonian.
+        :type H: (2^N,2^N) array-like object
+        :param ref: Reference wavefunction.
+        :type ref: (2^N,1) array-like object
+        :param system: Prescribes a working directory name to dump stuff like .npy files in.
+        :type system: str        
+        :param pool: Pool of operators.
+        :type: list
+        :param v_pool: List of strings associated with operator pool.
+        :type: list
+
+        :param H_adapt: Separate Hamiltonian to use during operator additions.  Defaults to H.
+        :type H_adapt: (2^N,2^N) array-like object, optional
+        :param H_vqe: Separate Hamiltonian to use during parameter minimization.  Defaults to H.
+        :type H_vqe: (2^N,2^N) array-like object, optional
+        :param verbose: Sets the logger level.  Defaults to "INFO". 
+        :type verbose: str, optional
+        :param sym_ops: Dictionary of operators of interest to track. (H, S_z, S^2, N, etc.).  Defaults to {'H': H}. 
+        :type verbose: list, optional
+        :param sym_break: Dictionary of perturbations to use to break symmetry in the CI wavefunction.  Defaults to None.
+        :type sym_break: Array-like, optional
+       
+        :return: None
+        :rtype: NoneType    
+        """
+          
+        self.H = H
+        self.ref = ref
+        self.system = system
+        self.pool = pool
+        self.v_pool = v_pool
+ 
+        if H_adapt is None:
+            self.H_adapt = self.H
+        else:
+            self.H_adapt = H_adapt
+
+        if H_vqe is None:
+            self.H_vqe = self.H
+        else:
+            self.H_vqe = H_vqe
+
+      
+        if sym_ops is None:
+            self.sym_ops = {'H': H}
+        else:
+            self.sym_ops = sym_ops
+
+
+
+        if os.path.isdir(system):
+            print("No loading implemented yet.")
+            exit()
+            self.restart = True
+        else:
+            os.mkdir(system)
+            self.restart = False
+
+
+        logging.basicConfig(filename = f"{system}/log.dat", level = verbose, format = "") 
+        logging.info("---------------------------\n")
+        if self.restart == False:
+            logging.info("Starting a new calculation.\n")
+        else:  
+            logging.info("Restarting the calculation.\n")
+        logging.info("---------------------------")
+        
+        if self.restart == False:
+            #We do an exact diagonalization to check for degeneracies/symmetry issues
+            logging.info("\nReference information:")
+            self.ref_syms = {}
+            for key in self.sym_ops.keys():
+                val = (ref.T@(self.sym_ops[key]@ref))[0,0]
+                logging.info(f"{key: >6}: {val:20.16f}")
+                self.ref_syms[key] = val
+            logging.info("\nED information:") 
+            w, v = scipy.sparse.linalg.eigsh(H, k = min(H.shape[0]-1,10), which = "SA")
+            self.ed_energies = w
+            self.ed_wfns = v
+            self.ed_syms = []
+            for i in range(0, len(w)):
+                logging.info(f"ED Solution {i+1}:")
+                ed_dict = {}
+                for key in self.sym_ops.keys():
+                    val = (v[:,i].T@(self.sym_ops[key]@v[:,i]))
+                    logging.info(f"{key: >6}: {val:20.16f}")
+                    ed_dict[key] = copy.copy(val)
+                self.ed_syms.append(copy.copy(ed_dict))
+
+            for key in self.sym_ops.keys():
+                if key != "H" and abs(self.ed_syms[0][key] - self.ref_syms[key]) > 1e-8:
+                    logging.info(f"\nWARNING: <{key}> symmetry of reference inconsistent with ED solution.")
+            if abs(self.ed_syms[0]["H"] - self.ed_syms[1]["H"]) < (1/Eh):
+                logging.info(f"\nWARNING:  Lowest two ED solutions may be quasi-degenerate.")
+
+
+            if sym_break is None: 
+                logging.info("\nNo symmetries provided to break.")
+            else:
+                #Add a symmetry breaking piece to H to break degenerate states.
+                logging.info("\nBroken Symmetry ED information:")
+                H_eff = copy.copy(H)
+                for key in sym_break.keys():
+                    H_eff += sym_break[key]
+                w2, v2 = scipy.sparse.linalg.eigsh(H_eff, k = min(H.shape[0]-1,10), which = "SA")
+                self.ed_syms = []
+                kill = False
+                for i in range(0, len(w)):
+                    logging.info(f"BS-ED Solution {i+1}:")
+                    ed_dict = {}
+                    for key in self.sym_ops.keys():
+                        val = (v2[:,i].T@(self.sym_ops[key]@v2[:,i]))
+                        logging.info(f"{key: >6}: {val:20.16f}")
+                        if key == "H" and abs(val - self.ed_energies[i]) > 1e-6:
+                            kill = True
+                        ed_dict[key] = copy.copy(val)
+                if kill == True:
+                    logging.critical(f"Perturbation is too strong to be safe.")
+                    logging.critical(f"Please weaken or disable \"sym_break\" and try again.")
+                    exit()
+                    self.ed_syms.append(copy.copy(ed_dict))
+                self.ed_wfns = v2
+                self.ed_energies = w2
+    
+    def t_ucc_E(self, params, ansatz, ref):
+        """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
+        :param params: Parameters associated with ansatz.
+        :type params: list 
+        :param ansatz: List of operator indices, applied to reference in reversed order.
+        :type ansatz: list
+        :param ref: Reference state.
+        :type ref: (2^N,1) array-like
+        :return: energy, associated state 
+        :rtype: list
+        """
+        state = ref
+        for i in reversed(range(0, len(ansatz))):
+            state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], state)
+        E = (state.T@(self.H_vqe)@state).todense()[0,0]
+        return E, state        
+
+
+    def vqe(self, params, ansatz, ref, strategy = "bfgs", energy = None, jac = None):
+        """Variational quantum eigensolver for one ansatz 
+        :param params: Parameters associated with ansatz.
+        :type params: list 
+        :param ansatz: List of operator indices, applied to reference in reversed order.
+        :type ansatz: list
+        :param ref: Reference state.
+        :type ref: (2^N,1) array-like
+        :param strategy: What minimization approach to use.  Defaults to BFGS.
+        :type strategy: string, optional
+        :param energy: Energy function to minimize- Defaults to Trotter UCC.
+        :type energy: function, optional
+        :param jac: Gradient function. Defaults to None.
+        :type jac: function, optional
+       
+        :rtype: energy, gnorm, 
+        """
+        if energy is None:
+            energy = self.t_ucc_energy
+        
+        log.debug("Performing VQE:")
+       
+        
+    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None):
+        """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
+        :param params: Parameters associated with ansatz.
+        :type params: list 
+        :param ansatz: List of operator indices, applied to reference in reversed order.
+        :type ansatz: list
+        :param ref: Reference state.
+        :type ref: (2^N,1) array-like
+        :param gtol: Stopping condition on gradient norm of all ops to add
+        :type gtol: float
+        :param Etol: Stopping condition on error from ED of all ops
+        :type Etol: float
+        :param max_depth: Stopping condition on operators
+        :type max_depth: int
+        """
+
+        state = copy.copy(ref)
+        Done = False
+        iteration = len(ansatz)
+        logging.info("Performing ADAPT:")
+        logging.info(f"\nADAPT Iteration 0")
+        E = (state.T@(self.H@state))[0,0] 
+        while Done == False:           
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool])
+            gnorm = np.linalg.norm(gradient)
+            idx = np.argsort(abs(gradient)) 
+            E = (state.T@(self.H@state))[0,0] 
+            error = E - self.ed_energies[0]
+            fid = ((self.ed_wfns[:,0].T)@state)[0]**2
+
+            logging.info(f":Operator/ Expectation Value/ Error")
+            for key in self.sym_ops.keys():
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0]
+                err = val - self.ed_syms[key]
+                logging.info(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
+                
+            logging.info(f"Next operator to be added: {self.v_pool[idx[-1]]}")
+            logging.info(f"Associated gradient:       {gradient[idx[-1]]:20.16f}")
+            logging.info(f"Gradient norm:             {gnorm:20.16f}")
+            logging.info(f"Fidelity to ED:            {fid:20.16f}")
+            
+            if gtol is not None and gnorm < gtol:
+                Done = True
+                logging.info(f"\nADAPT finished.  (Gradient norm acceptable.)")
+                continue
+            if max_depth is not None and iteration+1 > max_depth:
+                Done = True
+                logging.info(f"\nADAPT finished.  (Max depth reached.)")
+                continue
+            if Etol is not None and error < Etol:
+                Done = True
+                logging.info(f"\nADAPT finished.  (Error acceptable.)")
+                continue
+            iteration += 1
+            logging.info(f"\nADAPT Iteration {iteration}")
+            params = [0] + list(params)
+            ansatz = [self.pool[idx[-1]]] + ansatz
+            E, params, state = self.t_ucc_E(params, ansatz, ref)
+
+
+        logging.info(f"\nConverged ADAPT energy:    {E:20.16f}")            
+        logging.info(f"\nConverged ADAPT error:     {error:20.16f}")            
+        logging.info(f"\nConverged ADAPT gnorm:     {gnorm:20.16f}")            
+        logging.info(f"\nConverged ADAPT fidelity:  {fid:20.16f}")            
+        logging.info("\n---------------------------\n")
+        logging.info("\"Adapt.\" - Bear Grylls\n")
+        logging.info("\"ADAPT.\" - Harper \"Grimsley Bear\" Grimsley\n")
+
+
+
+        
+
+
+         
 
 def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = None, pool = "4qubit", spin_adapt = True, out_file = 'out', units = 'kcal/mol', verbose = True, subspace_algorithm = 'xiphos', screen = False, xiphos_no = 1, persist = False, qse_cull = False, eps = 1e-8, chem_acc = False, sample_vqe = False, seeds = 125, sample_uccsd = False, sample_vccsd = False, oo = False, dump_dir = 'dumpdir', seed_offset = 0, state_analysis = False, load = False, gimbal = False, rscale = 1):
     if os.path.exists(dump_dir):
@@ -252,7 +498,6 @@ def xiphos(H, ref, N_e, N_qubits, S2, Sz, Nop, thresh = 1e-3, depth = None, L = 
         for j in range(0, len(full_ops)):
             p = full_params[j]
             o = full_ops[j]
-
             for k in range(0, len(o)):
                 print(f"{k:5d}     {p[k]:20.8f}     {str(string_pool[o[k]]).split('+')[0]}")
 

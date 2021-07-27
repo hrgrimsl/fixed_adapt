@@ -1,6 +1,5 @@
 #Gives molecule class w/ methods for deriving pools, etc.
 import openfermion as of
-import openfermionpsi4 as ofp
 import scipy
 import re
 #import psi4
@@ -68,50 +67,36 @@ class system_data:
                 pool.append(string)
         pool = [i for i in pool if len(re.findall("Y", i))%2 == 1]
         self.pool += pool 
-        return [of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits) for i in pool], pool
+        return [(of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits)).real for i in pool], pool
 
-    def uccsd_pool(self, spin_adapt = False):
+    def grimsley_pool(self):
         N_qubits = self.N_qubits
         N_e = self.N_e
         pool = []
         v_pool = []
-        if spin_adapt == False:
-            for i in range(0, N_e):
-                for a in range(N_e, N_qubits):
-                    if (i+a)%2 == 0:
-                        pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
-                        v_pool.append(f"{i}->{a}")
-                    for j in range(i+1, N_e):
-                        for b in range(a+1, N_qubits):
-                            if i%2+j%2 == a%2+b%2:
-                                pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
-                                v_pool.append(f"{i},{j}->{a},{b}")
-        elif spin_adapt == True:
-           M = int(N_qubits/2)
-           N = int(N_e/2)
-           for i in range(0, N):
-               for a in range(N, M):
-                   pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
-                   v_pool.append(f"{i}->{a}")
-                   for j in range(i, N):
-                       for b in range(a, M):
-                           if (i, j) != (a, b):
 
-                               if i == j and a == b:
-                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
-
-                                   v_pool.append(f"{i}{j}->{a}{b}")
-                               elif i == j:
-                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
-                                   v_pool.append(f"{i}{j}->{a}{b}")
-                               elif a == b:
-                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
-                                   v_pool.append(f"{i}{j}->{a}{b}")
-                               else:
-                                   pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 2/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 2/np.sqrt(12))+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), -1/np.sqrt(12))+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), -1/np.sqrt(12)) )
-                                   v_pool.append(f"{i}{j}->{a}{b} (Type 1)")
-                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
-                                   v_pool.append(f"{i}{j}->{a}{b} (Type 2)")
+        M = int(N_qubits/2)
+        N = int(N_e/2)
+        for i in range(0, N):
+            for a in range(N, M):
+                pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
+                v_pool.append(f"{i}->{a}")
+                for j in range(i, N):
+                    for b in range(a, M):
+                        if i == j and a == b:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        elif i == j:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        elif a == b:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        else:
+                            pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 2/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 2/np.sqrt(12))+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(12)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), -1/np.sqrt(12))+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), -1/np.sqrt(12)) )
+                            v_pool.append(f"{i}{j}->{a}{b} (Type 1)")
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
+                            v_pool.append(f"{i}{j}->{a}{b} (Type 2)")
             
         #Adding normalization
         for i in range(0, len(pool)):
@@ -119,19 +104,13 @@ class system_data:
              op -= of.hermitian_conjugated(op)
              op = of.normal_ordered(op)
              assert(op.many_body_order() > 0)
-             coeff = 0
-             for t in op.terms:                 
-                 coeff_t = op.terms[t]
-                 coeff += coeff_t * coeff_t
-             op = op/np.sqrt(coeff)
-             pool[i] = copy.copy(op)
 
         jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
-
         self.pool = pool
         print("Operators in pool:")
         print(len(pool)) 
         return jw_pool, v_pool
+
     def uccsd_pool(self, spin_adapt = False):
         N_qubits = self.N_qubits
         N_e = self.N_e
