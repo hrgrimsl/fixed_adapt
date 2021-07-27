@@ -141,7 +141,7 @@ class Xiphos:
                 self.ed_wfns = v2
                 self.ed_energies = w2
     
-    def t_ucc_E(self, params, ansatz, ref):
+    def t_ucc_E(self, params, ansatz):
         """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
         :param params: Parameters associated with ansatz.
         :type params: list 
@@ -152,14 +152,94 @@ class Xiphos:
         :return: energy, associated state 
         :rtype: list
         """
-        state = ref
-        for i in reversed(range(0, len(ansatz))):
-            state = scipy.sparse.linalg.expm_multiply(params[i]*ansatz[i], state)
-        E = (state.T@(self.H_vqe)@state).todense()[0,0]
-        return E, state        
+        try:
+            E = self.e_dict(str(params))
+            self.e_saving += 1
+        except:
+            state = self.t_ucc_state(params, ansatz)
+            E = (state.T@(self.H_vqe)@state).todense()[0,0]
+        return E       
+
+    def t_ucc_state(self, params, ansatz):
+        try:
+            state = self.state_dict(str(params))
+            self.state_saving += 1
+        except:
+            state = copy.copy(self.ref)
+            for i in reversed(range(0, len(ansatz))):
+                state = scipy.sparse.linalg.expm_multiply(params[i]*self.pool[ansatz[i]], state)
+        return state
+
+    def t_ucc_grad(self, params, ansatz):
+        try:
+            grad = self.grad_dict[str(params)]
+            self.grad_saving += 1
+        except:
+            state = self.t_ucc_state(params, ansatz)
+            hstate = self.H_vqe@state
+            grad = [2*((hstate.T)@self.pool[ansatz[0]]@state).todense()[0,0]]
+            hstack = scipy.sparse.hstack([hstate,state]) 
+            for i in range(0, len(params)-1):
+                hstack = scipy.sparse.linalg.expm_multiply(-params[i]*self.pool[ansatz[i]], hstack).tocsr()
+                grad.append(2*((hstack[:,0].T)@self.pool[ansatz[i+1]]@hstack[:,1]).todense()[0,0])
+            grad = np.array(grad)
+            self.grad_dict[str(params)] = grad
+        return grad
+                
+    def t_ucc_hess(self, params, ansatz):
+        logging.info(f"\nVQE Iter. {self.vqe_iteration}")
+        self.vqe_iteration += 1
+        J = copy.copy(self.ref)
+        for i in reversed(range(0, len(params))):
+            J = scipy.sparse.hstack([self.pool[ansatz[i]]@J[:,-1], J])
+            J = scipy.sparse.linalg.expm_multiply(self.pool[ansatz[i]]*params[i], J)
+
+        J = J.tocsr()[:,:-1]
+        u, s, vh = np.linalg.svd(J.todense())       
+        hess = 2*J.T@(self.H_vqe@J).todense()       
+        state = self.t_ucc_state(params, ansatz)
+        hstate = self.H_vqe@state
+        for i in range(0, len(params)):            
+            hstack = scipy.sparse.hstack([copy.copy(hstate), copy.copy(J[:,i])]).tocsc() 
+            for j in range(0, i+1):
+                hstack = scipy.sparse.linalg.expm_multiply(-params[j]*self.pool[ansatz[j]], hstack)
+                ij = 2*((hstack[:,0].T)@self.pool[ansatz[j]]@hstack[:,1]).todense()[0,0]
+                if i == j:
+                    hess[i,i] += ij
+                else:
+                    hess[i,j] += ij
+                    hess[j,i] += ij
+        w, v = np.linalg.eigh(hess)
+        try:
+            energy = self.e_dict[str(params)]
+            self.e_saving += 1
+        except: 
+            energy = ((hstate.T)@state).todense()[0,0]
+            self.e_dict[str(params)] = energy 
+        try:
+           grad = self.grad_dict[str(params)]
+           self.grad_saving += 1
+        except:
+           grad = ((J.T)@hstate).todense()
+           self.grad_dict[str(params)] = grad
+
+        logging.info(f"Energy: {energy:20.16f}")
+        logging.info(f"GNorm:  {np.linalg.norm(grad):20.16f}")
+        logging.info(f"Jacobian Singular Values:")
+        spec_string = ""
+        for sv in s:
+            spec_string += f"{sv},"
+        logging.info(spec_string)
+        logging.info(f"Hessian Eigenvalues:")
+        spec_string = ""
+        for sv in w:
+            spec_string += f"{sv},"
+        logging.info(spec_string)
+        return hess
+    
 
 
-    def vqe(self, params, ansatz, ref, strategy = "bfgs", energy = None, jac = None):
+    def vqe(self, params, ansatz, strategy = "newton-cg", energy = None):
         """Variational quantum eigensolver for one ansatz 
         :param params: Parameters associated with ansatz.
         :type params: list 
@@ -170,17 +250,19 @@ class Xiphos:
         :param strategy: What minimization approach to use.  Defaults to BFGS.
         :type strategy: string, optional
         :param energy: Energy function to minimize- Defaults to Trotter UCC.
-        :type energy: function, optional
-        :param jac: Gradient function. Defaults to None.
-        :type jac: function, optional
-       
+        :type energy: function, optional       
         :rtype: energy, gnorm, 
         """
-        if energy is None:
-            energy = self.t_ucc_energy
-        
-        log.debug("Performing VQE:")
-       
+        self.vqe_iteration = 0
+        if energy is None or energy == self.t_ucc_E:
+            energy = self.t_ucc_E
+            jac = self.t_ucc_grad
+            hess = self.t_ucc_hess
+
+        if strategy == "newton-cg":
+            res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz), options = {'xtol': 1e-16})
+
+        return res
         
     def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
@@ -197,7 +279,13 @@ class Xiphos:
         :param max_depth: Stopping condition on operators
         :type max_depth: int
         """
-
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
+        self.e_savings = 0
+        self.grad_savings = 0
+        self.state_savings = 0
+        
         state = copy.copy(ref)
         Done = False
         iteration = len(ansatz)
@@ -212,17 +300,21 @@ class Xiphos:
             error = E - self.ed_energies[0]
             fid = ((self.ed_wfns[:,0].T)@state)[0]**2
 
-            logging.info(f":Operator/ Expectation Value/ Error")
+            logging.info(f"Operator/ Expectation Value/ Error")
             for key in self.sym_ops.keys():
                 val = ((state.T)@(self.sym_ops[key]@state))[0,0]
-                err = val - self.ed_syms[key]
+                err = val - self.ed_syms[0][key]
                 logging.info(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
                 
             logging.info(f"Next operator to be added: {self.v_pool[idx[-1]]}")
+            logging.info(f"Operator multiplicity {1+ansatz.count(idx[-1])}.")                
             logging.info(f"Associated gradient:       {gradient[idx[-1]]:20.16f}")
             logging.info(f"Gradient norm:             {gnorm:20.16f}")
             logging.info(f"Fidelity to ED:            {fid:20.16f}")
-            
+            logging.info(f"Current ansatz:")
+            for i in reversed(range(0, len(ansatz))):
+                logging.info(f"{i} {params[i]} {self.v_pool[ansatz[i]}") 
+            logging.info("|0>")  
             if gtol is not None and gnorm < gtol:
                 Done = True
                 logging.info(f"\nADAPT finished.  (Gradient norm acceptable.)")
@@ -237,11 +329,14 @@ class Xiphos:
                 continue
             iteration += 1
             logging.info(f"\nADAPT Iteration {iteration}")
-            params = [0] + list(params)
-            ansatz = [self.pool[idx[-1]]] + ansatz
-            E, params, state = self.t_ucc_E(params, ansatz, ref)
 
-
+            params = np.array([0] + list(params))
+            ansatz = [idx[-1]] + ansatz
+            res = self.vqe(params, ansatz)
+            params = copy.copy(res.x)
+            state = self.t_ucc_state(params, ansatz)
+            
+            
         logging.info(f"\nConverged ADAPT energy:    {E:20.16f}")            
         logging.info(f"\nConverged ADAPT error:     {error:20.16f}")            
         logging.info(f"\nConverged ADAPT gnorm:     {gnorm:20.16f}")            
@@ -252,8 +347,7 @@ class Xiphos:
 
 
 
-        
-
+       
 
          
 

@@ -35,7 +35,7 @@ proj = proj
 pool, v_pool = s.grimsley_pool()
 '''
 pool, v_pool = s.grimsley_pool()
-xiphos = Xiphos(H, ref, "h6", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
+xiphos = Xiphos(H, ref, "h6_2", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
 
 xiphos.adapt([], [], ref, max_depth = 100)
 
