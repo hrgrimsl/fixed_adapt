@@ -6,16 +6,9 @@ from sys import argv
 from pyscf import gto, scf
 import system_methods as sm
 import computational_tools as ct
-'''
-geom = "H 0 0 0; H 0 0 1; H 0 1 1; H 1 -1 -1; H 1, -1, -2; H 1, -1, -3"
-E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = 'h6_chk', read = False, feed_C = "B3LYP_C.npy")
-N_e = int(np.trace(D))
-H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
-system = sm.system_data(H, ref, N_e, N_qubits)
-ops, v_pool = system.raw_uccsd_pool()
-zero_params = [0 for i in ops]
-N = len(ops)
-'''
+from driver import *
+
+
 def num_grad(fun, x, h):
     deriv = []
     for i in range(0, len(x)):
@@ -53,7 +46,35 @@ def shucc_grad(x, E0, g, hessian):
     return g + hessian@x
 
 
-#E0 = (ref.T@(H@ref))[0,0]
+geom = "H 0 0 0; H 0 0 1; H 0 1 1; H 1 -1 -1; H 1, -1, -2; H 1, -1, -3"
+E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = 'h6_chk', read = False, feed_C = "B3LYP_C.npy")
+N_e = int(np.trace(D))
+H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
+s = sm.system_data(H, ref, N_e, N_qubits)
+pool, v_pool = s.grimsley_pool()
+N = len(pool)
+
+E0 = (ref.T@(H@ref))[0,0]
+xiphos = Xiphos(H, ref, "h6_shucc", pool, v_pool, verbose = "DEBUG")
+ansatz = [i for i in range(0, len(pool))]
+grad = xiphos.ucc_grad_zero(ansatz)
+hess = xiphos.ucc_hess_zero(ansatz)
+
+res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool),1)), jac = shucc_grad, method = "cg", args = (E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+print("bfgs solution")
+print(res.fun)
+print(res.success)
+print("analytic solution")
+print(E0 - .5*grad.T@np.linalg.inv(hess)@grad)
+print("cg solution (recycled)")
+x = -np.linalg.inv(hess)@grad
+res = scipy.optimize.minimize(shucc_E, x, jac = shucc_grad, method = "bfgs", args = (E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+print(res.fun)
+print(res.success)
+
+#res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool),1)), jac = shucc_grad, method = "bfgs", args = (E0, np.load("B3LYP_UCCSD_grad.npy"), np.load("B3LYP_UCCSD_hess.npy")), options = {"gtol": 1e-12, "disp": True})
+
+#print(res.fun)
 
 #Untrotterized energy
 #grad = num_grad(ct.simple_uccsd_energy, zero_params, 1e-6)
@@ -63,8 +84,8 @@ def shucc_grad(x, E0, g, hessian):
 #jerk = num_jerk(ct.simple_uccsd_energy, zero_params, 1e-2)
 #np.save("B3LYP_UCCSD_jerk", jerk)
 
-#res = scipy.optimize.minimize(shucc_E, np.zeros((len(ops),1)), jac = shucc_grad, method = "bfgs", args = (E0, np.load("B3LYP_UCCSD_grad.npy"), np.load("B3LYP_UCCSD_hess.npy")), options = {"gtol": 1e-12, "disp": True})
-#print(res.fun)
+
+
 
 #grad = num_grad(ct.simple_energy, zero_params, 1e-6)
 #np.save("B3LYP_tUCCSD_grad", grad)

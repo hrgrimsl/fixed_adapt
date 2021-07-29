@@ -80,8 +80,8 @@ class Xiphos:
         else:  
             logging.info("Restarting the calculation.\n")
         logging.info("---------------------------")
-        
 
+         
         #We do an exact diagonalization to check for degeneracies/symmetry issues
         logging.info("\nReference information:")
         self.ref_syms = {}
@@ -89,6 +89,7 @@ class Xiphos:
             val = (ref.T@(self.sym_ops[key]@ref))[0,0]
             logging.info(f"{key: >6}: {val:20.16f}")
             self.ref_syms[key] = val
+        self.hf = self.ref_syms['H']        
         logging.info("\nED information:") 
         w, v = scipy.sparse.linalg.eigsh(H, k = min(H.shape[0]-1,10), which = "SA")
         self.ed_energies = w
@@ -109,7 +110,42 @@ class Xiphos:
         if abs(self.ed_syms[0]["H"] - self.ed_syms[1]["H"]) < (1/Eh):
             logging.info(f"\nWARNING:  Lowest two ED solutions may be quasi-degenerate.")
 
-    
+    def ucc_E(self, params, ansatz):
+        G = params[0]*self.pool[ansatz[0]]
+        for i in range(1, len(ansatz)):
+            G += params[i]*self.pool[ansatz[i]] 
+        state = scipy.sparse.expm_multiply(G, self.ref)
+        E = ((state.T)@self.H@state).todense()[0,0]
+        return E
+
+    def comm(self, A, B):
+        return A@B - B@A
+
+    def ucc_grad_zero(self, ansatz):
+        grad = []
+        for i in range(0, len(ansatz)):
+            g = ((self.ref.T)@(self.comm(self.H, self.pool[ansatz[i]]))@self.ref).todense()[0,0]
+            grad.append(g)
+        return np.array(grad)
+   
+    def ucc_hess_zero(self, ansatz):
+        hess = np.zeros((len(ansatz), len(ansatz)))
+        for i in range(0, len(ansatz)):
+            for j in range(0, len(ansatz)):
+                hess[i,j] = ((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
+        return hess
+                 
+    def ucc_diag_jerk_zero(self, ansatz):
+        jerk = []
+        for i in range(0, len(ansatz)):
+            j = ((self.ref.T)@(self.comm(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[i]]), self.pool[ansatz[i]]))@self.ref).todense()[0,0]
+            jerk.append(j)
+        jmat = np.zeros((len(ansatz), len(ansatz), len(ansatz)))
+        for i in range(0, len(jerk)):
+            jmat[i,i,i] = jerk[i]
+        return jmat
+
+        
     def t_ucc_E(self, params, ansatz):
         """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
         :param params: Parameters associated with ansatz.
@@ -160,7 +196,7 @@ class Xiphos:
         self.vqe_iteration += 1
         J = copy.copy(self.ref)
         for i in reversed(range(0, len(params))):
-            J = scipy.sparse.hstack([self.pool[ansatz[i]]@J[:,-1], J])
+            J = scipy.sparse.hstack([self.pool[ansatz[i]]@J[:,-1], J]).tocsr()
             J = scipy.sparse.linalg.expm_multiply(self.pool[ansatz[i]]*params[i], J)
 
         J = J.tocsr()[:,:-1]
@@ -233,7 +269,7 @@ class Xiphos:
 
         return res
         
-    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None):
+    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad'):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
         :type params: list 
@@ -263,7 +299,15 @@ class Xiphos:
         while Done == False:           
             gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool])
             gnorm = np.linalg.norm(gradient)
-            idx = np.argsort(abs(gradient)) 
+            if criteria == 'grad':
+                idx = np.argsort(abs(gradient))
+
+            if criteria == 'lucc':
+                denom =  np.array([((state.T@(self.comm(self.H_adapt,op)@(op@state)))[0,0]) for op in self.pool])
+                dE_opt = np.divide(-.25*gradient*gradient, denom, out=np.zeros(gradient.shape), where=denom>1e-12)
+                idx = np.argsort(dE_opt)[::-1]
+
+                 
             E = (state.T@(self.H@state))[0,0] 
             error = E - self.ed_energies[0]
             fid = ((self.ed_wfns[:,0].T)@state)[0]**2
@@ -280,7 +324,7 @@ class Xiphos:
             logging.info(f"Gradient norm:             {gnorm:20.16f}")
             logging.info(f"Fidelity to ED:            {fid:20.16f}")
             logging.info(f"Current ansatz:")
-            for i in reversed(range(0, len(ansatz))):
+            for i in range(0, len(ansatz)):
                 logging.info(f"{i} {params[i]} {self.v_pool[ansatz[i]]}") 
             logging.info("|0>")  
             if gtol is not None and gnorm < gtol:

@@ -69,6 +69,48 @@ class system_data:
         self.pool += pool 
         return [(of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits)).real for i in pool], pool
 
+
+    def afi_pool(self):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+
+        M = int(N_qubits/2)
+        N = int(N_e/2)
+        for i in range(0, N):
+            for a in range(N, M):
+                pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
+                v_pool.append(f"{i}->{a}")
+                for j in range(i, N):
+                    for b in range(a, M):
+                        if i == j and a == b:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        elif i == j:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        elif a == b:
+                            pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+                        else:
+                            pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 1/2))
+                            v_pool.append(f"{i}{j}->{a}{b}")
+            
+        #Adding normalization
+        for i in range(0, len(pool)):
+             op = copy.copy(pool[i])
+             op -= of.hermitian_conjugated(op)
+             op = of.normal_ordered(op)
+             assert(op.many_body_order() > 0)
+
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+        
+
     def grimsley_pool(self):
         N_qubits = self.N_qubits
         N_e = self.N_e
