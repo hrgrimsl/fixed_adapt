@@ -63,7 +63,7 @@ plt.title("SVD Spectrum of Hessian Throughout ADAPT-VQE")
 plt.xlabel("Cumulative VQE Iterations")
 plt.ylabel("Hessian Eigenvalues")
 plt.yscale("log")
-plt.legend()
+
 plt.show()
 
 
@@ -98,17 +98,19 @@ for i in range(0, len(sorted_hessians)):
 
        
 xprev = 0
+xprevs = [0]
 for i in range(0, max_length-1):    
     ith = sorted_hessians[i]
     colors = plt.cm.jet(np.linspace(0,1,i+1))
     for j in range(0, len(ith[0])):
         js = []
         x = [xprev + j for j in range(0, len(ith))]
-
         for h in ith:
             js.append(h[j])
+
         plt.plot(x, js, color = colors[j], linewidth = 1)
-    xprev += len(ith)-1 
+    xprev += len(ith)-1
+    xprevs.append(copy.copy(xprev)) 
     plt.axvline(x = xprev, linewidth = .25, color = "black")
 
 
@@ -117,7 +119,7 @@ plt.title("SVD Spectrum of Jacobian Throughout ADAPT-VQE")
 plt.xlabel("Cumulative VQE Iterations")
 plt.ylabel("Hessian Eigenvalues")
 plt.yscale("log")
-plt.legend()
+
 plt.show()
 
 '''
@@ -164,26 +166,25 @@ for line in f.readlines():
     if "VQE" not in line and "--" not in line:
         Es[-1].append(float(line.split()[-1])-ci)
 
+xprev = 0
+Eprev = scf-ci
 for i in range(0, len(Es)):
-    plt.axvline(x = i+.5, linewidth = .25, color = "black")
-    if i != 0:
-        x = []
-        E = []
-    else:
-        x = []
-        E = []
+    E = [Eprev]
+    x = [xprev]
     for j in range(0, len(Es[i])):
-
-        x.append(i+.6 + .8*(j)/(len(Es[i])-1))
+        xprev += 1
         E.append(Es[i][j])
-    plt.plot(x, E, linewidth = 1, color = "black")
-    
+        x.append(xprev)
+    Eprev = E[-1]
+    plt.plot(x, E, linewidth = 1, color = "black")   
+    plt.axvline(x = xprev, linewidth = .25, color = "black")
 
-#plt.axvline(.5, linewidth = .25, color = "black", label = "ADAPT Iteration Demarcations")
+plt.axvline(0, linewidth = .25, color = "black", label = "ADAPT Iteration Demarcations")
 plt.title("Error Throughout ADAPT-VQE")
-plt.xlabel("ADAPT/VQE Iterations")
+plt.xlabel("Cumulative VQE Iterations")
 plt.ylabel("Error From ED (a.u.)")
 plt.yscale("log")
+
 plt.show()
 
 

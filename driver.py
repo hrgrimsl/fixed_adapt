@@ -72,7 +72,7 @@ class Xiphos:
             os.mkdir(system)
             self.restart = False
 
-
+        self.log_file = f"{system}/log.dat"
         logging.basicConfig(filename = f"{system}/log.dat", level = verbose, format = "") 
         logging.info("---------------------------\n")
         if self.restart == False:
@@ -110,11 +110,32 @@ class Xiphos:
         if abs(self.ed_syms[0]["H"] - self.ed_syms[1]["H"]) < (1/Eh):
             logging.info(f"\nWARNING:  Lowest two ED solutions may be quasi-degenerate.")
 
+    def rebuild_ansatz(self, A):
+        params = []
+        ansatz = [] 
+        #A is the number of operators in your ansatz that you know.
+        os.system(f"grep -A{A} ansatz {self.log_file} > {self.system}/temp.dat")
+        os.system(f"tail -n {A} {self.system}/temp.dat > {self.system}/temp2.dat")
+        f = open(f"{self.system}/temp2.dat", "r")
+        ansatz = []
+        params = []
+        for line in f.readlines():
+            line = line.split()
+            param = line[1]
+            if len(line) == 5:
+                op = line[2] + " " + line[3] + " " + line[4]
+            else:
+                op = line[2]
+            #temporarily reversing params, should be changed once I'm printing ansatz correctly
+            ansatz = [self.v_pool.index(op)] + ansatz
+            params = [float(param)] + params
+        return params, ansatz
+    
     def ucc_E(self, params, ansatz):
         G = params[0]*self.pool[ansatz[0]]
         for i in range(1, len(ansatz)):
             G += params[i]*self.pool[ansatz[i]] 
-        state = scipy.sparse.expm_multiply(G, self.ref)
+        state = scipy.sparse.linalg.expm_multiply(G, self.ref)
         E = ((state.T)@self.H@state).todense()[0,0]
         return E
 
@@ -132,7 +153,9 @@ class Xiphos:
         hess = np.zeros((len(ansatz), len(ansatz)))
         for i in range(0, len(ansatz)):
             for j in range(0, len(ansatz)):
-                hess[i,j] = ((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
+                    hess[i,j] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
+                    hess[j,i] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
+
         return hess
                  
     def ucc_diag_jerk_zero(self, ansatz):
@@ -145,7 +168,16 @@ class Xiphos:
             jmat[i,i,i] = jerk[i]
         return jmat
 
-        
+    def ucc_inf_d_E(self, params, ansatz, E0, grad, hess):
+        E = E0 + grad.T@params + .5*params.T@hess@params
+        for i in range(0, len(ansatz)):
+            E += self.ucc_E(np.array([params[i]]), [ansatz[i]])
+            E -= params[i]*grad[i]
+            E -= .5*params[i]*params[i]*hess[i,i] 
+            E -= E0
+        print(E)
+        return E
+         
     def t_ucc_E(self, params, ansatz):
         """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
         :param params: Parameters associated with ansatz.
@@ -190,7 +222,8 @@ class Xiphos:
             grad = np.array(grad)
             self.grad_dict[str(params)] = grad
         return grad
-                
+    
+
     def t_ucc_hess(self, params, ansatz):
         logging.info(f"\nVQE Iter. {self.vqe_iteration}")
         self.vqe_iteration += 1
@@ -242,7 +275,20 @@ class Xiphos:
         logging.info(spec_string)
         return hess
     
-
+    def H_eff_analysis(self, params, ansatz):
+        H_eff = copy.copy(self.H)
+        for i in reversed(range(0, len(params))):
+            U = scipy.sparse.linalg.expm(params[i]*self.pool[ansatz[i]])
+            H_eff = ((U.T)@H@U).todense()
+        E = ((self.ref.T)@H_eff@self.ref)
+        logging.info("Analysis of H_eff:")
+        logging.info(f"<0|H_eff|0> = {E}")
+        w, v = np.linalg.eigh(H_eff)
+        for sv in w:
+            spec_string += f"{sv},"
+        logging.info(f"Eigenvalues of H_eff:")
+        logging.info(spec_string)
+        
 
     def vqe(self, params, ansatz, strategy = "newton-cg", energy = None):
         """Variational quantum eigensolver for one ansatz 

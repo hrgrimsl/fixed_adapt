@@ -45,31 +45,60 @@ def shucc_E(x, E0, g, hessian):
 def shucc_grad(x, E0, g, hessian):
     return g + hessian@x
 
+def shucc_hess(x, E0, g, hessian):
+    return hessian 
 
-geom = "H 0 0 0; H 0 0 1; H 0 1 1; H 1 -1 -1; H 1, -1, -2; H 1, -1, -3"
+def enucc_E(x, E0, g, hessian, jerk):
+    E = E0 + g.T@x + .5*x.T@hessian@x + (1/6)*contract('iii,i,i,i', jerk, x, x, x)
+    return E
+
+def enucc_grad(x, E0, g, hessian, jerk):
+    grad = g + hessian@x + .5*contract('iii,i,i->i', jerk, x, x)
+    return grad
+
+geom = "H 0 0 0; H 0 .1 1; H .2 0 2.1; H 0 -.1 3.5; H 0 0 4; H 0 0 5"
 E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = 'h6_chk', read = False, feed_C = "B3LYP_C.npy")
 N_e = int(np.trace(D))
 H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
 s = sm.system_data(H, ref, N_e, N_qubits)
-pool, v_pool = s.grimsley_pool()
+pool, v_pool = s.raw_uccsd_pool(spin_adapt = False)
 N = len(pool)
 
 E0 = (ref.T@(H@ref))[0,0]
 xiphos = Xiphos(H, ref, "h6_shucc", pool, v_pool, verbose = "DEBUG")
 ansatz = [i for i in range(0, len(pool))]
+
 grad = xiphos.ucc_grad_zero(ansatz)
 hess = xiphos.ucc_hess_zero(ansatz)
+'''
+jerk = xiphos.ucc_diag_jerk_zero(ansatz)
 
-res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool),1)), jac = shucc_grad, method = "cg", args = (E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
-print("bfgs solution")
+res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool))), jac = shucc_grad, method = "bfgs", args = (E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+print("SHUCC solution:")
+print("E")
 print(res.fun)
+print("GNORM")
+print(np.linalg.norm(res.jac))
+print("Success")
 print(res.success)
-print("analytic solution")
-print(E0 - .5*grad.T@np.linalg.inv(hess)@grad)
-print("cg solution (recycled)")
-x = -np.linalg.inv(hess)@grad
-res = scipy.optimize.minimize(shucc_E, x, jac = shucc_grad, method = "bfgs", args = (E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+
+res = scipy.optimize.minimize(enucc_E, np.zeros((len(pool))), jac = enucc_grad, method = "bfgs", args = (E0, grad, hess, jerk), options = {"gtol": 1e-12, "disp": True})
+print("ENUCC solution:")
+print("E")
 print(res.fun)
+print("GNORM")
+print(np.linalg.norm(res.jac))
+print("Success")
+print(res.success)
+'''
+
+res = scipy.optimize.minimize(xiphos.ucc_inf_d_E, np.zeros((len(pool))), method = "bfgs", args = (ansatz, E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+print("HATER2_Inf solution:")
+print("E")
+print(res.fun)
+print("GNORM")
+print(np.linalg.norm(res.jac))
+print("Success")
 print(res.success)
 
 #res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool),1)), jac = shucc_grad, method = "bfgs", args = (E0, np.load("B3LYP_UCCSD_grad.npy"), np.load("B3LYP_UCCSD_hess.npy")), options = {"gtol": 1e-12, "disp": True})

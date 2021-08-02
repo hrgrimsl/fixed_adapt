@@ -9,7 +9,7 @@ import os
 from opt_einsum import contract
 
 from multiprocessing import Pool
-from num2words import num2words
+
 
 
 
