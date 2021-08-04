@@ -1,0 +1,7100 @@
+VQE Iter. 0
+Energy:  -1.9706022460321662
+--
+VQE Iter. 1
+Energy:  -2.0828664089912672
+--
+VQE Iter. 2
+Energy:  -2.0828664112612407
+--
+VQE Iter. 0
+Energy:  -2.0828664112612407
+--
+VQE Iter. 1
+Energy:  -2.1659265841435911
+--
+VQE Iter. 2
+Energy:  -2.1660676270276866
+--
+VQE Iter. 3
+Energy:  -2.1660681325257820
+--
+VQE Iter. 4
+Energy:  -2.1660681325262550
+--
+VQE Iter. 0
+Energy:  -2.1660681325262550
+--
+VQE Iter. 1
+Energy:  -2.2690766043361696
+--
+VQE Iter. 2
+Energy:  -2.2786121610825409
+--
+VQE Iter. 3
+Energy:  -2.2790635162654089
+--
+VQE Iter. 4
+Energy:  -2.2790653671430650
+--
+VQE Iter. 5
+Energy:  -2.2790653671601198
+--
+VQE Iter. 0
+Energy:  -2.2790653671601198
+--
+VQE Iter. 1
+Energy:  -2.3457638184625296
+--
+VQE Iter. 2
+Energy:  -2.3815648390017552
+--
+VQE Iter. 3
+Energy:  -2.3878343653512020
+--
+VQE Iter. 4
+Energy:  -2.3890901370257178
+--
+VQE Iter. 5
+Energy:  -2.3890921099269091
+--
+VQE Iter. 6
+Energy:  -2.3890921128708520
+--
+VQE Iter. 7
+Energy:  -2.3890921128709079
+--
+VQE Iter. 0
+Energy:  -2.3890921128709079
+--
+VQE Iter. 1
+Energy:  -2.4322268467764152
+--
+VQE Iter. 2
+Energy:  -2.4988784261130905
+--
+VQE Iter. 3
+Energy:  -2.5293290562212958
+--
+VQE Iter. 4
+Energy:  -2.5372819753026423
+--
+VQE Iter. 5
+Energy:  -2.5383391833106472
+--
+VQE Iter. 6
+Energy:  -2.5383454467845659
+--
+VQE Iter. 7
+Energy:  -2.5383454658288502
+--
+VQE Iter. 0
+Energy:  -2.5383454658288502
+--
+VQE Iter. 1
+Energy:  -2.6013434749703448
+--
+VQE Iter. 2
+Energy:  -2.6565172031699662
+--
+VQE Iter. 3
+Energy:  -2.6577819924046984
+--
+VQE Iter. 4
+Energy:  -2.6579438860733999
+--
+VQE Iter. 5
+Energy:  -2.6579449843141645
+--
+VQE Iter. 6
+Energy:  -2.6579449845170582
+--
+VQE Iter. 7
+Energy:  -2.6579449845170600
+--
+VQE Iter. 0
+Energy:  -2.6579449845170600
+--
+VQE Iter. 1
+Energy:  -2.6633978123763891
+--
+VQE Iter. 2
+Energy:  -2.6725179139598274
+--
+VQE Iter. 3
+Energy:  -2.6751665768422295
+--
+VQE Iter. 4
+Energy:  -2.6753381039977833
+--
+VQE Iter. 5
+Energy:  -2.6753505123010908
+--
+VQE Iter. 6
+Energy:  -2.6753505145900105
+--
+VQE Iter. 7
+Energy:  -2.6753505145912491
+--
+VQE Iter. 0
+Energy:  -2.6753505145912491
+--
+VQE Iter. 1
+Energy:  -2.6902495899266090
+--
+VQE Iter. 2
+Energy:  -2.7011924934314040
+--
+VQE Iter. 3
+Energy:  -2.7028249744269752
+--
+VQE Iter. 4
+Energy:  -2.7028645990875062
+--
+VQE Iter. 5
+Energy:  -2.7028648602305863
+--
+VQE Iter. 6
+Energy:  -2.7028648602391847
+--
+VQE Iter. 0
+Energy:  -2.7028648602391847
+--
+VQE Iter. 1
+Energy:  -2.7210368245220495
+--
+VQE Iter. 2
+Energy:  -2.7400316597713248
+--
+VQE Iter. 3
+Energy:  -2.7412320029978092
+--
+VQE Iter. 4
+Energy:  -2.7412786638220070
+--
+VQE Iter. 5
+Energy:  -2.7412792795791736
+--
+VQE Iter. 6
+Energy:  -2.7412792801416002
+--
+VQE Iter. 7
+Energy:  -2.7412792801416419
+--
+VQE Iter. 8
+Energy:  -2.7412792801416428
+--
+VQE Iter. 0
+Energy:  -2.7412792801416428
+--
+VQE Iter. 1
+Energy:  -2.7472401559885782
+--
+VQE Iter. 2
+Energy:  -2.7512270653657085
+--
+VQE Iter. 3
+Energy:  -2.7525818116896028
+--
+VQE Iter. 4
+Energy:  -2.7530877728989340
+--
+VQE Iter. 5
+Energy:  -2.7531459821484718
+--
+VQE Iter. 6
+Energy:  -2.7531543430051046
+--
+VQE Iter. 7
+Energy:  -2.7531543499823194
+--
+VQE Iter. 8
+Energy:  -2.7531543499877031
+--
+VQE Iter. 0
+Energy:  -2.7531543499877031
+--
+VQE Iter. 1
+Energy:  -2.7535170492508989
+--
+VQE Iter. 2
+Energy:  -2.7535171827933222
+--
+VQE Iter. 3
+Energy:  -2.7535171828259615
+--
+VQE Iter. 0
+Energy:  -2.7535171828259615
+--
+VQE Iter. 1
+Energy:  -2.7588841255980832
+--
+VQE Iter. 2
+Energy:  -2.7659646802105931
+--
+VQE Iter. 3
+Energy:  -2.7667100920305079
+--
+VQE Iter. 4
+Energy:  -2.7667620350060496
+--
+VQE Iter. 5
+Energy:  -2.7667636910785576
+--
+VQE Iter. 6
+Energy:  -2.7667637066327218
+--
+VQE Iter. 7
+Energy:  -2.7667637066327231
+--
+VQE Iter. 0
+Energy:  -2.7667637066327231
+--
+VQE Iter. 1
+Energy:  -2.7671377692637349
+--
+VQE Iter. 2
+Energy:  -2.7671386747387885
+--
+VQE Iter. 3
+Energy:  -2.7671386776756060
+--
+VQE Iter. 4
+Energy:  -2.7671386776756073
+--
+VQE Iter. 0
+Energy:  -2.7671386776756073
+--
+VQE Iter. 1
+Energy:  -2.7692237227660295
+--
+VQE Iter. 2
+Energy:  -2.7692322562643947
+--
+VQE Iter. 3
+Energy:  -2.7692323374306174
+--
+VQE Iter. 4
+Energy:  -2.7692323376722729
+--
+VQE Iter. 0
+Energy:  -2.7692323376722729
+--
+VQE Iter. 1
+Energy:  -2.7705005338382325
+--
+VQE Iter. 2
+Energy:  -2.7705126808578768
+--
+VQE Iter. 3
+Energy:  -2.7705129138626106
+--
+VQE Iter. 4
+Energy:  -2.7705129139962077
+--
+VQE Iter. 0
+Energy:  -2.7705129139962077
+--
+VQE Iter. 1
+Energy:  -2.7774118866381068
+--
+VQE Iter. 2
+Energy:  -2.7805251980659613
+--
+VQE Iter. 3
+Energy:  -2.7806418168329672
+--
+VQE Iter. 4
+Energy:  -2.7806532525169887
+--
+VQE Iter. 5
+Energy:  -2.7806534294925229
+--
+VQE Iter. 6
+Energy:  -2.7806534295032090
+--
+VQE Iter. 0
+Energy:  -2.7806534295032090
+--
+VQE Iter. 1
+Energy:  -2.7827629810836183
+--
+VQE Iter. 2
+Energy:  -2.7830498461775890
+--
+VQE Iter. 3
+Energy:  -2.7830550333749198
+--
+VQE Iter. 4
+Energy:  -2.7830550431076286
+--
+VQE Iter. 5
+Energy:  -2.7830550431082783
+--
+VQE Iter. 0
+Energy:  -2.7830550431082783
+--
+VQE Iter. 1
+Energy:  -2.7860569853795418
+--
+VQE Iter. 2
+Energy:  -2.7872902454637827
+--
+VQE Iter. 3
+Energy:  -2.7876774945397322
+--
+VQE Iter. 4
+Energy:  -2.7877107517388362
+--
+VQE Iter. 5
+Energy:  -2.7877114524417053
+--
+VQE Iter. 6
+Energy:  -2.7877114525850262
+--
+VQE Iter. 7
+Energy:  -2.7877114525850311
+--
+VQE Iter. 0
+Energy:  -2.7877114525850311
+--
+VQE Iter. 1
+Energy:  -2.7887891418290751
+--
+VQE Iter. 2
+Energy:  -2.7891176325050688
+--
+VQE Iter. 3
+Energy:  -2.7891328683170529
+--
+VQE Iter. 4
+Energy:  -2.7891335508279056
+--
+VQE Iter. 5
+Energy:  -2.7891335511544755
+--
+VQE Iter. 0
+Energy:  -2.7891335511544755
+--
+VQE Iter. 1
+Energy:  -2.7893623101180380
+--
+VQE Iter. 2
+Energy:  -2.7893628400700434
+--
+VQE Iter. 3
+Energy:  -2.7893628467863669
+--
+VQE Iter. 4
+Energy:  -2.7893628467863727
+--
+VQE Iter. 5
+Energy:  -2.7893628467863727
+--
+VQE Iter. 0
+Energy:  -2.7893628467863727
+--
+VQE Iter. 1
+Energy:  -2.7920006021004848
+--
+VQE Iter. 2
+Energy:  -2.7923419352858025
+--
+VQE Iter. 3
+Energy:  -2.7923655308043394
+--
+VQE Iter. 4
+Energy:  -2.7923658394860409
+--
+VQE Iter. 5
+Energy:  -2.7923658400219971
+--
+VQE Iter. 0
+Energy:  -2.7923658400219971
+--
+VQE Iter. 1
+Energy:  -2.7930200195851373
+--
+VQE Iter. 2
+Energy:  -2.7931253225855075
+--
+VQE Iter. 3
+Energy:  -2.7931365363959770
+--
+VQE Iter. 4
+Energy:  -2.7931365939402690
+--
+VQE Iter. 5
+Energy:  -2.7931365939965667
+--
+VQE Iter. 0
+Energy:  -2.7931365939965667
+--
+VQE Iter. 1
+Energy:  -2.7934400182875998
+--
+VQE Iter. 2
+Energy:  -2.7935094123335631
+--
+VQE Iter. 3
+Energy:  -2.7935179627576074
+--
+VQE Iter. 4
+Energy:  -2.7935180186758193
+--
+VQE Iter. 5
+Energy:  -2.7935180186957802
+--
+VQE Iter. 6
+Energy:  -2.7935180186957984
+--
+VQE Iter. 0
+Energy:  -2.7935180186957984
+--
+VQE Iter. 1
+Energy:  -2.7938401646609683
+--
+VQE Iter. 2
+Energy:  -2.7938415340383775
+--
+VQE Iter. 3
+Energy:  -2.7938415641010161
+--
+VQE Iter. 4
+Energy:  -2.7938415641051613
+--
+VQE Iter. 0
+Energy:  -2.7938415641051613
+--
+VQE Iter. 1
+Energy:  -2.7947613480600824
+--
+VQE Iter. 2
+Energy:  -2.7948590506127067
+--
+VQE Iter. 3
+Energy:  -2.7948610388136190
+--
+VQE Iter. 4
+Energy:  -2.7948610526013473
+--
+VQE Iter. 5
+Energy:  -2.7948610526030500
+--
+VQE Iter. 6
+Energy:  -2.7948610526030508
+--
+VQE Iter. 0
+Energy:  -2.7948610526030508
+--
+VQE Iter. 1
+Energy:  -2.7950133217276538
+--
+VQE Iter. 2
+Energy:  -2.7950135603102035
+--
+VQE Iter. 3
+Energy:  -2.7950135609599061
+--
+VQE Iter. 4
+Energy:  -2.7950135609600193
+--
+VQE Iter. 5
+Energy:  -2.7950135609600211
+--
+VQE Iter. 0
+Energy:  -2.7950135609600211
+--
+VQE Iter. 1
+Energy:  -2.7952870051334218
+--
+VQE Iter. 2
+Energy:  -2.7953120378335390
+--
+VQE Iter. 3
+Energy:  -2.7953196194412877
+--
+VQE Iter. 4
+Energy:  -2.7953196524299266
+--
+VQE Iter. 5
+Energy:  -2.7953196524581743
+--
+VQE Iter. 0
+Energy:  -2.7953196524581743
+--
+VQE Iter. 1
+Energy:  -2.7958619490293430
+--
+VQE Iter. 2
+Energy:  -2.7961502543526797
+--
+VQE Iter. 3
+Energy:  -2.7961857890517825
+--
+VQE Iter. 4
+Energy:  -2.7961872189959807
+--
+VQE Iter. 5
+Energy:  -2.7961872398749827
+--
+VQE Iter. 6
+Energy:  -2.7961872398755268
+--
+VQE Iter. 0
+Energy:  -2.7961872398755268
+--
+VQE Iter. 1
+Energy:  -2.7965379173804554
+--
+VQE Iter. 2
+Energy:  -2.7965907247251844
+--
+VQE Iter. 3
+Energy:  -2.7966091680312064
+--
+VQE Iter. 4
+Energy:  -2.7966096615812148
+--
+VQE Iter. 5
+Energy:  -2.7966096669471341
+--
+VQE Iter. 6
+Energy:  -2.7966096669478322
+--
+VQE Iter. 7
+Energy:  -2.7966096669478442
+--
+VQE Iter. 0
+Energy:  -2.7966096669478442
+--
+VQE Iter. 1
+Energy:  -2.7967710392183478
+--
+VQE Iter. 2
+Energy:  -2.7967718423887140
+--
+VQE Iter. 3
+Energy:  -2.7967718533139809
+--
+VQE Iter. 4
+Energy:  -2.7967718533147989
+--
+VQE Iter. 5
+Energy:  -2.7967718533148234
+--
+VQE Iter. 0
+Energy:  -2.7967718533148234
+--
+VQE Iter. 1
+Energy:  -2.7970554636162013
+--
+VQE Iter. 2
+Energy:  -2.7971023181433567
+--
+VQE Iter. 3
+Energy:  -2.7971071727681887
+--
+VQE Iter. 4
+Energy:  -2.7971072256172671
+--
+VQE Iter. 5
+Energy:  -2.7971072268027952
+--
+VQE Iter. 6
+Energy:  -2.7971072268028729
+--
+VQE Iter. 7
+Energy:  -2.7971072268028747
+--
+VQE Iter. 8
+Energy:  -2.7971072268028774
+--
+VQE Iter. 0
+Energy:  -2.7971072268028774
+--
+VQE Iter. 1
+Energy:  -2.7977486629653585
+--
+VQE Iter. 2
+Energy:  -2.7979397109224551
+--
+VQE Iter. 3
+Energy:  -2.7979548308826612
+--
+VQE Iter. 4
+Energy:  -2.7979552277257040
+--
+VQE Iter. 5
+Energy:  -2.7979552304015032
+--
+VQE Iter. 6
+Energy:  -2.7979552304017061
+--
+VQE Iter. 7
+Energy:  -2.7979552304017115
+--
+VQE Iter. 8
+Energy:  -2.7979552304017115
+--
+VQE Iter. 0
+Energy:  -2.7979552304017115
+--
+VQE Iter. 1
+Energy:  -2.7984455974022575
+--
+VQE Iter. 2
+Energy:  -2.7985764633979624
+--
+VQE Iter. 3
+Energy:  -2.7986438231819664
+--
+VQE Iter. 4
+Energy:  -2.7986453575371182
+--
+VQE Iter. 5
+Energy:  -2.7986454147188278
+--
+VQE Iter. 6
+Energy:  -2.7986454147390116
+--
+VQE Iter. 7
+Energy:  -2.7986454147390258
+--
+VQE Iter. 0
+Energy:  -2.7986454147390258
+--
+VQE Iter. 1
+Energy:  -2.7986593655352232
+--
+VQE Iter. 2
+Energy:  -2.7986593952059824
+--
+VQE Iter. 3
+Energy:  -2.7986593952124190
+--
+VQE Iter. 0
+Energy:  -2.7986593952124190
+--
+VQE Iter. 1
+Energy:  -2.7991415097932038
+--
+VQE Iter. 2
+Energy:  -2.7992592798932843
+--
+VQE Iter. 3
+Energy:  -2.7992619272185513
+--
+VQE Iter. 4
+Energy:  -2.7992619814020774
+--
+VQE Iter. 5
+Energy:  -2.7992619814119650
+--
+VQE Iter. 0
+Energy:  -2.7992619814119650
+--
+VQE Iter. 1
+Energy:  -2.7994614140344538
+--
+VQE Iter. 2
+Energy:  -2.7995039370135135
+--
+VQE Iter. 3
+Energy:  -2.7995052087964059
+--
+VQE Iter. 4
+Energy:  -2.7995052136233216
+--
+VQE Iter. 5
+Energy:  -2.7995052136286636
+--
+VQE Iter. 6
+Energy:  -2.7995052136286702
+--
+VQE Iter. 7
+Energy:  -2.7995052136286702
+--
+VQE Iter. 0
+Energy:  -2.7995052136286702
+--
+VQE Iter. 1
+Energy:  -2.7995855787821418
+--
+VQE Iter. 2
+Energy:  -2.7996117829433667
+--
+VQE Iter. 3
+Energy:  -2.7996265106758522
+--
+VQE Iter. 4
+Energy:  -2.7996317843535121
+--
+VQE Iter. 5
+Energy:  -2.7996378534257951
+--
+VQE Iter. 6
+Energy:  -2.7996395362076272
+--
+VQE Iter. 7
+Energy:  -2.7996404767707395
+--
+VQE Iter. 8
+Energy:  -2.7996406973206933
+--
+VQE Iter. 9
+Energy:  -2.7996407314208946
+--
+VQE Iter. 10
+Energy:  -2.7996407314964062
+--
+VQE Iter. 11
+Energy:  -2.7996407314967824
+--
+VQE Iter. 12
+Energy:  -2.7996407314967868
+--
+VQE Iter. 0
+Energy:  -2.7996407314967868
+--
+VQE Iter. 1
+Energy:  -2.7997154713920449
+--
+VQE Iter. 2
+Energy:  -2.7997423868193372
+--
+VQE Iter. 3
+Energy:  -2.7997526168739699
+--
+VQE Iter. 4
+Energy:  -2.7997533948679614
+--
+VQE Iter. 5
+Energy:  -2.7997534043869559
+--
+VQE Iter. 6
+Energy:  -2.7997534044288592
+--
+VQE Iter. 7
+Energy:  -2.7997534044290653
+--
+VQE Iter. 8
+Energy:  -2.7997534044290653
+--
+VQE Iter. 0
+Energy:  -2.7997534044290653
+--
+VQE Iter. 1
+Energy:  -2.7998105812487424
+--
+VQE Iter. 2
+Energy:  -2.7998112823572199
+--
+VQE Iter. 3
+Energy:  -2.7998112983884238
+--
+VQE Iter. 4
+Energy:  -2.7998112983982426
+--
+VQE Iter. 5
+Energy:  -2.7998112983982684
+--
+VQE Iter. 6
+Energy:  -2.7998112983983141
+--
+VQE Iter. 7
+Energy:  -2.7998112983983177
+--
+VQE Iter. 8
+Energy:  -2.7998112983983523
+--
+VQE Iter. 9
+Energy:  -2.7998112983984176
+--
+VQE Iter. 10
+Energy:  -2.7998112983984185
+--
+VQE Iter. 11
+Energy:  -2.7998112983984202
+--
+VQE Iter. 0
+Energy:  -2.7998112983984202
+--
+VQE Iter. 1
+Energy:  -2.7998807726832204
+--
+VQE Iter. 2
+Energy:  -2.7998926440130845
+--
+VQE Iter. 3
+Energy:  -2.7998940027545975
+--
+VQE Iter. 4
+Energy:  -2.7998942221686600
+--
+VQE Iter. 5
+Energy:  -2.7998942360534302
+--
+VQE Iter. 6
+Energy:  -2.7998942360613253
+--
+VQE Iter. 7
+Energy:  -2.7998942360614869
+--
+VQE Iter. 8
+Energy:  -2.7998942360614953
+--
+VQE Iter. 9
+Energy:  -2.7998942360615109
+--
+VQE Iter. 10
+Energy:  -2.7998942360615113
+--
+VQE Iter. 0
+Energy:  -2.7998942360615113
+--
+VQE Iter. 1
+Energy:  -2.7999378897813392
+--
+VQE Iter. 2
+Energy:  -2.7999736808726268
+--
+VQE Iter. 3
+Energy:  -2.7999750625864790
+--
+VQE Iter. 4
+Energy:  -2.7999751685344889
+--
+VQE Iter. 5
+Energy:  -2.7999751691249513
+--
+VQE Iter. 6
+Energy:  -2.7999751691261201
+--
+VQE Iter. 7
+Energy:  -2.7999751691261223
+--
+VQE Iter. 8
+Energy:  -2.7999751691261232
+--
+VQE Iter. 0
+Energy:  -2.7999751691261232
+--
+VQE Iter. 1
+Energy:  -2.8000024981882441
+--
+VQE Iter. 2
+Energy:  -2.8000183282659563
+--
+VQE Iter. 3
+Energy:  -2.8000213368392046
+--
+VQE Iter. 4
+Energy:  -2.8000214264911527
+--
+VQE Iter. 5
+Energy:  -2.8000214295592656
+--
+VQE Iter. 6
+Energy:  -2.8000214295626846
+--
+VQE Iter. 7
+Energy:  -2.8000214295627366
+--
+VQE Iter. 0
+Energy:  -2.8000214295627366
+--
+VQE Iter. 1
+Energy:  -2.8000969825888662
+--
+VQE Iter. 2
+Energy:  -2.8001123998396267
+--
+VQE Iter. 3
+Energy:  -2.8001308007710102
+--
+VQE Iter. 4
+Energy:  -2.8001361821023885
+--
+VQE Iter. 5
+Energy:  -2.8001376660939941
+--
+VQE Iter. 6
+Energy:  -2.8001377607144553
+--
+VQE Iter. 7
+Energy:  -2.8001377705301991
+--
+VQE Iter. 8
+Energy:  -2.8001377705338264
+--
+VQE Iter. 9
+Energy:  -2.8001377705338624
+--
+VQE Iter. 0
+Energy:  -2.8001377705338624
+--
+VQE Iter. 1
+Energy:  -2.8002218666293390
+--
+VQE Iter. 2
+Energy:  -2.8002874474513604
+--
+VQE Iter. 3
+Energy:  -2.8003202089271659
+--
+VQE Iter. 4
+Energy:  -2.8003216688388259
+--
+VQE Iter. 5
+Energy:  -2.8003217241004865
+--
+VQE Iter. 6
+Energy:  -2.8003217311619326
+--
+VQE Iter. 7
+Energy:  -2.8003217311647060
+--
+VQE Iter. 0
+Energy:  -2.8003217311647060
+--
+VQE Iter. 1
+Energy:  -2.8003810904679005
+--
+VQE Iter. 2
+Energy:  -2.8004199475279545
+--
+VQE Iter. 3
+Energy:  -2.8004283864756516
+--
+VQE Iter. 4
+Energy:  -2.8004343952709063
+--
+VQE Iter. 5
+Energy:  -2.8004397090857118
+--
+VQE Iter. 6
+Energy:  -2.8004431919201167
+--
+VQE Iter. 7
+Energy:  -2.8004441872958359
+--
+VQE Iter. 8
+Energy:  -2.8004442422360607
+--
+VQE Iter. 9
+Energy:  -2.8004442423517184
+--
+VQE Iter. 10
+Energy:  -2.8004442423519857
+--
+VQE Iter. 11
+Energy:  -2.8004442423520208
+--
+VQE Iter. 0
+Energy:  -2.8004442423520208
+--
+VQE Iter. 1
+Energy:  -2.8005378359620874
+--
+VQE Iter. 2
+Energy:  -2.8005913284084718
+--
+VQE Iter. 3
+Energy:  -2.8006275760218169
+--
+VQE Iter. 4
+Energy:  -2.8006512865387476
+--
+VQE Iter. 5
+Energy:  -2.8006563780730405
+--
+VQE Iter. 6
+Energy:  -2.8006577780692004
+--
+VQE Iter. 7
+Energy:  -2.8006578191563034
+--
+VQE Iter. 8
+Energy:  -2.8006578195174980
+--
+VQE Iter. 9
+Energy:  -2.8006578195176455
+--
+VQE Iter. 10
+Energy:  -2.8006578195176459
+--
+VQE Iter. 0
+Energy:  -2.8006578195176459
+--
+VQE Iter. 1
+Energy:  -2.8006647547827885
+--
+VQE Iter. 2
+Energy:  -2.8006685363911834
+--
+VQE Iter. 3
+Energy:  -2.8006699619096302
+--
+VQE Iter. 4
+Energy:  -2.8006701761376744
+--
+VQE Iter. 5
+Energy:  -2.8006702840722459
+--
+VQE Iter. 6
+Energy:  -2.8006702936333157
+--
+VQE Iter. 7
+Energy:  -2.8006702943411530
+--
+VQE Iter. 8
+Energy:  -2.8006702943414563
+--
+VQE Iter. 0
+Energy:  -2.8006702943414563
+--
+VQE Iter. 1
+Energy:  -2.8006707281895742
+--
+VQE Iter. 2
+Energy:  -2.8006707286534827
+--
+VQE Iter. 3
+Energy:  -2.8006707286537345
+--
+VQE Iter. 4
+Energy:  -2.8006707286537385
+--
+VQE Iter. 0
+Energy:  -2.8006707286537385
+--
+VQE Iter. 1
+Energy:  -2.8006715724585889
+--
+VQE Iter. 2
+Energy:  -2.8006715739356696
+--
+VQE Iter. 3
+Energy:  -2.8006715739434638
+--
+VQE Iter. 4
+Energy:  -2.8006715739443981
+--
+VQE Iter. 5
+Energy:  -2.8006715739446184
+--
+VQE Iter. 6
+Energy:  -2.8006715739447170
+--
+VQE Iter. 7
+Energy:  -2.8006715739448422
+--
+VQE Iter. 0
+Energy:  -2.8006715739448422
+--
+VQE Iter. 1
+Energy:  -2.8006758504173650
+--
+VQE Iter. 2
+Energy:  -2.8006781148037518
+--
+VQE Iter. 3
+Energy:  -2.8006785035457917
+--
+VQE Iter. 4
+Energy:  -2.8006786313774867
+--
+VQE Iter. 5
+Energy:  -2.8006786709101723
+--
+VQE Iter. 6
+Energy:  -2.8006786764916853
+--
+VQE Iter. 7
+Energy:  -2.8006786765644414
+--
+VQE Iter. 8
+Energy:  -2.8006786765659037
+--
+VQE Iter. 0
+Energy:  -2.8006786765659037
+--
+VQE Iter. 1
+Energy:  -2.8006810566232820
+--
+VQE Iter. 2
+Energy:  -2.8006811484047169
+--
+VQE Iter. 3
+Energy:  -2.8006811590489082
+--
+VQE Iter. 4
+Energy:  -2.8006811590566429
+--
+VQE Iter. 5
+Energy:  -2.8006811590566505
+--
+VQE Iter. 6
+Energy:  -2.8006811590566549
+--
+VQE Iter. 0
+Energy:  -2.8006811590566549
+--
+VQE Iter. 1
+Energy:  -2.8006811852496991
+--
+VQE Iter. 2
+Energy:  -2.8006811852532412
+--
+VQE Iter. 3
+Energy:  -2.8006811852534890
+--
+VQE Iter. 4
+Energy:  -2.8006811852535591
+--
+VQE Iter. 5
+Energy:  -2.8006811852535844
+--
+VQE Iter. 6
+Energy:  -2.8006811852536320
+--
+VQE Iter. 7
+Energy:  -2.8006811852537217
+--
+VQE Iter. 8
+Energy:  -2.8006811852538771
+--
+VQE Iter. 0
+Energy:  -2.8006811852538771
+--
+VQE Iter. 1
+Energy:  -2.8006842347252112
+--
+VQE Iter. 2
+Energy:  -2.8006856093999044
+--
+VQE Iter. 3
+Energy:  -2.8006857662283524
+--
+VQE Iter. 4
+Energy:  -2.8006857759238546
+--
+VQE Iter. 5
+Energy:  -2.8006857766616471
+--
+VQE Iter. 6
+Energy:  -2.8006857766619295
+--
+VQE Iter. 7
+Energy:  -2.8006857766621751
+--
+VQE Iter. 0
+Energy:  -2.8006857766621751
+--
+VQE Iter. 1
+Energy:  -2.8006859407269498
+--
+VQE Iter. 2
+Energy:  -2.8006859407675893
+--
+VQE Iter. 3
+Energy:  -2.8006859407678286
+--
+VQE Iter. 0
+Energy:  -2.8006859407678286
+--
+VQE Iter. 1
+Energy:  -2.8006859470224823
+--
+VQE Iter. 2
+Energy:  -2.8006859470237671
+--
+VQE Iter. 0
+Energy:  -2.8006859470237671
+--
+VQE Iter. 1
+Energy:  -2.8006867394577801
+--
+VQE Iter. 2
+Energy:  -2.8006867588697086
+--
+VQE Iter. 3
+Energy:  -2.8006867599050804
+--
+VQE Iter. 4
+Energy:  -2.8006867599113621
+--
+VQE Iter. 0
+Energy:  -2.8006867599113621
+--
+VQE Iter. 1
+Energy:  -2.8006867774620732
+--
+VQE Iter. 2
+Energy:  -2.8006867774727193
+--
+VQE Iter. 3
+Energy:  -2.8006867774727198
+--
+VQE Iter. 4
+Energy:  -2.8006867774727335
+--
+VQE Iter. 5
+Energy:  -2.8006867774727571
+--
+VQE Iter. 0
+Energy:  -2.8006867774727571
+--
+VQE Iter. 1
+Energy:  -2.8006878950087573
+--
+VQE Iter. 2
+Energy:  -2.8006879303103376
+--
+VQE Iter. 3
+Energy:  -2.8006879318258937
+--
+VQE Iter. 4
+Energy:  -2.8006879318259923
+--
+VQE Iter. 5
+Energy:  -2.8006879318259972
+--
+VQE Iter. 6
+Energy:  -2.8006879318259976
+--
+VQE Iter. 0
+Energy:  -2.8006879318259976
+--
+VQE Iter. 1
+Energy:  -2.8006881686051353
+--
+VQE Iter. 2
+Energy:  -2.8006881720529342
+--
+VQE Iter. 3
+Energy:  -2.8006881720832051
+--
+VQE Iter. 4
+Energy:  -2.8006881720881602
+--
+VQE Iter. 5
+Energy:  -2.8006881720889369
+--
+VQE Iter. 6
+Energy:  -2.8006881720890946
+--
+VQE Iter. 7
+Energy:  -2.8006881720891030
+--
+VQE Iter. 8
+Energy:  -2.8006881720891048
+--
+VQE Iter. 0
+Energy:  -2.8006881720891048
+--
+VQE Iter. 1
+Energy:  -2.8006884232469531
+--
+VQE Iter. 2
+Energy:  -2.8006884260487932
+--
+VQE Iter. 3
+Energy:  -2.8006884262124210
+--
+VQE Iter. 4
+Energy:  -2.8006884262170644
+--
+VQE Iter. 5
+Energy:  -2.8006884262176075
+--
+VQE Iter. 6
+Energy:  -2.8006884262177891
+--
+VQE Iter. 0
+Energy:  -2.8006884262177891
+--
+VQE Iter. 1
+Energy:  -2.8006894805448082
+--
+VQE Iter. 2
+Energy:  -2.8006901255854668
+--
+VQE Iter. 3
+Energy:  -2.8006902786309724
+--
+VQE Iter. 4
+Energy:  -2.8006903395583649
+--
+VQE Iter. 5
+Energy:  -2.8006903623675621
+--
+VQE Iter. 6
+Energy:  -2.8006903646848813
+--
+VQE Iter. 7
+Energy:  -2.8006903647127808
+--
+VQE Iter. 8
+Energy:  -2.8006903647137662
+--
+VQE Iter. 9
+Energy:  -2.8006903647137764
+--
+VQE Iter. 0
+Energy:  -2.8006903647137764
+--
+VQE Iter. 1
+Energy:  -2.8006913560689894
+--
+VQE Iter. 2
+Energy:  -2.8006914418700526
+--
+VQE Iter. 3
+Energy:  -2.8006914460666668
+--
+VQE Iter. 4
+Energy:  -2.8006914462135493
+--
+VQE Iter. 5
+Energy:  -2.8006914462146186
+--
+VQE Iter. 6
+Energy:  -2.8006914462146257
+--
+VQE Iter. 7
+Energy:  -2.8006914462146271
+--
+VQE Iter. 8
+Energy:  -2.8006914462146275
+--
+VQE Iter. 9
+Energy:  -2.8006914462149077
+--
+VQE Iter. 0
+Energy:  -2.8006914462149077
+--
+VQE Iter. 1
+Energy:  -2.8006925188885980
+--
+VQE Iter. 2
+Energy:  -2.8006938386757936
+--
+VQE Iter. 3
+Energy:  -2.8006954117035132
+--
+VQE Iter. 4
+Energy:  -2.8006968287897305
+--
+VQE Iter. 5
+Energy:  -2.8006983114351724
+--
+VQE Iter. 6
+Energy:  -2.8006995330610289
+--
+VQE Iter. 7
+Energy:  -2.8007004842201715
+--
+VQE Iter. 8
+Energy:  -2.8007011701430184
+--
+VQE Iter. 9
+Energy:  -2.8007019438293668
+--
+VQE Iter. 10
+Energy:  -2.8007024153256213
+--
+VQE Iter. 11
+Energy:  -2.8007027545263243
+--
+VQE Iter. 12
+Energy:  -2.8007029855339791
+--
+VQE Iter. 13
+Energy:  -2.8007032136051992
+--
+VQE Iter. 14
+Energy:  -2.8007032902303179
+--
+VQE Iter. 15
+Energy:  -2.8007033406048847
+--
+VQE Iter. 16
+Energy:  -2.8007033572484623
+--
+VQE Iter. 17
+Energy:  -2.8007033645613020
+--
+VQE Iter. 18
+Energy:  -2.8007033695773864
+--
+VQE Iter. 19
+Energy:  -2.8007033717889729
+--
+VQE Iter. 20
+Energy:  -2.8007033732383531
+--
+VQE Iter. 21
+Energy:  -2.8007033738983771
+--
+VQE Iter. 22
+Energy:  -2.8007033740100367
+--
+VQE Iter. 23
+Energy:  -2.8007033740819658
+--
+VQE Iter. 24
+Energy:  -2.8007033740845309
+--
+VQE Iter. 25
+Energy:  -2.8007033740853449
+--
+VQE Iter. 0
+Energy:  -2.8007033740853449
+--
+VQE Iter. 1
+Energy:  -2.8007039739883486
+--
+VQE Iter. 2
+Energy:  -2.8007050176546651
+--
+VQE Iter. 3
+Energy:  -2.8007060798126209
+--
+VQE Iter. 4
+Energy:  -2.8007062398809750
+--
+VQE Iter. 5
+Energy:  -2.8007062696019269
+--
+VQE Iter. 6
+Energy:  -2.8007062818879316
+--
+VQE Iter. 7
+Energy:  -2.8007063015609832
+--
+VQE Iter. 8
+Energy:  -2.8007063154264347
+--
+VQE Iter. 9
+Energy:  -2.8007063242812054
+--
+VQE Iter. 10
+Energy:  -2.8007063353231199
+--
+VQE Iter. 11
+Energy:  -2.8007063399459353
+--
+VQE Iter. 12
+Energy:  -2.8007063477970151
+--
+VQE Iter. 13
+Energy:  -2.8007063544116524
+--
+VQE Iter. 14
+Energy:  -2.8007063614541092
+--
+VQE Iter. 15
+Energy:  -2.8007063674396431
+--
+VQE Iter. 16
+Energy:  -2.8007063741385552
+--
+VQE Iter. 17
+Energy:  -2.8007063779636319
+--
+VQE Iter. 18
+Energy:  -2.8007063812412740
+--
+VQE Iter. 19
+Energy:  -2.8007063846664702
+--
+VQE Iter. 20
+Energy:  -2.8007063865428163
+--
+VQE Iter. 21
+Energy:  -2.8007063882369976
+--
+VQE Iter. 22
+Energy:  -2.8007063896101694
+--
+VQE Iter. 23
+Energy:  -2.8007063904624121
+--
+VQE Iter. 24
+Energy:  -2.8007063909529757
+--
+VQE Iter. 25
+Energy:  -2.8007063910120391
+--
+VQE Iter. 26
+Energy:  -2.8007063910755488
+--
+VQE Iter. 27
+Energy:  -2.8007063910925165
+--
+VQE Iter. 28
+Energy:  -2.8007063910947578
+--
+VQE Iter. 29
+Energy:  -2.8007063910959960
+--
+VQE Iter. 30
+Energy:  -2.8007063910968544
+--
+VQE Iter. 31
+Energy:  -2.8007063910975569
+--
+VQE Iter. 32
+Energy:  -2.8007063910977914
+--
+VQE Iter. 33
+Energy:  -2.8007063910979992
+--
+VQE Iter. 34
+Energy:  -2.8007063910981889
+--
+VQE Iter. 35
+Energy:  -2.8007063910981924
+--
+VQE Iter. 36
+Energy:  -2.8007063910982244
+--
+VQE Iter. 37
+Energy:  -2.8007063910982781
+--
+VQE Iter. 38
+Energy:  -2.8007063910983789
+--
+VQE Iter. 0
+Energy:  -2.8007063910983789
+--
+VQE Iter. 1
+Energy:  -2.8007073449467064
+--
+VQE Iter. 2
+Energy:  -2.8007076551942212
+--
+VQE Iter. 3
+Energy:  -2.8007077272040330
+--
+VQE Iter. 4
+Energy:  -2.8007077427058924
+--
+VQE Iter. 5
+Energy:  -2.8007077460194827
+--
+VQE Iter. 6
+Energy:  -2.8007077481392790
+--
+VQE Iter. 7
+Energy:  -2.8007077481735552
+--
+VQE Iter. 8
+Energy:  -2.8007077481743283
+--
+VQE Iter. 9
+Energy:  -2.8007077481745344
+--
+VQE Iter. 0
+Energy:  -2.8007077481745344
+--
+VQE Iter. 1
+Energy:  -2.8007103411174454
+--
+VQE Iter. 2
+Energy:  -2.8007143527383667
+--
+VQE Iter. 3
+Energy:  -2.8007166313737577
+--
+VQE Iter. 4
+Energy:  -2.8007173538332362
+--
+VQE Iter. 5
+Energy:  -2.8007175458595523
+--
+VQE Iter. 6
+Energy:  -2.8007176026474832
+--
+VQE Iter. 7
+Energy:  -2.8007176840503964
+--
+VQE Iter. 8
+Energy:  -2.8007177162673629
+--
+VQE Iter. 9
+Energy:  -2.8007177338093334
+--
+VQE Iter. 10
+Energy:  -2.8007177562665797
+--
+VQE Iter. 11
+Energy:  -2.8007177643849257
+--
+VQE Iter. 12
+Energy:  -2.8007177775361938
+--
+VQE Iter. 13
+Energy:  -2.8007177888499548
+--
+VQE Iter. 14
+Energy:  -2.8007177941475181
+--
+VQE Iter. 15
+Energy:  -2.8007177985122853
+--
+VQE Iter. 16
+Energy:  -2.8007178016546077
+--
+VQE Iter. 17
+Energy:  -2.8007178037949410
+--
+VQE Iter. 18
+Energy:  -2.8007178045140835
+--
+VQE Iter. 19
+Energy:  -2.8007178049413763
+--
+VQE Iter. 20
+Energy:  -2.8007178050047306
+--
+VQE Iter. 21
+Energy:  -2.8007178050063204
+--
+VQE Iter. 22
+Energy:  -2.8007178050076229
+--
+VQE Iter. 0
+Energy:  -2.8007178050076229
+--
+VQE Iter. 1
+Energy:  -2.8007211293882444
+--
+VQE Iter. 2
+Energy:  -2.8007248939510485
+--
+VQE Iter. 3
+Energy:  -2.8007265238517460
+--
+VQE Iter. 4
+Energy:  -2.8007271252820245
+--
+VQE Iter. 5
+Energy:  -2.8007280674143953
+--
+VQE Iter. 6
+Energy:  -2.8007285894533269
+--
+VQE Iter. 7
+Energy:  -2.8007291193369297
+--
+VQE Iter. 8
+Energy:  -2.8007294044612681
+--
+VQE Iter. 9
+Energy:  -2.8007297149476873
+--
+VQE Iter. 10
+Energy:  -2.8007300544356961
+--
+VQE Iter. 11
+Energy:  -2.8007302601290447
+--
+VQE Iter. 12
+Energy:  -2.8007305269007094
+--
+VQE Iter. 13
+Energy:  -2.8007306394428033
+--
+VQE Iter. 14
+Energy:  -2.8007308336041046
+--
+VQE Iter. 15
+Energy:  -2.8007310222177049
+--
+VQE Iter. 16
+Energy:  -2.8007311761985485
+--
+VQE Iter. 17
+Energy:  -2.8007313088116819
+--
+VQE Iter. 18
+Energy:  -2.8007314548703865
+--
+VQE Iter. 19
+Energy:  -2.8007315624286644
+--
+VQE Iter. 20
+Energy:  -2.8007317006008057
+--
+VQE Iter. 21
+Energy:  -2.8007317705521042
+--
+VQE Iter. 22
+Energy:  -2.8007318874006217
+--
+VQE Iter. 23
+Energy:  -2.8007319937102730
+--
+VQE Iter. 24
+Energy:  -2.8007320626478611
+--
+VQE Iter. 25
+Energy:  -2.8007321624823729
+--
+VQE Iter. 26
+Energy:  -2.8007322667418086
+--
+VQE Iter. 27
+Energy:  -2.8007323530368762
+--
+VQE Iter. 28
+Energy:  -2.8007324816249684
+--
+VQE Iter. 29
+Energy:  -2.8007326816217502
+--
+VQE Iter. 30
+Energy:  -2.8007329526368894
+--
+VQE Iter. 31
+Energy:  -2.8007331730179170
+--
+VQE Iter. 32
+Energy:  -2.8007335410966121
+--
+VQE Iter. 33
+Energy:  -2.8007338748499482
+--
+VQE Iter. 34
+Energy:  -2.8007344433239623
+--
+VQE Iter. 35
+Energy:  -2.8007352420859521
+--
+VQE Iter. 36
+Energy:  -2.8007361255063552
+--
+VQE Iter. 37
+Energy:  -2.8007368183677244
+--
+VQE Iter. 38
+Energy:  -2.8007373674039235
+--
+VQE Iter. 39
+Energy:  -2.8007377413779428
+--
+VQE Iter. 40
+Energy:  -2.8007382256608522
+--
+VQE Iter. 41
+Energy:  -2.8007387244588218
+--
+VQE Iter. 42
+Energy:  -2.8007390618620867
+--
+VQE Iter. 43
+Energy:  -2.8007395481632837
+--
+VQE Iter. 44
+Energy:  -2.8007401520160156
+--
+VQE Iter. 45
+Energy:  -2.8007406660309830
+--
+VQE Iter. 46
+Energy:  -2.8007408416662880
+--
+VQE Iter. 47
+Energy:  -2.8007411175409915
+--
+VQE Iter. 48
+Energy:  -2.8007414284829211
+--
+VQE Iter. 49
+Energy:  -2.8007416673519607
+--
+VQE Iter. 50
+Energy:  -2.8007417949968341
+--
+VQE Iter. 51
+Energy:  -2.8007419775911329
+--
+VQE Iter. 52
+Energy:  -2.8007420493191932
+--
+VQE Iter. 53
+Energy:  -2.8007421859575943
+--
+VQE Iter. 54
+Energy:  -2.8007423855077320
+--
+VQE Iter. 55
+Energy:  -2.8007424703608144
+--
+VQE Iter. 56
+Energy:  -2.8007426309237218
+--
+VQE Iter. 57
+Energy:  -2.8007428620690140
+--
+VQE Iter. 58
+Energy:  -2.8007429716820953
+--
+VQE Iter. 59
+Energy:  -2.8007431753997545
+--
+VQE Iter. 60
+Energy:  -2.8007434488016232
+--
+VQE Iter. 61
+Energy:  -2.8007435942737287
+--
+VQE Iter. 62
+Energy:  -2.8007438588932052
+--
+VQE Iter. 63
+Energy:  -2.8007441396909978
+--
+VQE Iter. 64
+Energy:  -2.8007443664055076
+--
+VQE Iter. 65
+Energy:  -2.8007447075267575
+--
+VQE Iter. 66
+Energy:  -2.8007448384880163
+--
+VQE Iter. 67
+Energy:  -2.8007450914932064
+--
+VQE Iter. 68
+Energy:  -2.8007454213163725
+--
+VQE Iter. 69
+Energy:  -2.8007455887556807
+--
+VQE Iter. 70
+Energy:  -2.8007458790128590
+--
+VQE Iter. 71
+Energy:  -2.8007461675328793
+--
+VQE Iter. 72
+Energy:  -2.8007463753943314
+--
+VQE Iter. 73
+Energy:  -2.8007465231621884
+--
+VQE Iter. 74
+Energy:  -2.8007467398663821
+--
+VQE Iter. 75
+Energy:  -2.8007468025044786
+--
+VQE Iter. 76
+Energy:  -2.8007469166347430
+--
+VQE Iter. 77
+Energy:  -2.8007470584672709
+--
+VQE Iter. 78
+Energy:  -2.8007471127989505
+--
+VQE Iter. 79
+Energy:  -2.8007471869010852
+--
+VQE Iter. 80
+Energy:  -2.8007472223765495
+--
+VQE Iter. 81
+Energy:  -2.8007472885816207
+--
+VQE Iter. 82
+Energy:  -2.8007473731687988
+--
+VQE Iter. 83
+Energy:  -2.8007474100053851
+--
+VQE Iter. 84
+Energy:  -2.8007474787000666
+--
+VQE Iter. 85
+Energy:  -2.8007475426498676
+--
+VQE Iter. 86
+Energy:  -2.8007476391973469
+--
+VQE Iter. 87
+Energy:  -2.8007477827923672
+--
+VQE Iter. 88
+Energy:  -2.8007479679264642
+--
+VQE Iter. 89
+Energy:  -2.8007482131959640
+--
+VQE Iter. 90
+Energy:  -2.8007483447727495
+--
+VQE Iter. 91
+Energy:  -2.8007485467505351
+--
+VQE Iter. 92
+Energy:  -2.8007488265780864
+--
+VQE Iter. 93
+Energy:  -2.8007491243878855
+--
+VQE Iter. 94
+Energy:  -2.8007492406728058
+--
+VQE Iter. 95
+Energy:  -2.8007494515271025
+--
+VQE Iter. 96
+Energy:  -2.8007496658493296
+--
+VQE Iter. 97
+Energy:  -2.8007498507210666
+--
+VQE Iter. 98
+Energy:  -2.8007499712355601
+--
+VQE Iter. 99
+Energy:  -2.8007501517939182
+--
+VQE Iter. 100
+Energy:  -2.8007502942752875
+--
+VQE Iter. 101
+Energy:  -2.8007504410106807
+--
+VQE Iter. 102
+Energy:  -2.8007505602369029
+--
+VQE Iter. 103
+Energy:  -2.8007506405694871
+--
+VQE Iter. 104
+Energy:  -2.8007507503562690
+--
+VQE Iter. 105
+Energy:  -2.8007507942987711
+--
+VQE Iter. 106
+Energy:  -2.8007508736517930
+--
+VQE Iter. 107
+Energy:  -2.8007509427032207
+--
+VQE Iter. 108
+Energy:  -2.8007510153728639
+--
+VQE Iter. 109
+Energy:  -2.8007510742572248
+--
+VQE Iter. 110
+Energy:  -2.8007511253684099
+--
+VQE Iter. 111
+Energy:  -2.8007511731260317
+--
+VQE Iter. 112
+Energy:  -2.8007511986128293
+--
+VQE Iter. 113
+Energy:  -2.8007512189824650
+--
+VQE Iter. 114
+Energy:  -2.8007512353083848
+--
+VQE Iter. 115
+Energy:  -2.8007512500480907
+--
+VQE Iter. 116
+Energy:  -2.8007512547583424
+--
+VQE Iter. 117
+Energy:  -2.8007512588114740
+--
+VQE Iter. 118
+Energy:  -2.8007512606276803
+--
+VQE Iter. 119
+Energy:  -2.8007512609516150
+--
+VQE Iter. 120
+Energy:  -2.8007512609709235
+--
+VQE Iter. 121
+Energy:  -2.8007512609717922
+--
+VQE Iter. 122
+Energy:  -2.8007512609721572
+--
+VQE Iter. 123
+Energy:  -2.8007512609723322
+--
+VQE Iter. 124
+Energy:  -2.8007512609723388
+--
+VQE Iter. 0
+Energy:  -2.8007512609723388
+--
+VQE Iter. 1
+Energy:  -2.8007559909048614
+--
+VQE Iter. 2
+Energy:  -2.8007636651705714
+--
+VQE Iter. 3
+Energy:  -2.8007684006876259
+--
+VQE Iter. 4
+Energy:  -2.8007693633126030
+--
+VQE Iter. 5
+Energy:  -2.8007698995170731
+--
+VQE Iter. 6
+Energy:  -2.8007707610658810
+--
+VQE Iter. 7
+Energy:  -2.8007716436214256
+--
+VQE Iter. 8
+Energy:  -2.8007720769912465
+--
+VQE Iter. 9
+Energy:  -2.8007727666838984
+--
+VQE Iter. 10
+Energy:  -2.8007736591473886
+--
+VQE Iter. 11
+Energy:  -2.8007746468532817
+--
+VQE Iter. 12
+Energy:  -2.8007753151694992
+--
+VQE Iter. 13
+Energy:  -2.8007762122404047
+--
+VQE Iter. 14
+Energy:  -2.8007766020518852
+--
+VQE Iter. 15
+Energy:  -2.8007773197814521
+--
+VQE Iter. 16
+Energy:  -2.8007780769405826
+--
+VQE Iter. 17
+Energy:  -2.8007787279442371
+--
+VQE Iter. 18
+Energy:  -2.8007797426603629
+--
+VQE Iter. 19
+Energy:  -2.8007809915088102
+--
+VQE Iter. 20
+Energy:  -2.8007823246933832
+--
+VQE Iter. 21
+Energy:  -2.8007828661201852
+--
+VQE Iter. 22
+Energy:  -2.8007837593344824
+--
+VQE Iter. 23
+Energy:  -2.8007850056260790
+--
+VQE Iter. 24
+Energy:  -2.8007856309374124
+--
+VQE Iter. 25
+Energy:  -2.8007867799273241
+--
+VQE Iter. 26
+Energy:  -2.8007886502745016
+--
+VQE Iter. 27
+Energy:  -2.8007896798026755
+--
+VQE Iter. 28
+Energy:  -2.8007916774253601
+--
+VQE Iter. 29
+Energy:  -2.8007949876524632
+--
+VQE Iter. 30
+Energy:  -2.8007999007614064
+--
+VQE Iter. 31
+Energy:  -2.8008019176533456
+--
+VQE Iter. 32
+Energy:  -2.8008057056856104
+--
+VQE Iter. 33
+Energy:  -2.8008088048867004
+--
+VQE Iter. 34
+Energy:  -2.8008128768387510
+--
+VQE Iter. 35
+Energy:  -2.8008186728647160
+--
+VQE Iter. 36
+Energy:  -2.8008221353946969
+--
+VQE Iter. 37
+Energy:  -2.8008275519471324
+--
+VQE Iter. 38
+Energy:  -2.8008333822697864
+--
+VQE Iter. 39
+Energy:  -2.8008371886477357
+--
+VQE Iter. 40
+Energy:  -2.8008407188057696
+--
+VQE Iter. 41
+Energy:  -2.8008427207868944
+--
+VQE Iter. 42
+Energy:  -2.8008461935448290
+--
+VQE Iter. 43
+Energy:  -2.8008506019485946
+--
+VQE Iter. 44
+Energy:  -2.8008526210967339
+--
+VQE Iter. 45
+Energy:  -2.8008560026734695
+--
+VQE Iter. 46
+Energy:  -2.8008572971117149
+--
+VQE Iter. 47
+Energy:  -2.8008594444581503
+--
+VQE Iter. 48
+Energy:  -2.8008620378441105
+--
+VQE Iter. 49
+Energy:  -2.8008630515489474
+--
+VQE Iter. 50
+Energy:  -2.8008645564963874
+--
+VQE Iter. 51
+Energy:  -2.8008663479463185
+--
+VQE Iter. 52
+Energy:  -2.8008670690328938
+--
+VQE Iter. 53
+Energy:  -2.8008677706881517
+--
+VQE Iter. 54
+Energy:  -2.8008686638181008
+--
+VQE Iter. 55
+Energy:  -2.8008691494127977
+--
+VQE Iter. 56
+Energy:  -2.8008699531877248
+--
+VQE Iter. 57
+Energy:  -2.8008710818161231
+--
+VQE Iter. 58
+Energy:  -2.8008723988235582
+--
+VQE Iter. 59
+Energy:  -2.8008731892563872
+--
+VQE Iter. 60
+Energy:  -2.8008741389900296
+--
+VQE Iter. 61
+Energy:  -2.8008744763378877
+--
+VQE Iter. 62
+Energy:  -2.8008750577771742
+--
+VQE Iter. 63
+Energy:  -2.8008756176836003
+--
+VQE Iter. 64
+Energy:  -2.8008760045566956
+--
+VQE Iter. 65
+Energy:  -2.8008762982429443
+--
+VQE Iter. 66
+Energy:  -2.8008767438641682
+--
+VQE Iter. 67
+Energy:  -2.8008772645987792
+--
+VQE Iter. 68
+Energy:  -2.8008774554985960
+--
+VQE Iter. 69
+Energy:  -2.8008777761844561
+--
+VQE Iter. 70
+Energy:  -2.8008780682705416
+--
+VQE Iter. 71
+Energy:  -2.8008783110444009
+--
+VQE Iter. 72
+Energy:  -2.8008785392145015
+--
+VQE Iter. 73
+Energy:  -2.8008787738941212
+--
+VQE Iter. 74
+Energy:  -2.8008789686216859
+--
+VQE Iter. 75
+Energy:  -2.8008791689656363
+--
+VQE Iter. 76
+Energy:  -2.8008793401626164
+--
+VQE Iter. 77
+Energy:  -2.8008794980426241
+--
+VQE Iter. 78
+Energy:  -2.8008796577213770
+--
+VQE Iter. 79
+Energy:  -2.8008797948786661
+--
+VQE Iter. 80
+Energy:  -2.8008799223466663
+--
+VQE Iter. 81
+Energy:  -2.8008800471496613
+--
+VQE Iter. 82
+Energy:  -2.8008801676971040
+--
+VQE Iter. 83
+Energy:  -2.8008802792774663
+--
+VQE Iter. 84
+Energy:  -2.8008803945312795
+--
+VQE Iter. 85
+Energy:  -2.8008804998072936
+--
+VQE Iter. 86
+Energy:  -2.8008806339026870
+--
+VQE Iter. 87
+Energy:  -2.8008807154828355
+--
+VQE Iter. 88
+Energy:  -2.8008808491538062
+--
+VQE Iter. 89
+Energy:  -2.8008810193201996
+--
+VQE Iter. 90
+Energy:  -2.8008811030935057
+--
+VQE Iter. 91
+Energy:  -2.8008812458728429
+--
+VQE Iter. 92
+Energy:  -2.8008814043251093
+--
+VQE Iter. 93
+Energy:  -2.8008815173893442
+--
+VQE Iter. 94
+Energy:  -2.8008816748491734
+--
+VQE Iter. 95
+Energy:  -2.8008818216550999
+--
+VQE Iter. 96
+Energy:  -2.8008819248427490
+--
+VQE Iter. 97
+Energy:  -2.8008820648066419
+--
+VQE Iter. 98
+Energy:  -2.8008821315245562
+--
+VQE Iter. 99
+Energy:  -2.8008822533847462
+--
+VQE Iter. 100
+Energy:  -2.8008823598547781
+--
+VQE Iter. 101
+Energy:  -2.8008824862375294
+--
+VQE Iter. 102
+Energy:  -2.8008825786203682
+--
+VQE Iter. 103
+Energy:  -2.8008827025376233
+--
+VQE Iter. 104
+Energy:  -2.8008828800744046
+--
+VQE Iter. 105
+Energy:  -2.8008829822055588
+--
+VQE Iter. 106
+Energy:  -2.8008831318498753
+--
+VQE Iter. 107
+Energy:  -2.8008833408499845
+--
+VQE Iter. 108
+Energy:  -2.8008835129661809
+--
+VQE Iter. 109
+Energy:  -2.8008837235689814
+--
+VQE Iter. 110
+Energy:  -2.8008838356576535
+--
+VQE Iter. 111
+Energy:  -2.8008840159669073
+--
+VQE Iter. 112
+Energy:  -2.8008842709843038
+--
+VQE Iter. 113
+Energy:  -2.8008845706127596
+--
+VQE Iter. 114
+Energy:  -2.8008848989754349
+--
+VQE Iter. 115
+Energy:  -2.8008850632314939
+--
+VQE Iter. 116
+Energy:  -2.8008853314266950
+--
+VQE Iter. 117
+Energy:  -2.8008856470003889
+--
+VQE Iter. 118
+Energy:  -2.8008857678099339
+--
+VQE Iter. 119
+Energy:  -2.8008859882925194
+--
+VQE Iter. 120
+Energy:  -2.8008861836030570
+--
+VQE Iter. 121
+Energy:  -2.8008863985034123
+--
+VQE Iter. 122
+Energy:  -2.8008865395328186
+--
+VQE Iter. 123
+Energy:  -2.8008867190622211
+--
+VQE Iter. 124
+Energy:  -2.8008868020439808
+--
+VQE Iter. 125
+Energy:  -2.8008869341893061
+--
+VQE Iter. 126
+Energy:  -2.8008870788111531
+--
+VQE Iter. 127
+Energy:  -2.8008872207208575
+--
+VQE Iter. 128
+Energy:  -2.8008872824615985
+--
+VQE Iter. 129
+Energy:  -2.8008873692700451
+--
+VQE Iter. 130
+Energy:  -2.8008874743426699
+--
+VQE Iter. 131
+Energy:  -2.8008875491792891
+--
+VQE Iter. 132
+Energy:  -2.8008876251166321
+--
+VQE Iter. 133
+Energy:  -2.8008876670769305
+--
+VQE Iter. 134
+Energy:  -2.8008877329388668
+--
+VQE Iter. 135
+Energy:  -2.8008878115009699
+--
+VQE Iter. 136
+Energy:  -2.8008878911774344
+--
+VQE Iter. 137
+Energy:  -2.8008879559915050
+--
+VQE Iter. 138
+Energy:  -2.8008880369683244
+--
+VQE Iter. 139
+Energy:  -2.8008881228983196
+--
+VQE Iter. 140
+Energy:  -2.8008881727735453
+--
+VQE Iter. 141
+Energy:  -2.8008882425063186
+--
+VQE Iter. 142
+Energy:  -2.8008882704841174
+--
+VQE Iter. 143
+Energy:  -2.8008883245486733
+--
+VQE Iter. 144
+Energy:  -2.8008884028570558
+--
+VQE Iter. 145
+Energy:  -2.8008885116532851
+--
+VQE Iter. 146
+Energy:  -2.8008885860403825
+--
+VQE Iter. 147
+Energy:  -2.8008886895397525
+--
+VQE Iter. 148
+Energy:  -2.8008888368497935
+--
+VQE Iter. 149
+Energy:  -2.8008889684687559
+--
+VQE Iter. 150
+Energy:  -2.8008890940061550
+--
+VQE Iter. 151
+Energy:  -2.8008891801225184
+--
+VQE Iter. 152
+Energy:  -2.8008893160498110
+--
+VQE Iter. 153
+Energy:  -2.8008895026019371
+--
+VQE Iter. 154
+Energy:  -2.8008897197180520
+--
+VQE Iter. 155
+Energy:  -2.8008899399712877
+--
+VQE Iter. 156
+Energy:  -2.8008901110210163
+--
+VQE Iter. 157
+Energy:  -2.8008902646435776
+--
+VQE Iter. 158
+Energy:  -2.8008904576987734
+--
+VQE Iter. 159
+Energy:  -2.8008907200889923
+--
+VQE Iter. 160
+Energy:  -2.8008909368142021
+--
+VQE Iter. 161
+Energy:  -2.8008912353120756
+--
+VQE Iter. 162
+Energy:  -2.8008915643307244
+--
+VQE Iter. 163
+Energy:  -2.8008918707230430
+--
+VQE Iter. 164
+Energy:  -2.8008920862581532
+--
+VQE Iter. 165
+Energy:  -2.8008924060294138
+--
+VQE Iter. 166
+Energy:  -2.8008928275299665
+--
+VQE Iter. 167
+Energy:  -2.8008931738605565
+--
+VQE Iter. 168
+Energy:  -2.8008935652431828
+--
+VQE Iter. 169
+Energy:  -2.8008937998896899
+--
+VQE Iter. 170
+Energy:  -2.8008941472587132
+--
+VQE Iter. 171
+Energy:  -2.8008945290914729
+--
+VQE Iter. 172
+Energy:  -2.8008948318159308
+--
+VQE Iter. 173
+Energy:  -2.8008952021420845
+--
+VQE Iter. 174
+Energy:  -2.8008953724635801
+--
+VQE Iter. 175
+Energy:  -2.8008955814885903
+--
+VQE Iter. 176
+Energy:  -2.8008957143815829
+--
+VQE Iter. 177
+Energy:  -2.8008959105855280
+--
+VQE Iter. 178
+Energy:  -2.8008962032272073
+--
+VQE Iter. 179
+Energy:  -2.8008963134296474
+--
+VQE Iter. 180
+Energy:  -2.8008965114503588
+--
+VQE Iter. 181
+Energy:  -2.8008967303909342
+--
+VQE Iter. 182
+Energy:  -2.8008968792791444
+--
+VQE Iter. 183
+Energy:  -2.8008970069556973
+--
+VQE Iter. 184
+Energy:  -2.8008971646426781
+--
+VQE Iter. 185
+Energy:  -2.8008972434937340
+--
+VQE Iter. 186
+Energy:  -2.8008973560933739
+--
+VQE Iter. 187
+Energy:  -2.8008974662951442
+--
+VQE Iter. 188
+Energy:  -2.8008975354684180
+--
+VQE Iter. 189
+Energy:  -2.8008975626033110
+--
+VQE Iter. 190
+Energy:  -2.8008975821212174
+--
+VQE Iter. 191
+Energy:  -2.8008975944857948
+--
+VQE Iter. 192
+Energy:  -2.8008976057825330
+--
+VQE Iter. 193
+Energy:  -2.8008976080192580
+--
+VQE Iter. 194
+Energy:  -2.8008976088983926
+--
+VQE Iter. 195
+Energy:  -2.8008976089105992
+--
+VQE Iter. 196
+Energy:  -2.8008976089237785
+--
+VQE Iter. 197
+Energy:  -2.8008976089240760
+--
+VQE Iter. 198
+Energy:  -2.8008976089240796
+--
+VQE Iter. 199
+Energy:  -2.8008976089240800
+--
+VQE Iter. 200
+Energy:  -2.8008976089240814
+--
+VQE Iter. 0
+Energy:  -2.8008976089240814
+--
+VQE Iter. 1
+Energy:  -2.8009021485912138
+--
+VQE Iter. 2
+Energy:  -2.8009058277036529
+--
+VQE Iter. 3
+Energy:  -2.8009063483055492
+--
+VQE Iter. 4
+Energy:  -2.8009064961068004
+--
+VQE Iter. 5
+Energy:  -2.8009066001290504
+--
+VQE Iter. 6
+Energy:  -2.8009066471273352
+--
+VQE Iter. 7
+Energy:  -2.8009066729734751
+--
+VQE Iter. 8
+Energy:  -2.8009066903785920
+--
+VQE Iter. 9
+Energy:  -2.8009066986724958
+--
+VQE Iter. 10
+Energy:  -2.8009067030381392
+--
+VQE Iter. 11
+Energy:  -2.8009067040199578
+--
+VQE Iter. 12
+Energy:  -2.8009067045747975
+--
+VQE Iter. 13
+Energy:  -2.8009067046339258
+--
+VQE Iter. 14
+Energy:  -2.8009067046364269
+--
+VQE Iter. 15
+Energy:  -2.8009067046372107
+--
+VQE Iter. 16
+Energy:  -2.8009067046372182
+--
+VQE Iter. 17
+Energy:  -2.8009067046372307
+--
+VQE Iter. 18
+Energy:  -2.8009067046372325
+--
+VQE Iter. 19
+Energy:  -2.8009067046372351
+--
+VQE Iter. 20
+Energy:  -2.8009067046372578
+--
+VQE Iter. 0
+Energy:  -2.8009067046372578
+--
+VQE Iter. 1
+Energy:  -2.8009108562630671
+--
+VQE Iter. 2
+Energy:  -2.8009145262640920
+--
+VQE Iter. 3
+Energy:  -2.8009148296578994
+--
+VQE Iter. 4
+Energy:  -2.8009152861014983
+--
+VQE Iter. 5
+Energy:  -2.8009155760159081
+--
+VQE Iter. 6
+Energy:  -2.8009156854849824
+--
+VQE Iter. 7
+Energy:  -2.8009157482071307
+--
+VQE Iter. 8
+Energy:  -2.8009158063238662
+--
+VQE Iter. 9
+Energy:  -2.8009158342963492
+--
+VQE Iter. 10
+Energy:  -2.8009158459532104
+--
+VQE Iter. 11
+Energy:  -2.8009158533808827
+--
+VQE Iter. 12
+Energy:  -2.8009158545733772
+--
+VQE Iter. 13
+Energy:  -2.8009158549410671
+--
+VQE Iter. 14
+Energy:  -2.8009158549483928
+--
+VQE Iter. 15
+Energy:  -2.8009158549485820
+--
+VQE Iter. 16
+Energy:  -2.8009158549485820
+--
+VQE Iter. 0
+Energy:  -2.8009158549485820
+--
+VQE Iter. 1
+Energy:  -2.8009179146968668
+--
+VQE Iter. 2
+Energy:  -2.8009203406761958
+--
+VQE Iter. 3
+Energy:  -2.8009205536355020
+--
+VQE Iter. 4
+Energy:  -2.8009206326005254
+--
+VQE Iter. 5
+Energy:  -2.8009206769922637
+--
+VQE Iter. 6
+Energy:  -2.8009207119889608
+--
+VQE Iter. 7
+Energy:  -2.8009207334234234
+--
+VQE Iter. 8
+Energy:  -2.8009207481396090
+--
+VQE Iter. 9
+Energy:  -2.8009207603564983
+--
+VQE Iter. 10
+Energy:  -2.8009207639574649
+--
+VQE Iter. 11
+Energy:  -2.8009207670387619
+--
+VQE Iter. 12
+Energy:  -2.8009207684677140
+--
+VQE Iter. 13
+Energy:  -2.8009207687316846
+--
+VQE Iter. 14
+Energy:  -2.8009207687481084
+--
+VQE Iter. 15
+Energy:  -2.8009207687491129
+--
+VQE Iter. 16
+Energy:  -2.8009207687494171
+--
+VQE Iter. 0
+Energy:  -2.8009207687494171
+--
+VQE Iter. 1
+Energy:  -2.8009252510056712
+--
+VQE Iter. 2
+Energy:  -2.8009275474282496
+--
+VQE Iter. 3
+Energy:  -2.8009277656616076
+--
+VQE Iter. 4
+Energy:  -2.8009279080558107
+--
+VQE Iter. 5
+Energy:  -2.8009279456228269
+--
+VQE Iter. 6
+Energy:  -2.8009279663305389
+--
+VQE Iter. 7
+Energy:  -2.8009279910346629
+--
+VQE Iter. 8
+Energy:  -2.8009280034601858
+--
+VQE Iter. 9
+Energy:  -2.8009280150421416
+--
+VQE Iter. 10
+Energy:  -2.8009280220383115
+--
+VQE Iter. 11
+Energy:  -2.8009280250891884
+--
+VQE Iter. 12
+Energy:  -2.8009280266702681
+--
+VQE Iter. 13
+Energy:  -2.8009280268697987
+--
+VQE Iter. 14
+Energy:  -2.8009280269663193
+--
+VQE Iter. 15
+Energy:  -2.8009280269772723
+--
+VQE Iter. 16
+Energy:  -2.8009280269799257
+--
+VQE Iter. 17
+Energy:  -2.8009280269808925
+--
+VQE Iter. 18
+Energy:  -2.8009280269810661
+--
+VQE Iter. 19
+Energy:  -2.8009280269810715
+--
+VQE Iter. 20
+Energy:  -2.8009280269810723
+--
+VQE Iter. 21
+Energy:  -2.8009280269810732
+--
+VQE Iter. 0
+Energy:  -2.8009280269810732
+--
+VQE Iter. 1
+Energy:  -2.8009287200076045
+--
+VQE Iter. 2
+Energy:  -2.8009298823949527
+--
+VQE Iter. 3
+Energy:  -2.8009306464614330
+--
+VQE Iter. 4
+Energy:  -2.8009310085258385
+--
+VQE Iter. 5
+Energy:  -2.8009313129212323
+--
+VQE Iter. 6
+Energy:  -2.8009315068585479
+--
+VQE Iter. 7
+Energy:  -2.8009316594307769
+--
+VQE Iter. 8
+Energy:  -2.8009317722448812
+--
+VQE Iter. 9
+Energy:  -2.8009318876747216
+--
+VQE Iter. 10
+Energy:  -2.8009319861699722
+--
+VQE Iter. 11
+Energy:  -2.8009320823172352
+--
+VQE Iter. 12
+Energy:  -2.8009321769013411
+--
+VQE Iter. 13
+Energy:  -2.8009322678367452
+--
+VQE Iter. 14
+Energy:  -2.8009323558228534
+--
+VQE Iter. 15
+Energy:  -2.8009324413621535
+--
+VQE Iter. 16
+Energy:  -2.8009325281322277
+--
+VQE Iter. 17
+Energy:  -2.8009326242188268
+--
+VQE Iter. 18
+Energy:  -2.8009326994220554
+--
+VQE Iter. 19
+Energy:  -2.8009328064642758
+--
+VQE Iter. 20
+Energy:  -2.8009328489644125
+--
+VQE Iter. 21
+Energy:  -2.8009329290939986
+--
+VQE Iter. 22
+Energy:  -2.8009330129618299
+--
+VQE Iter. 23
+Energy:  -2.8009330858362484
+--
+VQE Iter. 24
+Energy:  -2.8009331824167965
+--
+VQE Iter. 25
+Energy:  -2.8009332303772307
+--
+VQE Iter. 26
+Energy:  -2.8009333149454640
+--
+VQE Iter. 27
+Energy:  -2.8009333925411966
+--
+VQE Iter. 28
+Energy:  -2.8009334708602589
+--
+VQE Iter. 29
+Energy:  -2.8009335246549778
+--
+VQE Iter. 30
+Energy:  -2.8009335955833166
+--
+VQE Iter. 31
+Energy:  -2.8009336301915999
+--
+VQE Iter. 32
+Energy:  -2.8009336919674253
+--
+VQE Iter. 33
+Energy:  -2.8009337429187178
+--
+VQE Iter. 34
+Energy:  -2.8009338049323484
+--
+VQE Iter. 35
+Energy:  -2.8009338374876145
+--
+VQE Iter. 36
+Energy:  -2.8009338875238665
+--
+VQE Iter. 37
+Energy:  -2.8009339396813568
+--
+VQE Iter. 38
+Energy:  -2.8009339577724282
+--
+VQE Iter. 39
+Energy:  -2.8009339861570028
+--
+VQE Iter. 40
+Energy:  -2.8009340110297409
+--
+VQE Iter. 41
+Energy:  -2.8009340181175175
+--
+VQE Iter. 42
+Energy:  -2.8009340295189600
+--
+VQE Iter. 43
+Energy:  -2.8009340372796516
+--
+VQE Iter. 44
+Energy:  -2.8009340400214127
+--
+VQE Iter. 45
+Energy:  -2.8009340423736209
+--
+VQE Iter. 46
+Energy:  -2.8009340435005212
+--
+VQE Iter. 47
+Energy:  -2.8009340437263597
+--
+VQE Iter. 48
+Energy:  -2.8009340437412957
+--
+VQE Iter. 49
+Energy:  -2.8009340437428749
+--
+VQE Iter. 50
+Energy:  -2.8009340437455670
+--
+VQE Iter. 0
+Energy:  -2.8009340437455670
+--
+VQE Iter. 1
+Energy:  -2.8009349064593216
+--
+VQE Iter. 2
+Energy:  -2.8009361234411760
+--
+VQE Iter. 3
+Energy:  -2.8009364667211987
+--
+VQE Iter. 4
+Energy:  -2.8009365235535775
+--
+VQE Iter. 5
+Energy:  -2.8009365540417743
+--
+VQE Iter. 6
+Energy:  -2.8009365902010641
+--
+VQE Iter. 7
+Energy:  -2.8009366071443398
+--
+VQE Iter. 8
+Energy:  -2.8009366154607882
+--
+VQE Iter. 9
+Energy:  -2.8009366221485039
+--
+VQE Iter. 10
+Energy:  -2.8009366278066312
+--
+VQE Iter. 11
+Energy:  -2.8009366322176694
+--
+VQE Iter. 12
+Energy:  -2.8009366346032314
+--
+VQE Iter. 13
+Energy:  -2.8009366363067749
+--
+VQE Iter. 14
+Energy:  -2.8009366368610733
+--
+VQE Iter. 15
+Energy:  -2.8009366374902296
+--
+VQE Iter. 16
+Energy:  -2.8009366376329492
+--
+VQE Iter. 17
+Energy:  -2.8009366377470220
+--
+VQE Iter. 18
+Energy:  -2.8009366377702998
+--
+VQE Iter. 19
+Energy:  -2.8009366377712892
+--
+VQE Iter. 20
+Energy:  -2.8009366377717564
+--
+VQE Iter. 21
+Energy:  -2.8009366377720024
+--
+VQE Iter. 0
+Energy:  -2.8009366377720024
+--
+VQE Iter. 1
+Energy:  -2.8009371698831802
+--
+VQE Iter. 2
+Energy:  -2.8009380367071470
+--
+VQE Iter. 3
+Energy:  -2.8009387903254597
+--
+VQE Iter. 4
+Energy:  -2.8009389874478630
+--
+VQE Iter. 5
+Energy:  -2.8009390378495707
+--
+VQE Iter. 6
+Energy:  -2.8009390619355572
+--
+VQE Iter. 7
+Energy:  -2.8009390902730482
+--
+VQE Iter. 8
+Energy:  -2.8009391078074293
+--
+VQE Iter. 9
+Energy:  -2.8009391353993989
+--
+VQE Iter. 10
+Energy:  -2.8009391567793980
+--
+VQE Iter. 11
+Energy:  -2.8009391748598906
+--
+VQE Iter. 12
+Energy:  -2.8009391939671664
+--
+VQE Iter. 13
+Energy:  -2.8009392038507137
+--
+VQE Iter. 14
+Energy:  -2.8009392166861495
+--
+VQE Iter. 15
+Energy:  -2.8009392221434566
+--
+VQE Iter. 16
+Energy:  -2.8009392312863386
+--
+VQE Iter. 17
+Energy:  -2.8009392384936960
+--
+VQE Iter. 18
+Energy:  -2.8009392453599058
+--
+VQE Iter. 19
+Energy:  -2.8009392498648595
+--
+VQE Iter. 20
+Energy:  -2.8009392536677304
+--
+VQE Iter. 21
+Energy:  -2.8009392551599381
+--
+VQE Iter. 22
+Energy:  -2.8009392569340381
+--
+VQE Iter. 23
+Energy:  -2.8009392575391230
+--
+VQE Iter. 24
+Energy:  -2.8009392582841093
+--
+VQE Iter. 25
+Energy:  -2.8009392586211233
+--
+VQE Iter. 26
+Energy:  -2.8009392587006166
+--
+VQE Iter. 27
+Energy:  -2.8009392587112973
+--
+VQE Iter. 28
+Energy:  -2.8009392587123618
+--
+VQE Iter. 29
+Energy:  -2.8009392587123658
+--
+VQE Iter. 30
+Energy:  -2.8009392587123703
+--
+VQE Iter. 31
+Energy:  -2.8009392587125008
+--
+VQE Iter. 32
+Energy:  -2.8009392587127495
+--
+VQE Iter. 33
+Energy:  -2.8009392587132051
+--
+VQE Iter. 34
+Energy:  -2.8009392587132078
+--
+VQE Iter. 0
+Energy:  -2.8009392587132078
+--
+VQE Iter. 1
+Energy:  -2.8009394824812626
+--
+VQE Iter. 2
+Energy:  -2.8009397965783149
+--
+VQE Iter. 3
+Energy:  -2.8009398818264786
+--
+VQE Iter. 4
+Energy:  -2.8009398910131114
+--
+VQE Iter. 5
+Energy:  -2.8009399046449976
+--
+VQE Iter. 6
+Energy:  -2.8009399160317021
+--
+VQE Iter. 7
+Energy:  -2.8009399248070994
+--
+VQE Iter. 8
+Energy:  -2.8009399322234785
+--
+VQE Iter. 9
+Energy:  -2.8009399389962297
+--
+VQE Iter. 10
+Energy:  -2.8009399417478034
+--
+VQE Iter. 11
+Energy:  -2.8009399459450384
+--
+VQE Iter. 12
+Energy:  -2.8009399493601159
+--
+VQE Iter. 13
+Energy:  -2.8009399503135315
+--
+VQE Iter. 14
+Energy:  -2.8009399518962308
+--
+VQE Iter. 15
+Energy:  -2.8009399530634789
+--
+VQE Iter. 16
+Energy:  -2.8009399538005524
+--
+VQE Iter. 17
+Energy:  -2.8009399541832014
+--
+VQE Iter. 18
+Energy:  -2.8009399543223519
+--
+VQE Iter. 19
+Energy:  -2.8009399543374958
+--
+VQE Iter. 20
+Energy:  -2.8009399543490021
+--
+VQE Iter. 21
+Energy:  -2.8009399543543410
+--
+VQE Iter. 22
+Energy:  -2.8009399543554290
+--
+VQE Iter. 23
+Energy:  -2.8009399543561253
+--
+VQE Iter. 24
+Energy:  -2.8009399543564477
+--
+VQE Iter. 25
+Energy:  -2.8009399543564535
+--
+VQE Iter. 26
+Energy:  -2.8009399543564539
+--
+VQE Iter. 27
+Energy:  -2.8009399543576117
+--
+VQE Iter. 28
+Energy:  -2.8009399543597886
+--
+VQE Iter. 29
+Energy:  -2.8009399543600169
+--
+VQE Iter. 30
+Energy:  -2.8009399543602056
+--
+VQE Iter. 31
+Energy:  -2.8009399543602109
+--
+VQE Iter. 32
+Energy:  -2.8009399543602136
+--
+VQE Iter. 33
+Energy:  -2.8009399543602145
+--
+VQE Iter. 34
+Energy:  -2.8009399543602442
+--
+VQE Iter. 0
+Energy:  -2.8009399543602442
+--
+VQE Iter. 1
+Energy:  -2.8009401384132144
+--
+VQE Iter. 2
+Energy:  -2.8009403990482467
+--
+VQE Iter. 3
+Energy:  -2.8009404914032592
+--
+VQE Iter. 4
+Energy:  -2.8009405100255824
+--
+VQE Iter. 5
+Energy:  -2.8009405252900028
+--
+VQE Iter. 6
+Energy:  -2.8009405458579977
+--
+VQE Iter. 7
+Energy:  -2.8009405619706680
+--
+VQE Iter. 8
+Energy:  -2.8009405714868540
+--
+VQE Iter. 9
+Energy:  -2.8009405781134218
+--
+VQE Iter. 10
+Energy:  -2.8009405833279106
+--
+VQE Iter. 11
+Energy:  -2.8009405880460041
+--
+VQE Iter. 12
+Energy:  -2.8009405919219827
+--
+VQE Iter. 13
+Energy:  -2.8009405941851013
+--
+VQE Iter. 14
+Energy:  -2.8009405972336507
+--
+VQE Iter. 15
+Energy:  -2.8009406003697532
+--
+VQE Iter. 16
+Energy:  -2.8009406025401753
+--
+VQE Iter. 17
+Energy:  -2.8009406046166681
+--
+VQE Iter. 18
+Energy:  -2.8009406059620359
+--
+VQE Iter. 19
+Energy:  -2.8009406068238811
+--
+VQE Iter. 20
+Energy:  -2.8009406072835263
+--
+VQE Iter. 21
+Energy:  -2.8009406078212948
+--
+VQE Iter. 22
+Energy:  -2.8009406080373469
+--
+VQE Iter. 23
+Energy:  -2.8009406083106847
+--
+VQE Iter. 24
+Energy:  -2.8009406084237178
+--
+VQE Iter. 25
+Energy:  -2.8009406084374171
+--
+VQE Iter. 26
+Energy:  -2.8009406084466328
+--
+VQE Iter. 27
+Energy:  -2.8009406084636916
+--
+VQE Iter. 28
+Energy:  -2.8009406084673536
+--
+VQE Iter. 29
+Energy:  -2.8009406084743471
+--
+VQE Iter. 30
+Energy:  -2.8009406084764237
+--
+VQE Iter. 31
+Energy:  -2.8009406084779958
+--
+VQE Iter. 32
+Energy:  -2.8009406084792117
+--
+VQE Iter. 33
+Energy:  -2.8009406084807638
+--
+VQE Iter. 34
+Energy:  -2.8009406084807709
+--
+VQE Iter. 35
+Energy:  -2.8009406084818451
+--
+VQE Iter. 36
+Energy:  -2.8009406084908570
+--
+VQE Iter. 37
+Energy:  -2.8009406084913744
+--
+VQE Iter. 38
+Energy:  -2.8009406084913784
+--
+VQE Iter. 39
+Energy:  -2.8009406084913788
+--
+VQE Iter. 0
+Energy:  -2.8009406084913788
+--
+VQE Iter. 1
+Energy:  -2.8009407987155672
+--
+VQE Iter. 2
+Energy:  -2.8009411420269634
+--
+VQE Iter. 3
+Energy:  -2.8009416185872835
+--
+VQE Iter. 4
+Energy:  -2.8009417693362058
+--
+VQE Iter. 5
+Energy:  -2.8009418367396144
+--
+VQE Iter. 6
+Energy:  -2.8009419085797398
+--
+VQE Iter. 7
+Energy:  -2.8009419350428515
+--
+VQE Iter. 8
+Energy:  -2.8009419599783518
+--
+VQE Iter. 9
+Energy:  -2.8009419967316611
+--
+VQE Iter. 10
+Energy:  -2.8009420305264365
+--
+VQE Iter. 11
+Energy:  -2.8009420524112114
+--
+VQE Iter. 12
+Energy:  -2.8009420695499871
+--
+VQE Iter. 13
+Energy:  -2.8009420804008331
+--
+VQE Iter. 14
+Energy:  -2.8009420889371586
+--
+VQE Iter. 15
+Energy:  -2.8009420981425945
+--
+VQE Iter. 16
+Energy:  -2.8009421039660958
+--
+VQE Iter. 17
+Energy:  -2.8009421101883691
+--
+VQE Iter. 18
+Energy:  -2.8009421143489583
+--
+VQE Iter. 19
+Energy:  -2.8009421186283379
+--
+VQE Iter. 20
+Energy:  -2.8009421214097165
+--
+VQE Iter. 21
+Energy:  -2.8009421235442402
+--
+VQE Iter. 22
+Energy:  -2.8009421250851632
+--
+VQE Iter. 23
+Energy:  -2.8009421263072736
+--
+VQE Iter. 24
+Energy:  -2.8009421267622607
+--
+VQE Iter. 25
+Energy:  -2.8009421268216270
+--
+VQE Iter. 26
+Energy:  -2.8009421269102344
+--
+VQE Iter. 27
+Energy:  -2.8009421269394679
+--
+VQE Iter. 28
+Energy:  -2.8009421269421488
+--
+VQE Iter. 29
+Energy:  -2.8009421269426356
+--
+VQE Iter. 30
+Energy:  -2.8009421269426729
+--
+VQE Iter. 31
+Energy:  -2.8009421269426746
+--
+VQE Iter. 32
+Energy:  -2.8009421269426764
+--
+VQE Iter. 0
+Energy:  -2.8009421269426764
+--
+VQE Iter. 1
+Energy:  -2.8009422548657654
+--
+VQE Iter. 2
+Energy:  -2.8009424438329349
+--
+VQE Iter. 3
+Energy:  -2.8009425142061053
+--
+VQE Iter. 4
+Energy:  -2.8009425253851106
+--
+VQE Iter. 5
+Energy:  -2.8009425389850091
+--
+VQE Iter. 6
+Energy:  -2.8009425492056579
+--
+VQE Iter. 7
+Energy:  -2.8009425567831978
+--
+VQE Iter. 8
+Energy:  -2.8009425615669077
+--
+VQE Iter. 9
+Energy:  -2.8009425659585334
+--
+VQE Iter. 10
+Energy:  -2.8009425687885283
+--
+VQE Iter. 11
+Energy:  -2.8009425710097227
+--
+VQE Iter. 12
+Energy:  -2.8009425718857255
+--
+VQE Iter. 13
+Energy:  -2.8009425726625530
+--
+VQE Iter. 14
+Energy:  -2.8009425731193187
+--
+VQE Iter. 15
+Energy:  -2.8009425732714339
+--
+VQE Iter. 16
+Energy:  -2.8009425733463704
+--
+VQE Iter. 17
+Energy:  -2.8009425733473008
+--
+VQE Iter. 18
+Energy:  -2.8009425733473141
+--
+VQE Iter. 19
+Energy:  -2.8009425733474345
+--
+VQE Iter. 20
+Energy:  -2.8009425733474593
+--
+VQE Iter. 21
+Energy:  -2.8009425733476809
+--
+VQE Iter. 22
+Energy:  -2.8009425733480997
+--
+VQE Iter. 23
+Energy:  -2.8009425733488125
+--
+VQE Iter. 0
+Energy:  -2.8009425733488125
+--
+VQE Iter. 1
+Energy:  -2.8009426623863858
+--
+VQE Iter. 2
+Energy:  -2.8009428145100048
+--
+VQE Iter. 3
+Energy:  -2.8009429216291717
+--
+VQE Iter. 4
+Energy:  -2.8009430215276421
+--
+VQE Iter. 5
+Energy:  -2.8009430533887478
+--
+VQE Iter. 6
+Energy:  -2.8009430813656753
+--
+VQE Iter. 7
+Energy:  -2.8009431010152905
+--
+VQE Iter. 8
+Energy:  -2.8009431182368427
+--
+VQE Iter. 9
+Energy:  -2.8009431352818446
+--
+VQE Iter. 10
+Energy:  -2.8009431447086852
+--
+VQE Iter. 11
+Energy:  -2.8009431590815064
+--
+VQE Iter. 12
+Energy:  -2.8009431706132188
+--
+VQE Iter. 13
+Energy:  -2.8009431804638929
+--
+VQE Iter. 14
+Energy:  -2.8009431903541939
+--
+VQE Iter. 15
+Energy:  -2.8009431961476068
+--
+VQE Iter. 16
+Energy:  -2.8009432006994439
+--
+VQE Iter. 17
+Energy:  -2.8009432054691255
+--
+VQE Iter. 18
+Energy:  -2.8009432079137300
+--
+VQE Iter. 19
+Energy:  -2.8009432112699124
+--
+VQE Iter. 20
+Energy:  -2.8009432126810134
+--
+VQE Iter. 21
+Energy:  -2.8009432149087581
+--
+VQE Iter. 22
+Energy:  -2.8009432168285673
+--
+VQE Iter. 23
+Energy:  -2.8009432179278666
+--
+VQE Iter. 24
+Energy:  -2.8009432188215881
+--
+VQE Iter. 25
+Energy:  -2.8009432195141688
+--
+VQE Iter. 26
+Energy:  -2.8009432200495761
+--
+VQE Iter. 27
+Energy:  -2.8009432202019724
+--
+VQE Iter. 28
+Energy:  -2.8009432204103053
+--
+VQE Iter. 29
+Energy:  -2.8009432204880436
+--
+VQE Iter. 30
+Energy:  -2.8009432205721283
+--
+VQE Iter. 31
+Energy:  -2.8009432205968747
+--
+VQE Iter. 32
+Energy:  -2.8009432205974045
+--
+VQE Iter. 33
+Energy:  -2.8009432205983504
+--
+VQE Iter. 34
+Energy:  -2.8009432205985099
+--
+VQE Iter. 0
+Energy:  -2.8009432205985099
+--
+VQE Iter. 1
+Energy:  -2.8009433041413265
+--
+VQE Iter. 2
+Energy:  -2.8009434307083185
+--
+VQE Iter. 3
+Energy:  -2.8009434800568740
+--
+VQE Iter. 4
+Energy:  -2.8009435012650483
+--
+VQE Iter. 5
+Energy:  -2.8009435190396124
+--
+VQE Iter. 6
+Energy:  -2.8009435351142407
+--
+VQE Iter. 7
+Energy:  -2.8009435452565530
+--
+VQE Iter. 8
+Energy:  -2.8009435548726200
+--
+VQE Iter. 9
+Energy:  -2.8009435618162133
+--
+VQE Iter. 10
+Energy:  -2.8009435663336428
+--
+VQE Iter. 11
+Energy:  -2.8009435727566494
+--
+VQE Iter. 12
+Energy:  -2.8009435787068955
+--
+VQE Iter. 13
+Energy:  -2.8009435823602251
+--
+VQE Iter. 14
+Energy:  -2.8009435866925263
+--
+VQE Iter. 15
+Energy:  -2.8009435898823098
+--
+VQE Iter. 16
+Energy:  -2.8009435906992532
+--
+VQE Iter. 17
+Energy:  -2.8009435922416772
+--
+VQE Iter. 18
+Energy:  -2.8009435942857066
+--
+VQE Iter. 19
+Energy:  -2.8009435950676052
+--
+VQE Iter. 20
+Energy:  -2.8009435964506428
+--
+VQE Iter. 21
+Energy:  -2.8009435975287977
+--
+VQE Iter. 22
+Energy:  -2.8009435986004005
+--
+VQE Iter. 23
+Energy:  -2.8009435995343570
+--
+VQE Iter. 24
+Energy:  -2.8009436001696888
+--
+VQE Iter. 25
+Energy:  -2.8009436007755570
+--
+VQE Iter. 26
+Energy:  -2.8009436010383371
+--
+VQE Iter. 27
+Energy:  -2.8009436013890379
+--
+VQE Iter. 28
+Energy:  -2.8009436016023126
+--
+VQE Iter. 29
+Energy:  -2.8009436016624436
+--
+VQE Iter. 30
+Energy:  -2.8009436017634264
+--
+VQE Iter. 31
+Energy:  -2.8009436017748470
+--
+VQE Iter. 32
+Energy:  -2.8009436017801614
+--
+VQE Iter. 33
+Energy:  -2.8009436018264657
+--
+VQE Iter. 34
+Energy:  -2.8009436018293981
+--
+VQE Iter. 35
+Energy:  -2.8009436018311895
+--
+VQE Iter. 36
+Energy:  -2.8009436018327674
+--
+VQE Iter. 37
+Energy:  -2.8009436018475911
+--
+VQE Iter. 38
+Energy:  -2.8009436018484659
+--
+VQE Iter. 39
+Energy:  -2.8009436018493106
+--
+VQE Iter. 40
+Energy:  -2.8009436018499700
+--
+VQE Iter. 41
+Energy:  -2.8009436018505882
+--
+VQE Iter. 42
+Energy:  -2.8009436018511842
+--
+VQE Iter. 43
+Energy:  -2.8009436018511957
+--
+VQE Iter. 44
+Energy:  -2.8009436018515657
+--
+VQE Iter. 45
+Energy:  -2.8009436018657499
+--
+VQE Iter. 46
+Energy:  -2.8009436018837128
+--
+VQE Iter. 47
+Energy:  -2.8009436018866074
+--
+VQE Iter. 48
+Energy:  -2.8009436018869995
+--
+VQE Iter. 49
+Energy:  -2.8009436018870679
+--
+VQE Iter. 50
+Energy:  -2.8009436018870701
+--
+VQE Iter. 51
+Energy:  -2.8009436018870710
+--
+VQE Iter. 52
+Energy:  -2.8009436018870719
+--
+VQE Iter. 0
+Energy:  -2.8009436018870719
+--
+VQE Iter. 1
+Energy:  -2.8009436736743973
+--
+VQE Iter. 2
+Energy:  -2.8009438024118753
+--
+VQE Iter. 3
+Energy:  -2.8009439649152470
+--
+VQE Iter. 4
+Energy:  -2.8009440147909976
+--
+VQE Iter. 5
+Energy:  -2.8009440631866545
+--
+VQE Iter. 6
+Energy:  -2.8009440922156572
+--
+VQE Iter. 7
+Energy:  -2.8009441136165751
+--
+VQE Iter. 8
+Energy:  -2.8009441295029869
+--
+VQE Iter. 9
+Energy:  -2.8009441410333173
+--
+VQE Iter. 10
+Energy:  -2.8009441469841758
+--
+VQE Iter. 11
+Energy:  -2.8009441575818332
+--
+VQE Iter. 12
+Energy:  -2.8009441723505422
+--
+VQE Iter. 13
+Energy:  -2.8009441895454774
+--
+VQE Iter. 14
+Energy:  -2.8009442002842193
+--
+VQE Iter. 15
+Energy:  -2.8009442133420883
+--
+VQE Iter. 16
+Energy:  -2.8009442195633696
+--
+VQE Iter. 17
+Energy:  -2.8009442276529786
+--
+VQE Iter. 18
+Energy:  -2.8009442355959075
+--
+VQE Iter. 19
+Energy:  -2.8009442416597272
+--
+VQE Iter. 20
+Energy:  -2.8009442501526447
+--
+VQE Iter. 21
+Energy:  -2.8009442553685000
+--
+VQE Iter. 22
+Energy:  -2.8009442595131073
+--
+VQE Iter. 23
+Energy:  -2.8009442647380038
+--
+VQE Iter. 24
+Energy:  -2.8009442681603436
+--
+VQE Iter. 25
+Energy:  -2.8009442737608214
+--
+VQE Iter. 26
+Energy:  -2.8009442793391202
+--
+VQE Iter. 27
+Energy:  -2.8009442834863516
+--
+VQE Iter. 28
+Energy:  -2.8009442868184053
+--
+VQE Iter. 29
+Energy:  -2.8009442904718655
+--
+VQE Iter. 30
+Energy:  -2.8009442931553226
+--
+VQE Iter. 31
+Energy:  -2.8009442967128715
+--
+VQE Iter. 32
+Energy:  -2.8009442982942776
+--
+VQE Iter. 33
+Energy:  -2.8009443010461759
+--
+VQE Iter. 34
+Energy:  -2.8009443031313008
+--
+VQE Iter. 35
+Energy:  -2.8009443057659835
+--
+VQE Iter. 36
+Energy:  -2.8009443078048539
+--
+VQE Iter. 37
+Energy:  -2.8009443101373006
+--
+VQE Iter. 38
+Energy:  -2.8009443116877191
+--
+VQE Iter. 39
+Energy:  -2.8009443135041918
+--
+VQE Iter. 40
+Energy:  -2.8009443141926185
+--
+VQE Iter. 41
+Energy:  -2.8009443153551112
+--
+VQE Iter. 42
+Energy:  -2.8009443163582874
+--
+VQE Iter. 43
+Energy:  -2.8009443173361319
+--
+VQE Iter. 44
+Energy:  -2.8009443181665081
+--
+VQE Iter. 45
+Energy:  -2.8009443189918173
+--
+VQE Iter. 46
+Energy:  -2.8009443196210309
+--
+VQE Iter. 47
+Energy:  -2.8009443200311832
+--
+VQE Iter. 48
+Energy:  -2.8009443205773197
+--
+VQE Iter. 49
+Energy:  -2.8009443208100535
+--
+VQE Iter. 50
+Energy:  -2.8009443211608613
+--
+VQE Iter. 51
+Energy:  -2.8009443216546579
+--
+VQE Iter. 52
+Energy:  -2.8009443221463615
+--
+VQE Iter. 53
+Energy:  -2.8009443225146495
+--
+VQE Iter. 54
+Energy:  -2.8009443229611035
+--
+VQE Iter. 55
+Energy:  -2.8009443232724296
+--
+VQE Iter. 56
+Energy:  -2.8009443236518758
+--
+VQE Iter. 57
+Energy:  -2.8009443240043725
+--
+VQE Iter. 58
+Energy:  -2.8009443242237011
+--
+VQE Iter. 59
+Energy:  -2.8009443245442229
+--
+VQE Iter. 60
+Energy:  -2.8009443248638535
+--
+VQE Iter. 61
+Energy:  -2.8009443251210144
+--
+VQE Iter. 62
+Energy:  -2.8009443254712734
+--
+VQE Iter. 63
+Energy:  -2.8009443258745090
+--
+VQE Iter. 64
+Energy:  -2.8009443261018201
+--
+VQE Iter. 65
+Energy:  -2.8009443264556619
+--
+VQE Iter. 66
+Energy:  -2.8009443269331689
+--
+VQE Iter. 67
+Energy:  -2.8009443274220405
+--
+VQE Iter. 68
+Energy:  -2.8009443277896398
+--
+VQE Iter. 69
+Energy:  -2.8009443281799187
+--
+VQE Iter. 70
+Energy:  -2.8009443285796873
+--
+VQE Iter. 71
+Energy:  -2.8009443290591811
+--
+VQE Iter. 72
+Energy:  -2.8009443294291914
+--
+VQE Iter. 73
+Energy:  -2.8009443299835985
+--
+VQE Iter. 74
+Energy:  -2.8009443307499224
+--
+VQE Iter. 75
+Energy:  -2.8009443315376501
+--
+VQE Iter. 76
+Energy:  -2.8009443324438772
+--
+VQE Iter. 77
+Energy:  -2.8009443330814081
+--
+VQE Iter. 78
+Energy:  -2.8009443339495084
+--
+VQE Iter. 79
+Energy:  -2.8009443347712559
+--
+VQE Iter. 80
+Energy:  -2.8009443353938668
+--
+VQE Iter. 81
+Energy:  -2.8009443363006175
+--
+VQE Iter. 82
+Energy:  -2.8009443375567047
+--
+VQE Iter. 83
+Energy:  -2.8009443382885935
+--
+VQE Iter. 84
+Energy:  -2.8009443393713696
+--
+VQE Iter. 85
+Energy:  -2.8009443408821926
+--
+VQE Iter. 86
+Energy:  -2.8009443424491351
+--
+VQE Iter. 87
+Energy:  -2.8009443434623824
+--
+VQE Iter. 88
+Energy:  -2.8009443447914646
+--
+VQE Iter. 89
+Energy:  -2.8009443467064123
+--
+VQE Iter. 90
+Energy:  -2.8009443479491551
+--
+VQE Iter. 91
+Energy:  -2.8009443496796327
+--
+VQE Iter. 92
+Energy:  -2.8009443520019590
+--
+VQE Iter. 93
+Energy:  -2.8009443542493297
+--
+VQE Iter. 94
+Energy:  -2.8009443568888077
+--
+VQE Iter. 95
+Energy:  -2.8009443589828216
+--
+VQE Iter. 96
+Energy:  -2.8009443617412284
+--
+VQE Iter. 97
+Energy:  -2.8009443653163810
+--
+VQE Iter. 98
+Energy:  -2.8009443683203199
+--
+VQE Iter. 99
+Energy:  -2.8009443712718767
+--
+VQE Iter. 100
+Energy:  -2.8009443727261525
+--
+VQE Iter. 101
+Energy:  -2.8009443753203036
+--
+VQE Iter. 102
+Energy:  -2.8009443789528676
+--
+VQE Iter. 103
+Energy:  -2.8009443830107519
+--
+VQE Iter. 104
+Energy:  -2.8009443855530360
+--
+VQE Iter. 105
+Energy:  -2.8009443893038064
+--
+VQE Iter. 106
+Energy:  -2.8009443945369030
+--
+VQE Iter. 107
+Energy:  -2.8009443985519424
+--
+VQE Iter. 108
+Energy:  -2.8009444039570512
+--
+VQE Iter. 109
+Energy:  -2.8009444060201427
+--
+VQE Iter. 110
+Energy:  -2.8009444099401324
+--
+VQE Iter. 111
+Energy:  -2.8009444151675740
+--
+VQE Iter. 112
+Energy:  -2.8009444179310510
+--
+VQE Iter. 113
+Energy:  -2.8009444229034215
+--
+VQE Iter. 114
+Energy:  -2.8009444278754749
+--
+VQE Iter. 115
+Energy:  -2.8009444329558080
+--
+VQE Iter. 116
+Energy:  -2.8009444377280630
+--
+VQE Iter. 117
+Energy:  -2.8009444432854869
+--
+VQE Iter. 118
+Energy:  -2.8009444476007106
+--
+VQE Iter. 119
+Energy:  -2.8009444542888522
+--
+VQE Iter. 120
+Energy:  -2.8009444633427085
+--
+VQE Iter. 121
+Energy:  -2.8009444683302820
+--
+VQE Iter. 122
+Energy:  -2.8009444696971868
+--
+VQE Iter. 123
+Energy:  -2.8009444761729094
+--
+VQE Iter. 124
+Energy:  -2.8009444839024380
+--
+VQE Iter. 125
+Energy:  -2.8009444892196402
+--
+VQE Iter. 126
+Energy:  -2.8009444972330217
+--
+VQE Iter. 127
+Energy:  -2.8009445077149620
+--
+VQE Iter. 128
+Energy:  -2.8009445151739429
+--
+VQE Iter. 129
+Energy:  -2.8009445250429961
+--
+VQE Iter. 130
+Energy:  -2.8009445338962995
+--
+VQE Iter. 131
+Energy:  -2.8009445356414053
+--
+VQE Iter. 132
+Energy:  -2.8009445432724283
+--
+VQE Iter. 133
+Energy:  -2.8009445527397734
+--
+VQE Iter. 134
+Energy:  -2.8009445588798396
+--
+VQE Iter. 135
+Energy:  -2.8009445683383181
+--
+VQE Iter. 136
+Energy:  -2.8009445807799476
+--
+VQE Iter. 137
+Energy:  -2.8009445927142242
+--
+VQE Iter. 138
+Energy:  -2.8009445994371522
+--
+VQE Iter. 139
+Energy:  -2.8009446091610792
+--
+VQE Iter. 140
+Energy:  -2.8009446158868663
+--
+VQE Iter. 141
+Energy:  -2.8009446223757029
+--
+VQE Iter. 142
+Energy:  -2.8009446274969858
+--
+VQE Iter. 143
+Energy:  -2.8009446360045938
+--
+VQE Iter. 144
+Energy:  -2.8009446473409723
+--
+VQE Iter. 145
+Energy:  -2.8009446564547993
+--
+VQE Iter. 146
+Energy:  -2.8009446633641946
+--
+VQE Iter. 147
+Energy:  -2.8009446724410134
+--
+VQE Iter. 148
+Energy:  -2.8009446768915622
+--
+VQE Iter. 149
+Energy:  -2.8009446848134902
+--
+VQE Iter. 150
+Energy:  -2.8009446920418046
+--
+VQE Iter. 151
+Energy:  -2.8009446998401826
+--
+VQE Iter. 152
+Energy:  -2.8009447047035816
+--
+VQE Iter. 153
+Energy:  -2.8009447115838704
+--
+VQE Iter. 154
+Energy:  -2.8009447209860903
+--
+VQE Iter. 155
+Energy:  -2.8009447278808386
+--
+VQE Iter. 156
+Energy:  -2.8009447335120687
+--
+VQE Iter. 157
+Energy:  -2.8009447373013181
+--
+VQE Iter. 158
+Energy:  -2.8009447426443725
+--
+VQE Iter. 159
+Energy:  -2.8009447496918849
+--
+VQE Iter. 160
+Energy:  -2.8009447545379094
+--
+VQE Iter. 161
+Energy:  -2.8009447576504152
+--
+VQE Iter. 162
+Energy:  -2.8009447613017415
+--
+VQE Iter. 163
+Energy:  -2.8009447641484240
+--
+VQE Iter. 164
+Energy:  -2.8009447665306682
+--
+VQE Iter. 165
+Energy:  -2.8009447689997744
+--
+VQE Iter. 166
+Energy:  -2.8009447710240245
+--
+VQE Iter. 167
+Energy:  -2.8009447725530046
+--
+VQE Iter. 168
+Energy:  -2.8009447742743352
+--
+VQE Iter. 169
+Energy:  -2.8009447753937300
+--
+VQE Iter. 170
+Energy:  -2.8009447768470146
+--
+VQE Iter. 171
+Energy:  -2.8009447782488919
+--
+VQE Iter. 172
+Energy:  -2.8009447791754072
+--
+VQE Iter. 173
+Energy:  -2.8009447802066725
+--
+VQE Iter. 174
+Energy:  -2.8009447810247918
+--
+VQE Iter. 175
+Energy:  -2.8009447817434006
+--
+VQE Iter. 176
+Energy:  -2.8009447823983287
+--
+VQE Iter. 177
+Energy:  -2.8009447830816372
+--
+VQE Iter. 178
+Energy:  -2.8009447836901584
+--
+VQE Iter. 179
+Energy:  -2.8009447844511999
+--
+VQE Iter. 180
+Energy:  -2.8009447850645679
+--
+VQE Iter. 181
+Energy:  -2.8009447859354157
+--
+VQE Iter. 182
+Energy:  -2.8009447871397963
+--
+VQE Iter. 183
+Energy:  -2.8009447886918566
+--
+VQE Iter. 184
+Energy:  -2.8009447904787801
+--
+VQE Iter. 185
+Energy:  -2.8009447918936687
+--
+VQE Iter. 186
+Energy:  -2.8009447939289336
+--
+VQE Iter. 187
+Energy:  -2.8009447965920731
+--
+VQE Iter. 188
+Energy:  -2.8009447985893865
+--
+VQE Iter. 189
+Energy:  -2.8009448015069980
+--
+VQE Iter. 190
+Energy:  -2.8009448056342858
+--
+VQE Iter. 191
+Energy:  -2.8009448089570541
+--
+VQE Iter. 192
+Energy:  -2.8009448132788775
+--
+VQE Iter. 193
+Energy:  -2.8009448167036326
+--
+VQE Iter. 194
+Energy:  -2.8009448213882000
+--
+VQE Iter. 195
+Energy:  -2.8009448279167390
+--
+VQE Iter. 196
+Energy:  -2.8009448321252579
+--
+VQE Iter. 197
+Energy:  -2.8009448378984265
+--
+VQE Iter. 198
+Energy:  -2.8009448458818720
+--
+VQE Iter. 199
+Energy:  -2.8009448521529468
+--
+VQE Iter. 200
+Energy:  -2.8009448571512960
+--
+VQE Iter. 201
+Energy:  -2.8009448626711917
+--
+VQE Iter. 202
+Energy:  -2.8009448694806767
+--
+VQE Iter. 203
+Energy:  -2.8009448737236067
+--
+VQE Iter. 204
+Energy:  -2.8009448798959982
+--
+VQE Iter. 205
+Energy:  -2.8009448878533978
+--
+VQE Iter. 206
+Energy:  -2.8009448949991751
+--
+VQE Iter. 207
+Energy:  -2.8009448991769594
+--
+VQE Iter. 208
+Energy:  -2.8009449032718976
+--
+VQE Iter. 209
+Energy:  -2.8009449086704863
+--
+VQE Iter. 210
+Energy:  -2.8009449147604748
+--
+VQE Iter. 211
+Energy:  -2.8009449187894684
+--
+VQE Iter. 212
+Energy:  -2.8009449241962709
+--
+VQE Iter. 213
+Energy:  -2.8009449299844382
+--
+VQE Iter. 214
+Energy:  -2.8009449330229348
+--
+VQE Iter. 215
+Energy:  -2.8009449374736057
+--
+VQE Iter. 216
+Energy:  -2.8009449429956108
+--
+VQE Iter. 217
+Energy:  -2.8009449466796612
+--
+VQE Iter. 218
+Energy:  -2.8009449514386437
+--
+VQE Iter. 219
+Energy:  -2.8009449534261508
+--
+VQE Iter. 220
+Energy:  -2.8009449565568496
+--
+VQE Iter. 221
+Energy:  -2.8009449606617101
+--
+VQE Iter. 222
+Energy:  -2.8009449654469671
+--
+VQE Iter. 223
+Energy:  -2.8009449686964500
+--
+VQE Iter. 224
+Energy:  -2.8009449730369358
+--
+VQE Iter. 225
+Energy:  -2.8009449771334518
+--
+VQE Iter. 226
+Energy:  -2.8009449808803737
+--
+VQE Iter. 227
+Energy:  -2.8009449821889634
+--
+VQE Iter. 228
+Energy:  -2.8009449845310486
+--
+VQE Iter. 229
+Energy:  -2.8009449870027630
+--
+VQE Iter. 230
+Energy:  -2.8009449890745310
+--
+VQE Iter. 231
+Energy:  -2.8009449908933997
+--
+VQE Iter. 232
+Energy:  -2.8009449929272758
+--
+VQE Iter. 233
+Energy:  -2.8009449944117275
+--
+VQE Iter. 234
+Energy:  -2.8009449967693421
+--
+VQE Iter. 235
+Energy:  -2.8009449994410058
+--
+VQE Iter. 236
+Energy:  -2.8009450017170905
+--
+VQE Iter. 237
+Energy:  -2.8009450032674041
+--
+VQE Iter. 238
+Energy:  -2.8009450052156386
+--
+VQE Iter. 239
+Energy:  -2.8009450062861192
+--
+VQE Iter. 240
+Energy:  -2.8009450081641813
+--
+VQE Iter. 241
+Energy:  -2.8009450097564250
+--
+VQE Iter. 242
+Energy:  -2.8009450116073094
+--
+VQE Iter. 243
+Energy:  -2.8009450128146773
+--
+VQE Iter. 244
+Energy:  -2.8009450143954013
+--
+VQE Iter. 245
+Energy:  -2.8009450152239772
+--
+VQE Iter. 246
+Energy:  -2.8009450167483938
+--
+VQE Iter. 247
+Energy:  -2.8009450180213786
+--
+VQE Iter. 248
+Energy:  -2.8009450196234873
+--
+VQE Iter. 249
+Energy:  -2.8009450204662540
+--
+VQE Iter. 250
+Energy:  -2.8009450219715557
+--
+VQE Iter. 251
+Energy:  -2.8009450232469137
+--
+VQE Iter. 252
+Energy:  -2.8009450249703054
+--
+VQE Iter. 253
+Energy:  -2.8009450267077161
+--
+VQE Iter. 254
+Energy:  -2.8009450278808359
+--
+VQE Iter. 255
+Energy:  -2.8009450295479481
+--
+VQE Iter. 256
+Energy:  -2.8009450312990287
+--
+VQE Iter. 257
+Energy:  -2.8009450327947962
+--
+VQE Iter. 258
+Energy:  -2.8009450338572357
+--
+VQE Iter. 259
+Energy:  -2.8009450355482839
+--
+VQE Iter. 260
+Energy:  -2.8009450366304192
+--
+VQE Iter. 261
+Energy:  -2.8009450384275585
+--
+VQE Iter. 262
+Energy:  -2.8009450406647716
+--
+VQE Iter. 263
+Energy:  -2.8009450417352166
+--
+VQE Iter. 264
+Energy:  -2.8009450436582490
+--
+VQE Iter. 265
+Energy:  -2.8009450457130889
+--
+VQE Iter. 266
+Energy:  -2.8009450475735149
+--
+VQE Iter. 267
+Energy:  -2.8009450499904940
+--
+VQE Iter. 268
+Energy:  -2.8009450517125369
+--
+VQE Iter. 269
+Energy:  -2.8009450543976993
+--
+VQE Iter. 270
+Energy:  -2.8009450580526902
+--
+VQE Iter. 271
+Energy:  -2.8009450624354622
+--
+VQE Iter. 272
+Energy:  -2.8009450664888198
+--
+VQE Iter. 273
+Energy:  -2.8009450690135713
+--
+VQE Iter. 274
+Energy:  -2.8009450727670790
+--
+VQE Iter. 275
+Energy:  -2.8009450779830196
+--
+VQE Iter. 276
+Energy:  -2.8009450832880454
+--
+VQE Iter. 277
+Energy:  -2.8009450888746898
+--
+VQE Iter. 278
+Energy:  -2.8009450919657164
+--
+VQE Iter. 279
+Energy:  -2.8009450963994365
+--
+VQE Iter. 280
+Energy:  -2.8009451016120659
+--
+VQE Iter. 281
+Energy:  -2.8009451053840482
+--
+VQE Iter. 282
+Energy:  -2.8009451103985579
+--
+VQE Iter. 283
+Energy:  -2.8009451151587275
+--
+VQE Iter. 284
+Energy:  -2.8009451158575929
+--
+VQE Iter. 285
+Energy:  -2.8009451201639632
+--
+VQE Iter. 286
+Energy:  -2.8009451246953838
+--
+VQE Iter. 287
+Energy:  -2.8009451274918749
+--
+VQE Iter. 288
+Energy:  -2.8009451315458014
+--
+VQE Iter. 289
+Energy:  -2.8009451342494578
+--
+VQE Iter. 290
+Energy:  -2.8009451384538906
+--
+VQE Iter. 291
+Energy:  -2.8009451437164938
+--
+VQE Iter. 292
+Energy:  -2.8009451469209954
+--
+VQE Iter. 293
+Energy:  -2.8009451498005795
+--
+VQE Iter. 294
+Energy:  -2.8009451531142893
+--
+VQE Iter. 295
+Energy:  -2.8009451567577730
+--
+VQE Iter. 296
+Energy:  -2.8009451595862633
+--
+VQE Iter. 297
+Energy:  -2.8009451628105233
+--
+VQE Iter. 298
+Energy:  -2.8009451653298711
+--
+VQE Iter. 299
+Energy:  -2.8009451666944498
+--
+VQE Iter. 300
+Energy:  -2.8009451686662379
+--
+VQE Iter. 301
+Energy:  -2.8009451711480842
+--
+VQE Iter. 302
+Energy:  -2.8009451730672157
+--
+VQE Iter. 303
+Energy:  -2.8009451739815163
+--
+VQE Iter. 304
+Energy:  -2.8009451753076320
+--
+VQE Iter. 305
+Energy:  -2.8009451767451097
+--
+VQE Iter. 306
+Energy:  -2.8009451778128520
+--
+VQE Iter. 307
+Energy:  -2.8009451782880994
+--
+VQE Iter. 308
+Energy:  -2.8009451789721926
+--
+VQE Iter. 309
+Energy:  -2.8009451796858320
+--
+VQE Iter. 310
+Energy:  -2.8009451802053777
+--
+VQE Iter. 311
+Energy:  -2.8009451804086782
+--
+VQE Iter. 312
+Energy:  -2.8009451807133705
+--
+VQE Iter. 313
+Energy:  -2.8009451810022594
+--
+VQE Iter. 314
+Energy:  -2.8009451811642490
+--
+VQE Iter. 315
+Energy:  -2.8009451812471822
+--
+VQE Iter. 316
+Energy:  -2.8009451812919655
+--
+VQE Iter. 317
+Energy:  -2.8009451813126409
+--
+VQE Iter. 318
+Energy:  -2.8009451813239203
+--
+VQE Iter. 319
+Energy:  -2.8009451814103672
+--
+VQE Iter. 320
+Energy:  -2.8009451814784727
+--
+VQE Iter. 321
+Energy:  -2.8009451814926485
+--
+VQE Iter. 322
+Energy:  -2.8009451814936579
+--
+VQE Iter. 323
+Energy:  -2.8009451814943671
+--
+VQE Iter. 324
+Energy:  -2.8009451814953144
+--
+VQE Iter. 325
+Energy:  -2.8009451814960160
+--
+VQE Iter. 326
+Energy:  -2.8009451814964721
+--
+VQE Iter. 327
+Energy:  -2.8009451814968940
+--
+VQE Iter. 328
+Energy:  -2.8009451814972777
+--
+VQE Iter. 329
+Energy:  -2.8009451814972852
+--
+VQE Iter. 330
+Energy:  -2.8009451815024926
+--
+VQE Iter. 331
+Energy:  -2.8009451815027395
+--
+VQE Iter. 332
+Energy:  -2.8009451815030859
+--
+VQE Iter. 333
+Energy:  -2.8009451815033160
+--
+VQE Iter. 334
+Energy:  -2.8009451815034994
+--
+VQE Iter. 335
+Energy:  -2.8009451815108246
+--
+VQE Iter. 336
+Energy:  -2.8009451815108775
+--
+VQE Iter. 337
+Energy:  -2.8009451815108832
+--
+VQE Iter. 0
+Energy:  -2.8009451815108832
+--
+VQE Iter. 1
+Energy:  -2.8009452475490448
+--
+VQE Iter. 2
+Energy:  -2.8009453679977714
+--
+VQE Iter. 3
+Energy:  -2.8009455685480313
+--
+VQE Iter. 4
+Energy:  -2.8009456789788136
+--
+VQE Iter. 5
+Energy:  -2.8009456866975126
+--
+VQE Iter. 6
+Energy:  -2.8009457449556923
+--
+VQE Iter. 7
+Energy:  -2.8009457834126095
+--
+VQE Iter. 8
+Energy:  -2.8009458022966558
+--
+VQE Iter. 9
+Energy:  -2.8009458085568903
+--
+VQE Iter. 10
+Energy:  -2.8009458150132880
+--
+VQE Iter. 11
+Energy:  -2.8009458194915693
+--
+VQE Iter. 12
+Energy:  -2.8009458248809080
+--
+VQE Iter. 13
+Energy:  -2.8009458304524859
+--
+VQE Iter. 14
+Energy:  -2.8009458352306567
+--
+VQE Iter. 15
+Energy:  -2.8009458412227337
+--
+VQE Iter. 16
+Energy:  -2.8009458463525534
+--
+VQE Iter. 17
+Energy:  -2.8009458493950703
+--
+VQE Iter. 18
+Energy:  -2.8009458539132410
+--
+VQE Iter. 19
+Energy:  -2.8009458601108816
+--
+VQE Iter. 20
+Energy:  -2.8009458658222393
+--
+VQE Iter. 21
+Energy:  -2.8009458703477974
+--
+VQE Iter. 22
+Energy:  -2.8009458730886498
+--
+VQE Iter. 23
+Energy:  -2.8009458770587323
+--
+VQE Iter. 24
+Energy:  -2.8009458813033636
+--
+VQE Iter. 25
+Energy:  -2.8009458839530583
+--
+VQE Iter. 26
+Energy:  -2.8009458876961255
+--
+VQE Iter. 27
+Energy:  -2.8009458916719892
+--
+VQE Iter. 28
+Energy:  -2.8009458939567944
+--
+VQE Iter. 29
+Energy:  -2.8009458972523245
+--
+VQE Iter. 30
+Energy:  -2.8009459014036038
+--
+VQE Iter. 31
+Energy:  -2.8009459043314928
+--
+VQE Iter. 32
+Energy:  -2.8009459074879630
+--
+VQE Iter. 33
+Energy:  -2.8009459100146907
+--
+VQE Iter. 34
+Energy:  -2.8009459130001244
+--
+VQE Iter. 35
+Energy:  -2.8009459145021531
+--
+VQE Iter. 36
+Energy:  -2.8009459169087774
+--
+VQE Iter. 37
+Energy:  -2.8009459196764714
+--
+VQE Iter. 38
+Energy:  -2.8009459211014849
+--
+VQE Iter. 39
+Energy:  -2.8009459230918941
+--
+VQE Iter. 40
+Energy:  -2.8009459254947373
+--
+VQE Iter. 41
+Energy:  -2.8009459271287045
+--
+VQE Iter. 42
+Energy:  -2.8009459291185066
+--
+VQE Iter. 43
+Energy:  -2.8009459305327784
+--
+VQE Iter. 44
+Energy:  -2.8009459316088856
+--
+VQE Iter. 45
+Energy:  -2.8009459323741841
+--
+VQE Iter. 46
+Energy:  -2.8009459333212243
+--
+VQE Iter. 47
+Energy:  -2.8009459338455867
+--
+VQE Iter. 48
+Energy:  -2.8009459347011649
+--
+VQE Iter. 49
+Energy:  -2.8009459355742927
+--
+VQE Iter. 50
+Energy:  -2.8009459362152223
+--
+VQE Iter. 51
+Energy:  -2.8009459365829539
+--
+VQE Iter. 52
+Energy:  -2.8009459371013161
+--
+VQE Iter. 53
+Energy:  -2.8009459376340140
+--
+VQE Iter. 54
+Energy:  -2.8009459380175685
+--
+VQE Iter. 55
+Energy:  -2.8009459384278048
+--
+VQE Iter. 56
+Energy:  -2.8009459386742277
+--
+VQE Iter. 57
+Energy:  -2.8009459389726414
+--
+VQE Iter. 58
+Energy:  -2.8009459391512999
+--
+VQE Iter. 59
+Energy:  -2.8009459393724598
+--
+VQE Iter. 60
+Energy:  -2.8009459394335310
+--
+VQE Iter. 61
+Energy:  -2.8009459395439489
+--
+VQE Iter. 62
+Energy:  -2.8009459396326846
+--
+VQE Iter. 63
+Energy:  -2.8009459397374679
+--
+VQE Iter. 64
+Energy:  -2.8009459398123684
+--
+VQE Iter. 65
+Energy:  -2.8009459398809780
+--
+VQE Iter. 66
+Energy:  -2.8009459398966188
+--
+VQE Iter. 67
+Energy:  -2.8009459399006071
+--
+VQE Iter. 68
+Energy:  -2.8009459399049672
+--
+VQE Iter. 69
+Energy:  -2.8009459399438863
+--
+VQE Iter. 70
+Energy:  -2.8009459399481207
+--
+VQE Iter. 71
+Energy:  -2.8009459399834662
+--
+VQE Iter. 72
+Energy:  -2.8009459399869758
+--
+VQE Iter. 73
+Energy:  -2.8009459400140857
+--
+VQE Iter. 74
+Energy:  -2.8009459400177636
+--
+VQE Iter. 75
+Energy:  -2.8009459400177659
+--
+VQE Iter. 76
+Energy:  -2.8009459400177672
+--
+VQE Iter. 0
+Energy:  -2.8009459400177672
+--
+VQE Iter. 1
+Energy:  -2.8009459632096525
+--
+VQE Iter. 2
+Energy:  -2.8009460051297355
+--
+VQE Iter. 3
+Energy:  -2.8009460630571175
+--
+VQE Iter. 4
+Energy:  -2.8009460767031751
+--
+VQE Iter. 5
+Energy:  -2.8009460786960090
+--
+VQE Iter. 6
+Energy:  -2.8009460825191370
+--
+VQE Iter. 7
+Energy:  -2.8009460885913211
+--
+VQE Iter. 8
+Energy:  -2.8009460963988086
+--
+VQE Iter. 9
+Energy:  -2.8009461043329722
+--
+VQE Iter. 10
+Energy:  -2.8009461114464180
+--
+VQE Iter. 11
+Energy:  -2.8009461152689683
+--
+VQE Iter. 12
+Energy:  -2.8009461204995172
+--
+VQE Iter. 13
+Energy:  -2.8009461258060453
+--
+VQE Iter. 14
+Energy:  -2.8009461285654438
+--
+VQE Iter. 15
+Energy:  -2.8009461325176961
+--
+VQE Iter. 16
+Energy:  -2.8009461366433444
+--
+VQE Iter. 17
+Energy:  -2.8009461389553416
+--
+VQE Iter. 18
+Energy:  -2.8009461419936983
+--
+VQE Iter. 19
+Energy:  -2.8009461450133788
+--
+VQE Iter. 20
+Energy:  -2.8009461469983812
+--
+VQE Iter. 21
+Energy:  -2.8009461484748259
+--
+VQE Iter. 22
+Energy:  -2.8009461494610748
+--
+VQE Iter. 23
+Energy:  -2.8009461508005637
+--
+VQE Iter. 24
+Energy:  -2.8009461514033234
+--
+VQE Iter. 25
+Energy:  -2.8009461521339709
+--
+VQE Iter. 26
+Energy:  -2.8009461525833537
+--
+VQE Iter. 27
+Energy:  -2.8009461532065894
+--
+VQE Iter. 28
+Energy:  -2.8009461539766627
+--
+VQE Iter. 29
+Energy:  -2.8009461542609388
+--
+VQE Iter. 30
+Energy:  -2.8009461546450680
+--
+VQE Iter. 31
+Energy:  -2.8009461548425589
+--
+VQE Iter. 32
+Energy:  -2.8009461551483432
+--
+VQE Iter. 33
+Energy:  -2.8009461554416086
+--
+VQE Iter. 34
+Energy:  -2.8009461556896569
+--
+VQE Iter. 35
+Energy:  -2.8009461558253665
+--
+VQE Iter. 36
+Energy:  -2.8009461559460527
+--
+VQE Iter. 37
+Energy:  -2.8009461560632083
+--
+VQE Iter. 38
+Energy:  -2.8009461561471629
+--
+VQE Iter. 39
+Energy:  -2.8009461562093607
+--
+VQE Iter. 40
+Energy:  -2.8009461562681532
+--
+VQE Iter. 41
+Energy:  -2.8009461563146565
+--
+VQE Iter. 42
+Energy:  -2.8009461563164963
+--
+VQE Iter. 43
+Energy:  -2.8009461563165297
+--
+VQE Iter. 44
+Energy:  -2.8009461563168423
+--
+VQE Iter. 45
+Energy:  -2.8009461563555167
+--
+VQE Iter. 46
+Energy:  -2.8009461563633642
+--
+VQE Iter. 47
+Energy:  -2.8009461563633797
+--
+VQE Iter. 48
+Energy:  -2.8009461563635116
+--
+VQE Iter. 49
+Energy:  -2.8009461563635707
+--
+VQE Iter. 50
+Energy:  -2.8009461563636173
+--
+VQE Iter. 51
+Energy:  -2.8009461563636182
+--
+VQE Iter. 0
+Energy:  -2.8009461563636182
+--
+VQE Iter. 1
+Energy:  -2.8009461914223244
+--
+VQE Iter. 2
+Energy:  -2.8009462562840652
+--
+VQE Iter. 3
+Energy:  -2.8009463549811580
+--
+VQE Iter. 4
+Energy:  -2.8009464018572676
+--
+VQE Iter. 5
+Energy:  -2.8009464142327745
+--
+VQE Iter. 6
+Energy:  -2.8009464256829819
+--
+VQE Iter. 7
+Energy:  -2.8009464301449527
+--
+VQE Iter. 8
+Energy:  -2.8009464380193636
+--
+VQE Iter. 9
+Energy:  -2.8009464477799253
+--
+VQE Iter. 10
+Energy:  -2.8009464543982743
+--
+VQE Iter. 11
+Energy:  -2.8009464587932920
+--
+VQE Iter. 12
+Energy:  -2.8009464647650408
+--
+VQE Iter. 13
+Energy:  -2.8009464703458922
+--
+VQE Iter. 14
+Energy:  -2.8009464737965186
+--
+VQE Iter. 15
+Energy:  -2.8009464785433376
+--
+VQE Iter. 16
+Energy:  -2.8009464823392762
+--
+VQE Iter. 17
+Energy:  -2.8009464853945154
+--
+VQE Iter. 18
+Energy:  -2.8009464897926422
+--
+VQE Iter. 19
+Energy:  -2.8009464928378880
+--
+VQE Iter. 20
+Energy:  -2.8009464965551527
+--
+VQE Iter. 21
+Energy:  -2.8009464999554692
+--
+VQE Iter. 22
+Energy:  -2.8009465021661448
+--
+VQE Iter. 23
+Energy:  -2.8009465056548879
+--
+VQE Iter. 24
+Energy:  -2.8009465099758191
+--
+VQE Iter. 25
+Energy:  -2.8009465147876944
+--
+VQE Iter. 26
+Energy:  -2.8009465188333369
+--
+VQE Iter. 27
+Energy:  -2.8009465218813498
+--
+VQE Iter. 28
+Energy:  -2.8009465256437900
+--
+VQE Iter. 29
+Energy:  -2.8009465296818137
+--
+VQE Iter. 30
+Energy:  -2.8009465326174459
+--
+VQE Iter. 31
+Energy:  -2.8009465365986475
+--
+VQE Iter. 32
+Energy:  -2.8009465403768035
+--
+VQE Iter. 33
+Energy:  -2.8009465439969246
+--
+VQE Iter. 34
+Energy:  -2.8009465472256339
+--
+VQE Iter. 35
+Energy:  -2.8009465493866972
+--
+VQE Iter. 36
+Energy:  -2.8009465523824923
+--
+VQE Iter. 37
+Energy:  -2.8009465553323167
+--
+VQE Iter. 38
+Energy:  -2.8009465573326540
+--
+VQE Iter. 39
+Energy:  -2.8009465602427248
+--
+VQE Iter. 40
+Energy:  -2.8009465634625905
+--
+VQE Iter. 41
+Energy:  -2.8009465658809751
+--
+VQE Iter. 42
+Energy:  -2.8009465687281132
+--
+VQE Iter. 43
+Energy:  -2.8009465703410403
+--
+VQE Iter. 44
+Energy:  -2.8009465732152354
+--
+VQE Iter. 45
+Energy:  -2.8009465758664946
+--
+VQE Iter. 46
+Energy:  -2.8009465786672494
+--
+VQE Iter. 47
+Energy:  -2.8009465809383660
+--
+VQE Iter. 48
+Energy:  -2.8009465834724709
+--
+VQE Iter. 49
+Energy:  -2.8009465855222144
+--
+VQE Iter. 50
+Energy:  -2.8009465886485101
+--
+VQE Iter. 51
+Energy:  -2.8009465919068464
+--
+VQE Iter. 52
+Energy:  -2.8009465943081611
+--
+VQE Iter. 53
+Energy:  -2.8009465971416119
+--
+VQE Iter. 54
+Energy:  -2.8009465984643338
+--
+VQE Iter. 55
+Energy:  -2.8009466009295165
+--
+VQE Iter. 56
+Energy:  -2.8009466031498240
+--
+VQE Iter. 57
+Energy:  -2.8009466057194299
+--
+VQE Iter. 58
+Energy:  -2.8009466079609942
+--
+VQE Iter. 59
+Energy:  -2.8009466102210383
+--
+VQE Iter. 60
+Energy:  -2.8009466123316287
+--
+VQE Iter. 61
+Energy:  -2.8009466150131059
+--
+VQE Iter. 62
+Energy:  -2.8009466165599082
+--
+VQE Iter. 63
+Energy:  -2.8009466191676116
+--
+VQE Iter. 64
+Energy:  -2.8009466216747620
+--
+VQE Iter. 65
+Energy:  -2.8009466235232514
+--
+VQE Iter. 66
+Energy:  -2.8009466259800915
+--
+VQE Iter. 67
+Energy:  -2.8009466277912725
+--
+VQE Iter. 68
+Energy:  -2.8009466300976311
+--
+VQE Iter. 69
+Energy:  -2.8009466316915090
+--
+VQE Iter. 70
+Energy:  -2.8009466338704319
+--
+VQE Iter. 71
+Energy:  -2.8009466366047837
+--
+VQE Iter. 72
+Energy:  -2.8009466384563964
+--
+VQE Iter. 73
+Energy:  -2.8009466391375883
+--
+VQE Iter. 74
+Energy:  -2.8009466404465435
+--
+VQE Iter. 75
+Energy:  -2.8009466421889533
+--
+VQE Iter. 76
+Energy:  -2.8009466430113523
+--
+VQE Iter. 77
+Energy:  -2.8009466444892470
+--
+VQE Iter. 78
+Energy:  -2.8009466457154133
+--
+VQE Iter. 79
+Energy:  -2.8009466472819797
+--
+VQE Iter. 80
+Energy:  -2.8009466478593854
+--
+VQE Iter. 81
+Energy:  -2.8009466489419452
+--
+VQE Iter. 82
+Energy:  -2.8009466500481857
+--
+VQE Iter. 83
+Energy:  -2.8009466510200181
+--
+VQE Iter. 84
+Energy:  -2.8009466521098618
+--
+VQE Iter. 85
+Energy:  -2.8009466528945399
+--
+VQE Iter. 86
+Energy:  -2.8009466539030492
+--
+VQE Iter. 87
+Energy:  -2.8009466544291954
+--
+VQE Iter. 88
+Energy:  -2.8009466553210780
+--
+VQE Iter. 89
+Energy:  -2.8009466560807650
+--
+VQE Iter. 90
+Energy:  -2.8009466568698627
+--
+VQE Iter. 91
+Energy:  -2.8009466575584563
+--
+VQE Iter. 92
+Energy:  -2.8009466583434253
+--
+VQE Iter. 93
+Energy:  -2.8009466587072627
+--
+VQE Iter. 94
+Energy:  -2.8009466592481891
+--
+VQE Iter. 95
+Energy:  -2.8009466594453247
+--
+VQE Iter. 96
+Energy:  -2.8009466598071606
+--
+VQE Iter. 97
+Energy:  -2.8009466601497608
+--
+VQE Iter. 98
+Energy:  -2.8009466604773503
+--
+VQE Iter. 99
+Energy:  -2.8009466606957361
+--
+VQE Iter. 100
+Energy:  -2.8009466609674396
+--
+VQE Iter. 101
+Energy:  -2.8009466611072549
+--
+VQE Iter. 102
+Energy:  -2.8009466613352618
+--
+VQE Iter. 103
+Energy:  -2.8009466615518188
+--
+VQE Iter. 104
+Energy:  -2.8009466616711993
+--
+VQE Iter. 105
+Energy:  -2.8009466617018779
+--
+VQE Iter. 106
+Energy:  -2.8009466617298826
+--
+VQE Iter. 107
+Energy:  -2.8009466617511669
+--
+VQE Iter. 108
+Energy:  -2.8009466617710097
+--
+VQE Iter. 109
+Energy:  -2.8009466617880694
+--
+VQE Iter. 110
+Energy:  -2.8009466618041019
+--
+VQE Iter. 111
+Energy:  -2.8009466618256780
+--
+VQE Iter. 112
+Energy:  -2.8009466618420933
+--
+VQE Iter. 113
+Energy:  -2.8009466618561287
+--
+VQE Iter. 114
+Energy:  -2.8009466618691254
+--
+VQE Iter. 115
+Energy:  -2.8009466618813277
+--
+VQE Iter. 116
+Energy:  -2.8009466618926000
+--
+VQE Iter. 117
+Energy:  -2.8009466619031560
+--
+VQE Iter. 118
+Energy:  -2.8009466619131027
+--
+VQE Iter. 119
+Energy:  -2.8009466619974770
+--
+VQE Iter. 120
+Energy:  -2.8009466620098578
+--
+VQE Iter. 121
+Energy:  -2.8009466620154644
+--
+VQE Iter. 122
+Energy:  -2.8009466620224015
+--
+VQE Iter. 123
+Energy:  -2.8009466620820125
+--
+VQE Iter. 124
+Energy:  -2.8009466620927288
+--
+VQE Iter. 125
+Energy:  -2.8009466620975374
+--
+VQE Iter. 126
+Energy:  -2.8009466620991379
+--
+VQE Iter. 127
+Energy:  -2.8009466621482124
+--
+VQE Iter. 128
+Energy:  -2.8009466621586467
+--
+VQE Iter. 129
+Energy:  -2.8009466621630112
+--
+VQE Iter. 130
+Energy:  -2.8009466621668624
+--
+VQE Iter. 131
+Energy:  -2.8009466621677799
+--
+VQE Iter. 132
+Energy:  -2.8009466621684318
+--
+VQE Iter. 133
+Energy:  -2.8009466621688608
+--
+VQE Iter. 0
+Energy:  -2.8009466621688608
+--
+VQE Iter. 1
+Energy:  -2.8009466835319796
+--
+VQE Iter. 2
+Energy:  -2.8009467192811783
+--
+VQE Iter. 3
+Energy:  -2.8009467413388776
+--
+VQE Iter. 4
+Energy:  -2.8009467608966565
+--
+VQE Iter. 5
+Energy:  -2.8009467699577941
+--
+VQE Iter. 6
+Energy:  -2.8009467751262807
+--
+VQE Iter. 7
+Energy:  -2.8009467783570670
+--
+VQE Iter. 8
+Energy:  -2.8009467834534783
+--
+VQE Iter. 9
+Energy:  -2.8009467874477116
+--
+VQE Iter. 10
+Energy:  -2.8009467902745468
+--
+VQE Iter. 11
+Energy:  -2.8009467934521308
+--
+VQE Iter. 12
+Energy:  -2.8009467950390210
+--
+VQE Iter. 13
+Energy:  -2.8009467966170232
+--
+VQE Iter. 14
+Energy:  -2.8009467979447877
+--
+VQE Iter. 15
+Energy:  -2.8009467989764918
+--
+VQE Iter. 16
+Energy:  -2.8009468001867863
+--
+VQE Iter. 17
+Energy:  -2.8009468007769778
+--
+VQE Iter. 18
+Energy:  -2.8009468016049728
+--
+VQE Iter. 19
+Energy:  -2.8009468022327804
+--
+VQE Iter. 20
+Energy:  -2.8009468026065933
+--
+VQE Iter. 21
+Energy:  -2.8009468029796358
+--
+VQE Iter. 22
+Energy:  -2.8009468031210942
+--
+VQE Iter. 23
+Energy:  -2.8009468033157141
+--
+VQE Iter. 24
+Energy:  -2.8009468034743001
+--
+VQE Iter. 25
+Energy:  -2.8009468035030460
+--
+VQE Iter. 26
+Energy:  -2.8009468035114149
+--
+VQE Iter. 27
+Energy:  -2.8009468035695830
+--
+VQE Iter. 28
+Energy:  -2.8009468035792011
+--
+VQE Iter. 29
+Energy:  -2.8009468035800440
+--
+VQE Iter. 0
+Energy:  -2.8009468035800431
+--
+VQE Iter. 1
+Energy:  -2.8009468134882720
+--
+VQE Iter. 2
+Energy:  -2.8009468271470785
+--
+VQE Iter. 3
+Energy:  -2.8009468517368754
+--
+VQE Iter. 4
+Energy:  -2.8009468870769649
+--
+VQE Iter. 5
+Energy:  -2.8009469108393041
+--
+VQE Iter. 6
+Energy:  -2.8009469285224116
+--
+VQE Iter. 7
+Energy:  -2.8009469409560084
+--
+VQE Iter. 8
+Energy:  -2.8009469508768481
+--
+VQE Iter. 9
+Energy:  -2.8009469604360149
+--
+VQE Iter. 10
+Energy:  -2.8009469708044188
+--
+VQE Iter. 11
+Energy:  -2.8009469795264814
+--
+VQE Iter. 12
+Energy:  -2.8009469899218953
+--
+VQE Iter. 13
+Energy:  -2.8009469970628005
+--
+VQE Iter. 14
+Energy:  -2.8009470081258243
+--
+VQE Iter. 15
+Energy:  -2.8009470210428886
+--
+VQE Iter. 16
+Energy:  -2.8009470327460981
+--
+VQE Iter. 17
+Energy:  -2.8009470427831413
+--
+VQE Iter. 18
+Energy:  -2.8009470480404071
+--
+VQE Iter. 19
+Energy:  -2.8009470562861649
+--
+VQE Iter. 20
+Energy:  -2.8009470662661022
+--
+VQE Iter. 21
+Energy:  -2.8009470752677670
+--
+VQE Iter. 22
+Energy:  -2.8009470829089453
+--
+VQE Iter. 23
+Energy:  -2.8009470864274602
+--
+VQE Iter. 24
+Energy:  -2.8009470904038620
+--
+VQE Iter. 25
+Energy:  -2.8009470931773546
+--
+VQE Iter. 26
+Energy:  -2.8009470961453586
+--
+VQE Iter. 27
+Energy:  -2.8009470984924612
+--
+VQE Iter. 28
+Energy:  -2.8009471004442834
+--
+VQE Iter. 29
+Energy:  -2.8009471034199973
+--
+VQE Iter. 30
+Energy:  -2.8009471064030746
+--
+VQE Iter. 31
+Energy:  -2.8009471078411963
+--
+VQE Iter. 32
+Energy:  -2.8009471087370721
+--
+VQE Iter. 33
+Energy:  -2.8009471101982597
+--
+VQE Iter. 34
+Energy:  -2.8009471117957032
+--
+VQE Iter. 35
+Energy:  -2.8009471125737146
+--
+VQE Iter. 36
+Energy:  -2.8009471137203072
+--
+VQE Iter. 37
+Energy:  -2.8009471149187606
+--
+VQE Iter. 38
+Energy:  -2.8009471157572499
+--
+VQE Iter. 39
+Energy:  -2.8009471168977651
+--
+VQE Iter. 40
+Energy:  -2.8009471181087910
+--
+VQE Iter. 41
+Energy:  -2.8009471187913855
+--
+VQE Iter. 42
+Energy:  -2.8009471198390896
+--
+VQE Iter. 43
+Energy:  -2.8009471213127974
+--
+VQE Iter. 44
+Energy:  -2.8009471229620848
+--
+VQE Iter. 45
+Energy:  -2.8009471245268633
+--
+VQE Iter. 46
+Energy:  -2.8009471255774816
+--
+VQE Iter. 47
+Energy:  -2.8009471271217143
+--
+VQE Iter. 48
+Energy:  -2.8009471290219796
+--
+VQE Iter. 49
+Energy:  -2.8009471303653419
+--
+VQE Iter. 50
+Energy:  -2.8009471323432193
+--
+VQE Iter. 51
+Energy:  -2.8009471347927577
+--
+VQE Iter. 52
+Energy:  -2.8009471365387668
+--
+VQE Iter. 53
+Energy:  -2.8009471391227398
+--
+VQE Iter. 54
+Energy:  -2.8009471416976668
+--
+VQE Iter. 55
+Energy:  -2.8009471444642289
+--
+VQE Iter. 56
+Energy:  -2.8009471475207994
+--
+VQE Iter. 57
+Energy:  -2.8009471502228607
+--
+VQE Iter. 58
+Energy:  -2.8009471538534845
+--
+VQE Iter. 59
+Energy:  -2.8009471586793597
+--
+VQE Iter. 60
+Energy:  -2.8009471624788831
+--
+VQE Iter. 61
+Energy:  -2.8009471676060413
+--
+VQE Iter. 62
+Energy:  -2.8009471744114869
+--
+VQE Iter. 63
+Energy:  -2.8009471779682729
+--
+VQE Iter. 64
+Energy:  -2.8009471836282067
+--
+VQE Iter. 65
+Energy:  -2.8009471916782460
+--
+VQE Iter. 66
+Energy:  -2.8009472012456640
+--
+VQE Iter. 67
+Energy:  -2.8009472077721100
+--
+VQE Iter. 68
+Energy:  -2.8009472155633639
+--
+VQE Iter. 69
+Energy:  -2.8009472261943373
+--
+VQE Iter. 70
+Energy:  -2.8009472296620190
+--
+VQE Iter. 71
+Energy:  -2.8009472360811261
+--
+VQE Iter. 72
+Energy:  -2.8009472463603302
+--
+VQE Iter. 73
+Energy:  -2.8009472610906578
+--
+VQE Iter. 74
+Energy:  -2.8009472801120152
+--
+VQE Iter. 75
+Energy:  -2.8009473002049923
+--
+VQE Iter. 76
+Energy:  -2.8009473159704665
+--
+VQE Iter. 77
+Energy:  -2.8009473372671865
+--
+VQE Iter. 78
+Energy:  -2.8009473464621313
+--
+VQE Iter. 79
+Energy:  -2.8009473635998869
+--
+VQE Iter. 80
+Energy:  -2.8009473832831282
+--
+VQE Iter. 81
+Energy:  -2.8009473999043819
+--
+VQE Iter. 82
+Energy:  -2.8009474262971876
+--
+VQE Iter. 83
+Energy:  -2.8009474631751279
+--
+VQE Iter. 84
+Energy:  -2.8009474944399155
+--
+VQE Iter. 85
+Energy:  -2.8009475322271276
+--
+VQE Iter. 86
+Energy:  -2.8009475597469575
+--
+VQE Iter. 87
+Energy:  -2.8009475978459841
+--
+VQE Iter. 88
+Energy:  -2.8009476505412936
+--
+VQE Iter. 89
+Energy:  -2.8009476876755093
+--
+VQE Iter. 90
+Energy:  -2.8009477380129661
+--
+VQE Iter. 91
+Energy:  -2.8009477985539752
+--
+VQE Iter. 92
+Energy:  -2.8009478459707942
+--
+VQE Iter. 93
+Energy:  -2.8009479064565923
+--
+VQE Iter. 94
+Energy:  -2.8009479776857487
+--
+VQE Iter. 95
+Energy:  -2.8009480329942007
+--
+VQE Iter. 96
+Energy:  -2.8009481005462846
+--
+VQE Iter. 97
+Energy:  -2.8009481543725698
+--
+VQE Iter. 98
+Energy:  -2.8009482204270877
+--
+VQE Iter. 99
+Energy:  -2.8009482748824412
+--
+VQE Iter. 100
+Energy:  -2.8009483374832773
+--
+VQE Iter. 101
+Energy:  -2.8009483755718860
+--
+VQE Iter. 102
+Energy:  -2.8009484313374089
+--
+VQE Iter. 103
+Energy:  -2.8009484963623770
+--
+VQE Iter. 104
+Energy:  -2.8009485488252786
+--
+VQE Iter. 105
+Energy:  -2.8009486079200663
+--
+VQE Iter. 106
+Energy:  -2.8009486407978739
+--
+VQE Iter. 107
+Energy:  -2.8009486996678450
+--
+VQE Iter. 108
+Energy:  -2.8009487562753672
+--
+VQE Iter. 109
+Energy:  -2.8009488098103787
+--
+VQE Iter. 110
+Energy:  -2.8009488573143968
+--
+VQE Iter. 111
+Energy:  -2.8009489142931425
+--
+VQE Iter. 112
+Energy:  -2.8009489524468996
+--
+VQE Iter. 113
+Energy:  -2.8009490067460758
+--
+VQE Iter. 114
+Energy:  -2.8009490310747025
+--
+VQE Iter. 115
+Energy:  -2.8009490772589127
+--
+VQE Iter. 116
+Energy:  -2.8009491336356440
+--
+VQE Iter. 117
+Energy:  -2.8009491671760256
+--
+VQE Iter. 118
+Energy:  -2.8009492113137213
+--
+VQE Iter. 119
+Energy:  -2.8009492370168201
+--
+VQE Iter. 120
+Energy:  -2.8009492844262800
+--
+VQE Iter. 121
+Energy:  -2.8009493319693695
+--
+VQE Iter. 122
+Energy:  -2.8009493745242522
+--
+VQE Iter. 123
+Energy:  -2.8009494102343560
+--
+VQE Iter. 124
+Energy:  -2.8009494565300406
+--
+VQE Iter. 125
+Energy:  -2.8009494816829665
+--
+VQE Iter. 126
+Energy:  -2.8009495260957440
+--
+VQE Iter. 127
+Energy:  -2.8009495667273536
+--
+VQE Iter. 128
+Energy:  -2.8009496044517048
+--
+VQE Iter. 129
+Energy:  -2.8009496354562073
+--
+VQE Iter. 130
+Energy:  -2.8009496763749619
+--
+VQE Iter. 131
+Energy:  -2.8009496961466853
+--
+VQE Iter. 132
+Energy:  -2.8009497313060949
+--
+VQE Iter. 133
+Energy:  -2.8009497655586513
+--
+VQE Iter. 134
+Energy:  -2.8009497951232087
+--
+VQE Iter. 135
+Energy:  -2.8009498221185511
+--
+VQE Iter. 136
+Energy:  -2.8009498516684301
+--
+VQE Iter. 137
+Energy:  -2.8009498733401310
+--
+VQE Iter. 138
+Energy:  -2.8009499017640289
+--
+VQE Iter. 139
+Energy:  -2.8009499299889460
+--
+VQE Iter. 140
+Energy:  -2.8009499448195698
+--
+VQE Iter. 141
+Energy:  -2.8009499664048074
+--
+VQE Iter. 142
+Energy:  -2.8009499891563947
+--
+VQE Iter. 143
+Energy:  -2.8009500037277064
+--
+VQE Iter. 144
+Energy:  -2.8009500176593445
+--
+VQE Iter. 145
+Energy:  -2.8009500279325392
+--
+VQE Iter. 146
+Energy:  -2.8009500372295695
+--
+VQE Iter. 147
+Energy:  -2.8009500413964061
+--
+VQE Iter. 148
+Energy:  -2.8009500465178014
+--
+VQE Iter. 149
+Energy:  -2.8009500494022750
+--
+VQE Iter. 150
+Energy:  -2.8009500515436603
+--
+VQE Iter. 151
+Energy:  -2.8009500531178850
+--
+VQE Iter. 152
+Energy:  -2.8009500539917584
+--
+VQE Iter. 153
+Energy:  -2.8009500544087915
+--
+VQE Iter. 154
+Energy:  -2.8009500545639137
+--
+VQE Iter. 155
+Energy:  -2.8009500545736170
+--
+VQE Iter. 156
+Energy:  -2.8009500545747299
+--
+VQE Iter. 157
+Energy:  -2.8009500545756776
+--
+VQE Iter. 158
+Energy:  -2.8009500545764494
+--
+VQE Iter. 159
+Energy:  -2.8009500545767958
+--
+VQE Iter. 160
+Energy:  -2.8009500545772381
+--
+VQE Iter. 161
+Energy:  -2.8009500545776431
+--
+VQE Iter. 162
+Energy:  -2.8009500545779167
+--
+VQE Iter. 163
+Energy:  -2.8009500545780899
+--
+VQE Iter. 0
+Energy:  -2.8009500545780899
+--
+VQE Iter. 1
+Energy:  -2.8009500844326962
+--
+VQE Iter. 2
+Energy:  -2.8009501062222224
+--
+VQE Iter. 3
+Energy:  -2.8009501098399463
+--
+VQE Iter. 4
+Energy:  -2.8009501118026763
+--
+VQE Iter. 5
+Energy:  -2.8009501130107992
+--
+VQE Iter. 6
+Energy:  -2.8009501137063633
+--
+VQE Iter. 7
+Energy:  -2.8009501140002797
+--
+VQE Iter. 8
+Energy:  -2.8009501140268860
+--
+VQE Iter. 9
+Energy:  -2.8009501140568807
+--
+VQE Iter. 10
+Energy:  -2.8009501140630588
+--
+VQE Iter. 11
+Energy:  -2.8009501140647570
+--
+VQE Iter. 12
+Energy:  -2.8009501140652571
+--
+VQE Iter. 13
+Energy:  -2.8009501140652633
+--
+VQE Iter. 14
+Energy:  -2.8009501140653157
+--
+VQE Iter. 15
+Energy:  -2.8009501140654085
+--
+VQE Iter. 16
+Energy:  -2.8009501140655537
+--
+VQE Iter. 0
+Energy:  -2.8009501140655537
+--
+VQE Iter. 1
+Energy:  -2.8009501465039044
+--
+VQE Iter. 2
+Energy:  -2.8009501873254155
+--
+VQE Iter. 3
+Energy:  -2.8009502022965744
+--
+VQE Iter. 4
+Energy:  -2.8009502108713429
+--
+VQE Iter. 5
+Energy:  -2.8009502171530829
+--
+VQE Iter. 6
+Energy:  -2.8009502204447063
+--
+VQE Iter. 7
+Energy:  -2.8009502227616414
+--
+VQE Iter. 8
+Energy:  -2.8009502246044544
+--
+VQE Iter. 9
+Energy:  -2.8009502251039171
+--
+VQE Iter. 10
+Energy:  -2.8009502253820870
+--
+VQE Iter. 11
+Energy:  -2.8009502254882142
+--
+VQE Iter. 12
+Energy:  -2.8009502254899883
+--
+VQE Iter. 13
+Energy:  -2.8009502254927812
+--
+VQE Iter. 14
+Energy:  -2.8009502254948471
+--
+VQE Iter. 15
+Energy:  -2.8009502254956100
+--
+VQE Iter. 16
+Energy:  -2.8009502254956145
+--
+VQE Iter. 17
+Energy:  -2.8009502254956153
+--
+VQE Iter. 18
+Energy:  -2.8009502254956451
+--
+VQE Iter. 0
+Energy:  -2.8009502254956451
+--
+VQE Iter. 1
+Energy:  -2.8009503344161097
+--
+VQE Iter. 2
+Energy:  -2.8009504898875215
+--
+VQE Iter. 3
+Energy:  -2.8009505933735190
+--
+VQE Iter. 4
+Energy:  -2.8009506681294227
+--
+VQE Iter. 5
+Energy:  -2.8009507061520478
+--
+VQE Iter. 6
+Energy:  -2.8009507300019409
+--
+VQE Iter. 7
+Energy:  -2.8009507391001662
+--
+VQE Iter. 8
+Energy:  -2.8009507454752622
+--
+VQE Iter. 9
+Energy:  -2.8009507500130724
+--
+VQE Iter. 10
+Energy:  -2.8009507514452516
+--
+VQE Iter. 11
+Energy:  -2.8009507519357739
+--
+VQE Iter. 12
+Energy:  -2.8009507522028843
+--
+VQE Iter. 13
+Energy:  -2.8009507522051678
+--
+VQE Iter. 14
+Energy:  -2.8009507522057668
+--
+VQE Iter. 15
+Energy:  -2.8009507522059502
+--
+VQE Iter. 16
+Energy:  -2.8009507522060595
+--
+VQE Iter. 17
+Energy:  -2.8009507522061599
+--
+VQE Iter. 18
+Energy:  -2.8009507522062620
+--
+VQE Iter. 0
+Energy:  -2.8009507522062620
+--
+VQE Iter. 1
+Energy:  -2.8009508695290184
+--
+VQE Iter. 2
+Energy:  -2.8009510339025119
+--
+VQE Iter. 3
+Energy:  -2.8009511009264556
+--
+VQE Iter. 4
+Energy:  -2.8009512236781702
+--
+VQE Iter. 5
+Energy:  -2.8009513589421515
+--
+VQE Iter. 6
+Energy:  -2.8009514707515151
+--
+VQE Iter. 7
+Energy:  -2.8009515688303894
+--
+VQE Iter. 8
+Energy:  -2.8009517067909746
+--
+VQE Iter. 9
+Energy:  -2.8009517631665846
+--
+VQE Iter. 10
+Energy:  -2.8009518510913103
+--
+VQE Iter. 11
+Energy:  -2.8009519724766929
+--
+VQE Iter. 12
+Energy:  -2.8009520160407284
+--
+VQE Iter. 13
+Energy:  -2.8009520807760451
+--
+VQE Iter. 14
+Energy:  -2.8009521779936386
+--
+VQE Iter. 15
+Energy:  -2.8009522008896481
+--
+VQE Iter. 16
+Energy:  -2.8009522413859576
+--
+VQE Iter. 17
+Energy:  -2.8009523087662718
+--
+VQE Iter. 18
+Energy:  -2.8009523831799230
+--
+VQE Iter. 19
+Energy:  -2.8009524156071559
+--
+VQE Iter. 20
+Energy:  -2.8009524445252638
+--
+VQE Iter. 21
+Energy:  -2.8009524937607919
+--
+VQE Iter. 22
+Energy:  -2.8009525499047170
+--
+VQE Iter. 23
+Energy:  -2.8009525780155387
+--
+VQE Iter. 24
+Energy:  -2.8009526091776591
+--
+VQE Iter. 25
+Energy:  -2.8009526366435953
+--
+VQE Iter. 26
+Energy:  -2.8009526747138680
+--
+VQE Iter. 27
+Energy:  -2.8009527233464562
+--
+VQE Iter. 28
+Energy:  -2.8009527600631072
+--
+VQE Iter. 29
+Energy:  -2.8009528051545107
+--
+VQE Iter. 30
+Energy:  -2.8009528235189607
+--
+VQE Iter. 31
+Energy:  -2.8009528577546954
+--
+VQE Iter. 32
+Energy:  -2.8009528982331076
+--
+VQE Iter. 33
+Energy:  -2.8009529253534420
+--
+VQE Iter. 34
+Energy:  -2.8009529667544828
+--
+VQE Iter. 35
+Energy:  -2.8009530148597710
+--
+VQE Iter. 36
+Energy:  -2.8009530554286766
+--
+VQE Iter. 37
+Energy:  -2.8009531063485049
+--
+VQE Iter. 38
+Energy:  -2.8009531652302000
+--
+VQE Iter. 39
+Energy:  -2.8009532113830855
+--
+VQE Iter. 40
+Energy:  -2.8009532565213462
+--
+VQE Iter. 41
+Energy:  -2.8009533218683855
+--
+VQE Iter. 42
+Energy:  -2.8009534068112285
+--
+VQE Iter. 43
+Energy:  -2.8009534857281548
+--
+VQE Iter. 44
+Energy:  -2.8009535602876396
+--
+VQE Iter. 45
+Energy:  -2.8009536045841643
+--
+VQE Iter. 46
+Energy:  -2.8009536639518773
+--
+VQE Iter. 47
+Energy:  -2.8009537134208302
+--
+VQE Iter. 48
+Energy:  -2.8009537910080700
+--
+VQE Iter. 49
+Energy:  -2.8009538778874417
+--
+VQE Iter. 50
+Energy:  -2.8009539376791444
+--
+VQE Iter. 51
+Energy:  -2.8009540198484206
+--
+VQE Iter. 52
+Energy:  -2.8009541118426244
+--
+VQE Iter. 53
+Energy:  -2.8009541808282901
+--
+VQE Iter. 54
+Energy:  -2.8009542699741861
+--
+VQE Iter. 55
+Energy:  -2.8009543458691621
+--
+VQE Iter. 56
+Energy:  -2.8009544025545923
+--
+VQE Iter. 57
+Energy:  -2.8009544437780725
+--
+VQE Iter. 58
+Energy:  -2.8009544728202087
+--
+VQE Iter. 59
+Energy:  -2.8009544887360223
+--
+VQE Iter. 60
+Energy:  -2.8009545167154446
+--
+VQE Iter. 61
+Energy:  -2.8009545556359248
+--
+VQE Iter. 62
+Energy:  -2.8009545943036129
+--
+VQE Iter. 63
+Energy:  -2.8009546187357111
+--
+VQE Iter. 64
+Energy:  -2.8009546519573276
+--
+VQE Iter. 65
+Energy:  -2.8009546916104324
+--
+VQE Iter. 66
+Energy:  -2.8009547210805872
+--
+VQE Iter. 67
+Energy:  -2.8009547549701077
+--
+VQE Iter. 68
+Energy:  -2.8009547770454666
+--
+VQE Iter. 69
+Energy:  -2.8009548044715493
+--
+VQE Iter. 70
+Energy:  -2.8009548151708321
+--
+VQE Iter. 71
+Energy:  -2.8009548340879777
+--
+VQE Iter. 72
+Energy:  -2.8009548498674079
+--
+VQE Iter. 73
+Energy:  -2.8009548697508411
+--
+VQE Iter. 74
+Energy:  -2.8009548896957357
+--
+VQE Iter. 75
+Energy:  -2.8009548997741955
+--
+VQE Iter. 76
+Energy:  -2.8009549125675988
+--
+VQE Iter. 77
+Energy:  -2.8009549262861055
+--
+VQE Iter. 78
+Energy:  -2.8009549332543742
+--
+VQE Iter. 79
+Energy:  -2.8009549417335680
+--
+VQE Iter. 80
+Energy:  -2.8009549452835434
+--
+VQE Iter. 81
+Energy:  -2.8009549511276330
+--
+VQE Iter. 82
+Energy:  -2.8009549565938192
+--
+VQE Iter. 83
+Energy:  -2.8009549597707792
+--
+VQE Iter. 84
+Energy:  -2.8009549630247217
+--
+VQE Iter. 85
+Energy:  -2.8009549653734562
+--
+VQE Iter. 86
+Energy:  -2.8009549671645897
+--
+VQE Iter. 87
+Energy:  -2.8009549685819559
+--
+VQE Iter. 88
+Energy:  -2.8009549700304657
+--
+VQE Iter. 89
+Energy:  -2.8009549707859183
+--
+VQE Iter. 90
+Energy:  -2.8009549712877111
+--
+VQE Iter. 91
+Energy:  -2.8009549713855026
+--
+VQE Iter. 92
+Energy:  -2.8009549714939062
+--
+VQE Iter. 93
+Energy:  -2.8009549715071778
+--
+VQE Iter. 94
+Energy:  -2.8009549715073190
+--
+VQE Iter. 95
+Energy:  -2.8009549715073376
+--
+VQE Iter. 96
+Energy:  -2.8009549715073456
+--
+VQE Iter. 97
+Energy:  -2.8009549715076614
+--
+VQE Iter. 98
+Energy:  -2.8009549715076711
+--
+VQE Iter. 99
+Energy:  -2.8009549715076751
+--
+VQE Iter. 100
+Energy:  -2.8009549715076760
+--
+VQE Iter. 101
+Energy:  -2.8009549715076774
+--
+VQE Iter. 0
+Energy:  -2.8009549715076774
+--
+VQE Iter. 1
+Energy:  -2.8009551540658841
+--
+VQE Iter. 2
+Energy:  -2.8009553594259771
+--
+VQE Iter. 3
+Energy:  -2.8009554529103640
+--
+VQE Iter. 4
+Energy:  -2.8009555866572597
+--
+VQE Iter. 5
+Energy:  -2.8009556919787468
+--
+VQE Iter. 6
+Energy:  -2.8009557705311470
+--
+VQE Iter. 7
+Energy:  -2.8009558434079862
+--
+VQE Iter. 8
+Energy:  -2.8009558890341641
+--
+VQE Iter. 9
+Energy:  -2.8009559335382206
+--
+VQE Iter. 10
+Energy:  -2.8009559477754857
+--
+VQE Iter. 11
+Energy:  -2.8009559595221329
+--
+VQE Iter. 12
+Energy:  -2.8009559795324352
+--
+VQE Iter. 13
+Energy:  -2.8009560022036704
+--
+VQE Iter. 14
+Energy:  -2.8009560127550506
+--
+VQE Iter. 15
+Energy:  -2.8009560223315706
+--
+VQE Iter. 16
+Energy:  -2.8009560362437522
+--
+VQE Iter. 17
+Energy:  -2.8009560516204015
+--
+VQE Iter. 18
+Energy:  -2.8009560626657013
+--
+VQE Iter. 19
+Energy:  -2.8009560763948222
+--
+VQE Iter. 20
+Energy:  -2.8009560824967585
+--
+VQE Iter. 21
+Energy:  -2.8009560935752029
+--
+VQE Iter. 22
+Energy:  -2.8009561038598521
+--
+VQE Iter. 23
+Energy:  -2.8009561155101794
+--
+VQE Iter. 24
+Energy:  -2.8009561245194665
+--
+VQE Iter. 25
+Energy:  -2.8009561368054690
+--
+VQE Iter. 26
+Energy:  -2.8009561431540266
+--
+VQE Iter. 27
+Energy:  -2.8009561549265096
+--
+VQE Iter. 28
+Energy:  -2.8009561674116679
+--
+VQE Iter. 29
+Energy:  -2.8009561791513389
+--
+VQE Iter. 30
+Energy:  -2.8009561948193387
+--
+VQE Iter. 31
+Energy:  -2.8009562031544992
+--
+VQE Iter. 32
+Energy:  -2.8009562183863292
+--
+VQE Iter. 33
+Energy:  -2.8009562330906110
+--
+VQE Iter. 34
+Energy:  -2.8009562494667639
+--
+VQE Iter. 35
+Energy:  -2.8009562634763894
+--
+VQE Iter. 36
+Energy:  -2.8009562821017879
+--
+VQE Iter. 37
+Energy:  -2.8009562927326996
+--
+VQE Iter. 38
+Energy:  -2.8009563121678087
+--
+VQE Iter. 39
+Energy:  -2.8009563324426687
+--
+VQE Iter. 40
+Energy:  -2.8009563521041740
+--
+VQE Iter. 41
+Energy:  -2.8009563788147092
+--
+VQE Iter. 42
+Energy:  -2.8009563925907943
+--
+VQE Iter. 43
+Energy:  -2.8009564181005953
+--
+VQE Iter. 44
+Energy:  -2.8009564454895912
+--
+VQE Iter. 45
+Energy:  -2.8009564712218218
+--
+VQE Iter. 46
+Energy:  -2.8009565070698064
+--
+VQE Iter. 47
+Energy:  -2.8009565314897302
+--
+VQE Iter. 48
+Energy:  -2.8009565722971397
+--
+VQE Iter. 49
+Energy:  -2.8009566248311288
+--
+VQE Iter. 50
+Energy:  -2.8009566521492513
+--
+VQE Iter. 51
+Energy:  -2.8009567000817266
+--
+VQE Iter. 52
+Energy:  -2.8009567563198976
+--
+VQE Iter. 53
+Energy:  -2.8009567982076948
+--
+VQE Iter. 54
+Energy:  -2.8009568632659718
+--
+VQE Iter. 55
+Energy:  -2.8009569514743453
+--
+VQE Iter. 56
+Energy:  -2.8009570468514067
+--
+VQE Iter. 57
+Energy:  -2.8009571416495396
+--
+VQE Iter. 58
+Energy:  -2.8009572227855175
+--
+VQE Iter. 59
+Energy:  -2.8009573112022652
+--
+VQE Iter. 60
+Energy:  -2.8009573888543811
+--
+VQE Iter. 61
+Energy:  -2.8009574955675203
+--
+VQE Iter. 62
+Energy:  -2.8009575636834239
+--
+VQE Iter. 63
+Energy:  -2.8009576763571205
+--
+VQE Iter. 64
+Energy:  -2.8009578156526049
+--
+VQE Iter. 65
+Energy:  -2.8009578794905523
+--
+VQE Iter. 66
+Energy:  -2.8009579919321412
+--
+VQE Iter. 67
+Energy:  -2.8009581015344684
+--
+VQE Iter. 68
+Energy:  -2.8009582015369552
+--
+VQE Iter. 69
+Energy:  -2.8009582370917592
+--
+VQE Iter. 70
+Energy:  -2.8009582989152206
+--
+VQE Iter. 71
+Energy:  -2.8009583965959344
+--
+VQE Iter. 72
+Energy:  -2.8009585151159975
+--
+VQE Iter. 73
+Energy:  -2.8009586184482211
+--
+VQE Iter. 74
+Energy:  -2.8009586588020747
+--
+VQE Iter. 75
+Energy:  -2.8009586712652856
+--
+VQE Iter. 76
+Energy:  -2.8009587337883648
+--
+VQE Iter. 77
+Energy:  -2.8009587799854558
+--
+VQE Iter. 78
+Energy:  -2.8009588274768644
+--
+VQE Iter. 79
+Energy:  -2.8009588321447945
+--
+VQE Iter. 80
+Energy:  -2.8009588410931743
+--
+VQE Iter. 81
+Energy:  -2.8009588566529162
+--
+VQE Iter. 82
+Energy:  -2.8009588719075142
+--
+VQE Iter. 83
+Energy:  -2.8009588795636371
+--
+VQE Iter. 84
+Energy:  -2.8009588843187121
+--
+VQE Iter. 85
+Energy:  -2.8009588893738071
+--
+VQE Iter. 86
+Energy:  -2.8009588937874272
+--
+VQE Iter. 87
+Energy:  -2.8009588963460939
+--
+VQE Iter. 88
+Energy:  -2.8009588980314257
+--
+VQE Iter. 89
+Energy:  -2.8009588988683123
+--
+VQE Iter. 90
+Energy:  -2.8009588993538639
+--
+VQE Iter. 91
+Energy:  -2.8009588995471111
+--
+VQE Iter. 92
+Energy:  -2.8009588996341392
+--
+VQE Iter. 93
+Energy:  -2.8009588996418522
+--
+VQE Iter. 94
+Energy:  -2.8009588996430055
+--
+VQE Iter. 95
+Energy:  -2.8009588996438879
+--
+VQE Iter. 96
+Energy:  -2.8009588996507304
+--
+VQE Iter. 97
+Energy:  -2.8009588996507824
+--
+VQE Iter. 98
+Energy:  -2.8009588996507846
+--
+VQE Iter. 99
+Energy:  -2.8009588996507859
+--
+VQE Iter. 100
+Energy:  -2.8009588996507873
+--
+VQE Iter. 0
+Energy:  -2.8009588996507873
+--
+VQE Iter. 1
+Energy:  -2.8009588996514734
+--
+VQE Iter. 2
+Energy:  -2.8009588996518318
+--
+VQE Iter. 3
+Energy:  -2.8009588996518415
+--
+VQE Iter. 4
+Energy:  -2.8009588996518455
+--
+VQE Iter. 5
+Energy:  -2.8009588996524042
+--
+VQE Iter. 6
+Energy:  -2.8009588996525223
+--
+VQE Iter. 7
+Energy:  -2.8009588996526262
+--
+VQE Iter. 8
+Energy:  -2.8009588996526311
+--
+VQE Iter. 9
+Energy:  -2.8009588996526360
+--
+VQE Iter. 10
+Energy:  -2.8009588996526369
+--
+VQE Iter. 0
+Energy:  -2.8009588996526369
+--
+VQE Iter. 1
+Energy:  -2.8009588996529544
+--
+VQE Iter. 2
+Energy:  -2.8009588996529629
+--
+VQE Iter. 3
+Energy:  -2.8009588996529629
+--
+VQE Iter. 0
+Energy:  -2.8009588996529629
+--
+VQE Iter. 1
+Energy:  -2.8009588996531947
+--
+VQE Iter. 2
+Energy:  -2.8009588996531964
+--
+VQE Iter. 3
+Energy:  -2.8009588996531996
+--
+VQE Iter. 4
+Energy:  -2.8009588996533052
+--
+VQE Iter. 0
+Energy:  -2.8009588996533052
+--
+VQE Iter. 0
+Energy:  -2.8009588996533052
+--
+VQE Iter. 0
+Energy:  -2.8009588996533052
+--
+VQE Iter. 0
+Energy:  -2.8009588996533052
+--
+VQE Iter. 1
+Energy:  -2.8009588996540895
+--
+VQE Iter. 2
+Energy:  -2.8009588996541641
+--
+VQE Iter. 3
+Energy:  -2.8009588996541668

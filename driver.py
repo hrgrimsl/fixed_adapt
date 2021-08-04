@@ -177,7 +177,8 @@ class Xiphos:
             E -= E0
         print(E)
         return E
-         
+
+
     def t_ucc_E(self, params, ansatz):
         """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
         :param params: Parameters associated with ansatz.

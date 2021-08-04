@@ -92,7 +92,7 @@ print("Success")
 print(res.success)
 '''
 
-res = scipy.optimize.minimize(xiphos.ucc_inf_d_E, np.zeros((len(pool))), method = "bfgs", args = (ansatz, E0, grad, hess), options = {"gtol": 1e-12, "disp": True})
+res = scipy.optimize.minimize(xiphos.ucc_inf_d_E, np.zeros((len(pool))), method = "bfgs", jac = '3-point', args = (ansatz, E0, grad, hess), options = {"gtol": 1e-8, "disp": True})
 print("HATER2_Inf solution:")
 print("E")
 print(res.fun)
@@ -100,7 +100,7 @@ print("GNORM")
 print(np.linalg.norm(res.jac))
 print("Success")
 print(res.success)
-
+'''
 #res = scipy.optimize.minimize(shucc_E, np.zeros((len(pool),1)), jac = shucc_grad, method = "bfgs", args = (E0, np.load("B3LYP_UCCSD_grad.npy"), np.load("B3LYP_UCCSD_hess.npy")), options = {"gtol": 1e-12, "disp": True})
 
 #print(res.fun)
@@ -122,5 +122,5 @@ print(res.success)
 #np.save("B3LYP_tUCCSD_hess", hess)
 #jerk = num_jerk(ct.simple_energy, zero_params, 1e-2)
 #np.save("B3LYP_UCCSD_jerk", jerk)
-
+'''
         
