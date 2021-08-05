@@ -56,6 +56,8 @@ def enucc_grad(x, E0, g, hessian, jerk):
     grad = g + hessian@x + .5*contract('iii,i,i->i', jerk, x, x)
     return grad
 
+
+    
 geom = "H 0 0 0; H 0 .1 1; H .2 0 2.1; H 0 -.1 3.5; H 0 0 4; H 0 0 5"
 E_nuc, H_core, g, D, C, hf_energy = get_integrals(geom, "STO-3G", "rhf", chkfile = 'h6_chk', read = False, feed_C = "B3LYP_C.npy")
 N_e = int(np.trace(D))
@@ -92,7 +94,10 @@ print("Success")
 print(res.success)
 '''
 
-res = scipy.optimize.minimize(xiphos.ucc_inf_d_E, np.zeros((len(pool))), method = "bfgs", jac = '3-point', args = (ansatz, E0, grad, hess), options = {"gtol": 1e-8, "disp": True})
+def inf_cb(x):
+    print(xiphos.ucc_inf_d_E(x, ansatz, E0, grad, hess))
+
+res = scipy.optimize.minimize(xiphos.ucc_inf_d_E, np.zeros((len(pool))), method = "bfgs", jac = '3-point', args = (ansatz, E0, grad, hess), callback = inf_cb, options = {"disp": True})
 print("HATER2_Inf solution:")
 print("E")
 print(res.fun)

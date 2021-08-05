@@ -175,7 +175,6 @@ class Xiphos:
             E -= params[i]*grad[i]
             E -= .5*params[i]*params[i]*hess[i,i] 
             E -= E0
-        print(E)
         return E
 
 
