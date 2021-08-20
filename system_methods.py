@@ -267,6 +267,7 @@ class system_data:
         print("Operators in pool:")
         print(len(pool)) 
         return jw_pool, v_pool
+
     def raw_uccsd_pool(self, spin_adapt = False):
         N_qubits = self.N_qubits
         N_e = self.N_e
@@ -278,6 +279,8 @@ class system_data:
                     if (i+a)%2 == 0:
                         pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
                         v_pool.append(f"{i}->{a}")
+            for i in range(0, N_e):
+                for a in range(N_e, N_qubits):
                     for j in range(i+1, N_e):
                         for b in range(a+1, N_qubits):
                             if i%2+j%2 == a%2+b%2:

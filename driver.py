@@ -48,6 +48,10 @@ class Xiphos:
         self.system = system
         self.pool = pool
         self.v_pool = v_pool
+        self.vqe_iteration = 0
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
  
         if H_adapt is None:
             self.H_adapt = self.H
@@ -155,7 +159,6 @@ class Xiphos:
             for j in range(0, len(ansatz)):
                     hess[i,j] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
                     hess[j,i] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
-
         return hess
                  
     def ucc_diag_jerk_zero(self, ansatz):
@@ -176,7 +179,16 @@ class Xiphos:
             E -= .5*params[i]*params[i]*hess[i,i] 
             E -= E0
         return E
+    
+    def tucc_inf_d_E(self, params, ansatz, E0, grad, hess):
+        E = E0 + grad.T@params + .5*params.T@hess@params
+        for i in range(0, len(ansatz)):
+            E += self.t_ucc_E(np.array([params[i]]), [ansatz[i]])
+            E -= params[i]*grad[i]
+            E -= .5*params[i]*params[i]*hess[i,i] 
+            E -= E0
 
+        return E[0,0]
 
     def t_ucc_E(self, params, ansatz):
         """Pseudo-trotterized UCC energy.  Ansatz and params are applied to reference in reverse order. 
@@ -395,6 +407,9 @@ class Xiphos:
             state = self.t_ucc_state(params, ansatz)
             np.save(f"{self.system}/params", params)
             np.save(f"{self.system}/ops", ansatz)
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
             
         logging.info(f"\nConverged ADAPT energy:    {E:20.16f}")            
         logging.info(f"\nConverged ADAPT error:     {error:20.16f}")            
