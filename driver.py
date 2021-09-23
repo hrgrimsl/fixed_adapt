@@ -7,6 +7,7 @@ import copy
 import os
 import time
 import math
+import git
 
 #Globals
 Eh = 627.5094740631
@@ -186,11 +187,8 @@ class Xiphos:
             E -= params[i]*grad[i]
             E -= .5*params[i]*params[i]*hess[i,i] 
             E -= E0
-
         return E[0,0]
 
-
-    
     def H_eff_analysis(self, params, ansatz):
         H_eff = copy.copy(self.H)
         for i in reversed(range(0, len(params))):
@@ -204,49 +202,8 @@ class Xiphos:
             spec_string += f"{sv},"
         print(f"Eigenvalues of H_eff:")
         print(spec_string)
-        
-
-    
-
-
-
-
-
-    def aegis(self, params, ansatz, refs, deg_thresh = 1e-8, gtol = None, Etol = None, max_depth = None, criteria = 'grad'):
-        """Aces and Eights Generation of Interpolation Subspace  
-        :param params: Parameters associated with ansatz.
-        :type params: list 
-        :param ansatz: List of operator indices, applied to reference in reversed order.
-        :type ansatz: list
-        :param ref: Reference state.
-        :type ref: (2^N,1) array-like
-        :param deg_thresh: What are we calling a 'degenerate' gradient?
-        :type gtol: float
-        :param gtol: Stopping condition on gradient norm of all ops to add
-        :type gtol: float
-        :param Etol: Stopping condition on error from ED of all ops
-        :type Etol: float
-        :param max_depth: Stopping condition on operators
-        :type max_depth: int
-        """
-        self.e_dict = {}
-        self.grad_dict = {}
-        self.state_dict = {}
-        self.e_savings = 0
-        self.grad_savings = 0
-        self.state_savings = 0
-        states = refs       
-        while Done == False:
-            gnorms = []
-            for i in range(0, len(states)):
-                state = states[i]
-                print(f"Considering state {i}/{len(states)}")
-                gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool])
-                gnorms.append(np.linalg.norm(gradient))
-                idx = np.argsort(abs(gradient))
-                 
-        
-    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', multiple = False):
+                
+    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
         :type params: list 
@@ -278,18 +235,13 @@ class Xiphos:
             gnorm = np.linalg.norm(gradient)
             if criteria == 'grad':
                 idx = np.argsort(abs(gradient))
-
-            if criteria == 'lucc':
-                denom =  np.array([((state.T@(self.comm(self.H_adapt,op)@(op@state)))[0,0]) for op in self.pool])
-                dE_opt = np.divide(-.25*gradient*gradient, denom, out=np.zeros(gradient.shape), where=denom>1e-12)
-                idx = np.argsort(dE_opt)[::-1]
-
                  
             E = (state.T@(self.H@state))[0,0] 
             error = E - self.ed_energies[0]
             fid = ((self.ed_wfns[:,0].T)@state)[0]**2
-
+            print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
+
             for key in self.sym_ops.keys():
                 val = ((state.T)@(self.sym_ops[key]@state))[0,0]
                 err = val - self.ed_syms[0][key]
@@ -321,14 +273,11 @@ class Xiphos:
 
             params = np.array([0] + list(params))
             ansatz = [idx[-1]] + ansatz
-            if multiple == True: 
-                H_vqe = copy.copy(self.H_vqe)
-                pool = copy.copy(self.pool)
-                ref = copy.copy(self.ref)
-                params = multi_vqe(params, ansatz, H_vqe, pool, ref, self)  
-            else:
-                res = self.vqe(params, ansatz)
-                params = copy.copy(res.x)
+            H_vqe = copy.copy(self.H_vqe)
+            pool = copy.copy(self.pool)
+            ref = copy.copy(self.ref)
+            params = multi_vqe(params, ansatz, H_vqe, pool, ref, self, guesses = guesses)  
+
             state = t_ucc_state(params, ansatz, self.pool, self.ref)
             np.save(f"{self.system}/params", params)
             np.save(f"{self.system}/ops", ansatz)
@@ -343,7 +292,9 @@ class Xiphos:
         print("\n---------------------------\n")
         print("\"Adapt.\" - Bear Grylls\n")
         print("\"ADAPT.\" - Harper \"Grimsley Bear\" Grimsley\n")
-
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 #Stupid non-object methods because multiprocessing doesn't work with OOP for some reason
 
 def t_ucc_state(params, ansatz, pool, ref):
@@ -394,14 +345,14 @@ def t_ucc_hess(params, ansatz, H_vqe, pool, ref):
     #print(f"Energy: {energy:20.16f}")
     #print(f"GNorm:  {np.linalg.norm(grad):20.16f}")
     #print(f"Jacobian Singular Values:")
-    spec_string = ""
-    for sv in s:
-        spec_string += f"{sv},"
+    #spec_string = ""
+    #for sv in s:
+    #    spec_string += f"{sv},"
     #print(spec_string)
     #print(f"Hessian Eigenvalues:")
-    spec_string = ""
-    for sv in w:
-        spec_string += f"{sv},"
+    #spec_string = ""
+    #for sv in w:
+    #    spec_string += f"{sv},"
     #print(spec_string)
     return hess
 
@@ -424,7 +375,7 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "newton-cg", energy = None)
         res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-10})
     return res
 
-def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 10):
+def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 0):
     from multiprocessing import Pool
     start = time.time()
     os.system('export OPENBLAS_NUM_THREADS=1')
@@ -457,8 +408,7 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
     hess = [t_ucc_hess(L[i].x, ansatz, H_vqe, pool, ref) for i in range(0, len(L))]
     jacs = [t_ucc_jac(L[i].x, ansatz, H_vqe, pool, ref) for i in range(0, len(L))]
     idx = np.argsort(Es)
-    print(f"\nSolution analysis for {len(ansatz)} parameters:")
-    print("Seed,E_initial,E_final,G_Norm,Smallest Jac SV,Smallest Hess EV,Fidelity,E,S_z,S^2,N")
+    print(f"\nSolution Analysis:\n")
     smins = []
     for i in idx:
         seed = seeds[i]
@@ -472,10 +422,31 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
         e_min = 1/np.min(w)
         state = t_ucc_state(xs[i], ansatz, pool, ref)
         fid = ((xiphos.ed_wfns[:,0].T)@state)[0]**2
-        string = f"{seed},{E0},{EF},{g_norm},{s_min},{e_min},{fid}"
+        print(f"Parameters: {len(ansatz)}")
+        print(f"Initialization: {seed}")
+        print(f"Initial Energy: {E0:20.16f}")
+        print(f"Final Energy:   {EF:20.16f}")
+        print(f"GNorm:          {g_norm:20.16f}")
+        print(f"Fidelity:       {fid:20.16f}")
+        print(f"Solution Parameters:")
+        spec_string = ""
+        for x in xs[i]:
+            spec_string += f"{x},"
+        print(spec_string)
+        print(f"Jacobian Singular Values:")
+        spec_string = ""
+        for sv in s:
+            spec_string += f"{sv},"
+        print(spec_string)
+        print(f"Hessian Eigenvalues:")
+        spec_string = ""
+        for sv in w:
+            spec_string += f"{sv},"
+        print(spec_string)
+        print(f"Operator/ Expectation Value/ Error")
         for key in xiphos.sym_ops.keys():
             val = ((state.T)@(xiphos.sym_ops[key]@state))[0,0]
             err = val - xiphos.ed_syms[0][key]
-            string += f",{val:20.16f}"
-        print(string)
+            print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
+        print('\n')
     return xs[idx[0]]
