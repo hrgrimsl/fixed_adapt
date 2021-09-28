@@ -27,5 +27,5 @@ if __name__ == '__main__':
     xiphos = Xiphos(H, ref, "h4_single", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
     params = np.array([])
     ansatz = []
-    xiphos.adapt(params, ansatz, ref, max_depth = 5, guesses = 20)
+    xiphos.adapt(params, ansatz, ref, max_depth = 2, guesses = 100)
 

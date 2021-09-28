@@ -1,13 +1,15 @@
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = '1'
+import numpy as np
 import system_methods as sm
 import computational_tools as ct
 import openfermion as of
-import numpy as np
 import scipy
 import copy
-import os
 import time
 import math
 import git
+import seaborn
 
 #Globals
 Eh = 627.5094740631
@@ -297,6 +299,63 @@ class Xiphos:
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 #Stupid non-object methods because multiprocessing doesn't work with OOP for some reason
 
+    def graph(self, ansatz, ref):
+        import networkx as nx
+        import matplotlib.pyplot as plt
+        print("\nAnsatz Structure:\n")
+        for i in ansatz:
+            print(self.v_pool[i])
+        print("|0>")
+        print("Identifying all accessible determinants.")
+        print(f"Controllable Parameters:  |Determinants Accessible:")
+        dets = [copy.copy(ref)]
+        j = 0
+        print(f"{j:10d}                    {len(dets):10d}")
+        for i in reversed(ansatz):
+            j += 1
+            op = self.pool[i]
+            op*= 1/np.linalg.norm((op@ref).todense())
+            new_dets = []
+            for det in dets:
+                new_det = op@det
+                if (new_det.T@new_det)[0,0] > .01 and self.is_in(new_det, dets) == False and self.is_in(new_det, new_dets) == False:
+                    new_dets.append(copy.copy(new_det))
+            op = op@op
+            op*= 1/np.linalg.norm((op@ref).todense())
+            for det in dets:
+                new_det = op@det
+                if (new_det.T@new_det)[0,0] > .01 and self.is_in(new_det, dets) == False and self.is_in(new_det, new_dets) == False:
+                    new_dets.append(copy.copy(new_det))
+            dets += new_dets
+
+            print(f"{j:10d}                    {len(dets):10d}")
+        a_mat = np.zeros((len(dets), len(dets)))
+        cur_dets = [0]        
+        for k in reversed(ansatz):
+            op = self.pool[k]
+            op*= 1/np.linalg.norm((op@ref).todense())
+            new_dets = []
+            for i in cur_dets:
+                for j in range(0, len(dets)):
+                    if abs((dets[i].T@op@dets[j]).todense()[0,0]) > .01:
+                            new_dets.append(j)
+                            a_mat[i,j] += 1
+                            a_mat[j,i] += 1
+            cur_dets += new_dets
+       
+        G = nx.from_numpy_matrix(a_mat)
+        nx.draw(G, with_labels = True)
+        plt.show()
+         
+    def is_in(self, det, dets):
+        for det2 in dets:
+            if abs((det.T@det2)[0,0]) > .9:
+                return True
+        return False
+    
+    
+
+
 def t_ucc_state(params, ansatz, pool, ref):
     state = copy.copy(ref)
     for i in reversed(range(0, len(ansatz))):
@@ -395,10 +454,11 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
 
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))])] 
-    with Pool(6) as p:
+    with Pool(1) as p:
         L = p.starmap(vqe, iterable = iterable)
-    params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
+    params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
+
     return params
     
 def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos):
@@ -450,3 +510,5 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
             print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
         print('\n')
     return xs[idx[0]]
+
+
