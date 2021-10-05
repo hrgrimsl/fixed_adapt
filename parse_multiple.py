@@ -2,10 +2,11 @@ from sys import argv
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-
+import math
 script, fname = argv
 params = 1
 Energies = []
+E0s = []
 Done = False
 
 os.system(f"grep -A1 \"^Reference information:$\" {fname} > temp.dat")
@@ -37,6 +38,40 @@ while Done == False:
                energies.append(float(i.split()[-1]))        
        Energies.append(energies)
        params += 1
+params = 1
+Done = False
+while Done == False:
+   e0s = []
+   os.system(f"grep -A16 \"^Parameters: {params}$\" {fname} > temp.dat")
+   if os.path.getsize("temp.dat") == 0 or os.path.exists("temp.dat") == False:
+       Done = True
+   else:
+       os.system(f"grep \"^Initial Energy:\" temp.dat > temp2.dat")
+       with open("temp2.dat", "r") as f:
+           for i in f.readlines():
+               e0s.append(float(i.split()[-1]))        
+       E0s.append(e0s)
+       params += 1
+
+Seeds = []
+Done = False
+params = 1
+while Done == False:
+   seeds = []
+   os.system(f"grep -A16 \"^Parameters: {params}$\" {fname} > temp.dat")
+   if os.path.getsize("temp.dat") == 0 or os.path.exists("temp.dat") == False:
+       Done = True
+   else:
+       os.system(f"grep \"^Initialization:\" temp.dat > temp2.dat")
+       with open("temp2.dat", "r") as f:
+           for i in f.readlines():
+               try:
+                   seeds.append(int(i.split()[-1]))
+               except:
+                   seeds.append("Recycled") 
+       Seeds.append(seeds)
+       params += 1
+
 
 xs = [0] 
 best_es = [hf]
@@ -54,11 +89,48 @@ with open("temp.dat", "r") as f:
 plt.plot(xs, np.array(best_es)-ci, color = "blue", label = "Best Initialization")
 plt.plot(xs, np.array(recycled_es)-ci, color = "green", label = "Recycled Initialization")
 plt.scatter(xs, [float("NaN") for i in xs], color = "black", label = "Random Initializations")
+plt.legend()
 
+plt.xlabel("ADAPT Iterations")
+plt.ylabel("Error From ED (a.u.)")
+plt.yscale("log")
+plt.title("ADAPT's Local Minima")
+plt.show() 
+x0s = []
+for seed in Seeds[0]:
+    if seed != "Recycled":
+        np.random.seed(seed)
+        x0s.append(math.pi*np.sqrt(2)*np.random.rand(1)[0])
+    else:
+        x0s.append(0.0)
+plt.scatter(x0s , E0s[0])
+plt.show()
+x0s = []
+y0s = []
+for seed in Seeds[1]:
+    if seed != "Recycled":
+        np.random.seed(seed)
+        x0s.append(math.pi*np.sqrt(2)*np.random.rand(2)[0])
+        y0s.append(math.pi*np.sqrt(2)*np.random.rand(2)[1])
+    else:
+        x0s.append(0)
+        y0s.append(0)
+
+'''
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+idx = np.argsort(E0s[1])
+ax = fig.add_subplot(111,projection = '3d')
+ax.plot_surface(np.array(x0s),np.array(y0s), zs = np.array(E0s[1])[idx])
+plt.show()
+
+plt.violinplot(list(np.array(Energies)-ci), positions = [i+1 for i in range(0, params-1)])
+plt.plot(xs, np.array(best_es)-ci, color = "blue", label = "Best Initialization")
+plt.plot(xs, np.array(recycled_es)-ci, color = "green", label = "Recycled Initialization")
 plt.legend()
 plt.xlabel("ADAPT Iterations")
 plt.ylabel("Error From ED (a.u.)")
 plt.yscale("log")
 plt.title("ADAPT's Local Minima")
 plt.show() 
-
+'''

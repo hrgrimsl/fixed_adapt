@@ -302,6 +302,7 @@ class Xiphos:
     def graph(self, ansatz, ref):
         import networkx as nx
         import matplotlib.pyplot as plt
+        import colorsys
         print("\nAnsatz Structure:\n")
         for i in ansatz:
             print(self.v_pool[i])
@@ -312,6 +313,7 @@ class Xiphos:
         j = 0
         print(f"{j:10d}                    {len(dets):10d}")
         for i in reversed(ansatz):
+           
             j += 1
             op = self.pool[i]
             op*= 1/np.linalg.norm((op@ref).todense())
@@ -330,8 +332,10 @@ class Xiphos:
 
             print(f"{j:10d}                    {len(dets):10d}")
         a_mat = np.zeros((len(dets), len(dets)))
-        cur_dets = [0]        
+        cur_dets = [0]  
+        o_mats = []      
         for k in reversed(ansatz):
+            o_mat = np.zeros((len(dets), len(dets)))
             op = self.pool[k]
             op*= 1/np.linalg.norm((op@ref).todense())
             new_dets = []
@@ -341,12 +345,31 @@ class Xiphos:
                             new_dets.append(j)
                             a_mat[i,j] += 1
                             a_mat[j,i] += 1
+                            o_mat[i,j] += 1
+                            o_mat[j,i] += 1
+            o_mats.append(copy.copy(o_mat))
             cur_dets += new_dets
-       
+        colors = [colorsys.hsv_to_rgb(float(i+1)/len(ansatz),1.0,1.0) for i in range(0, len(ansatz))]
+        print(colors)
+        G = nx.Graph()
+        for i in range(0, len(dets)):
+            G.add_node(i)
+        for k in range(0, len(o_mats)):
+            o_mat = copy.copy(o_mats[k])
+            for i in range(0, len(dets)):
+                for j in range(i+1, len(dets)):
+                    if o_mat[i,j] > 0:
+                        G.add_edge(i, j, color = colors[k]) 
+
+        edge_colors = [G[u][v]['color'] for u,v in G.edges()]
+        nx.draw(G, edge_color = edge_colors, with_labels = True)
+        plt.show()
+                        
+        '''
         G = nx.from_numpy_matrix(a_mat)
         nx.draw(G, with_labels = True)
         plt.show()
-         
+        '''
     def is_in(self, det, dets):
         for det2 in dets:
             if abs((det.T@det2)[0,0]) > .9:
@@ -434,6 +457,14 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "newton-cg", energy = None)
         res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-10})
     return res
 
+def wfn_grid(op, pool, ref, xiphos):
+    for i in range(0, 1001):
+        x = 2*math.pi*i/1000
+        wfn = scipy.sparse.linalg.expm_multiply(x*op, ref)
+        c0 = (ref.T@wfn).todense()[0,0]
+        print(f"{x} {c0}")
+    exit()
+
 def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 0):
     from multiprocessing import Pool
     start = time.time()
@@ -450,16 +481,15 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         seed = i+guesses*(len(params)-1)
         seeds.append(seed)
         np.random.seed(seed)
-        param_list.append(4*np.sqrt(2)*np.random.rand(len(params)))
+        param_list.append(math.pi*2*np.random.rand(len(params)))
         E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
-
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))])] 
     with Pool(1) as p:
         L = p.starmap(vqe, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
     params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
-
     return params
+
     
 def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos):
     Es = [L[i].fun for i in range(0, len(L))]

@@ -202,12 +202,7 @@ class system_data:
              op -= of.hermitian_conjugated(op)
              op = of.normal_ordered(op)
              assert(op.many_body_order() > 0)
-             coeff = 0
-             for t in op.terms:                 
-                 coeff_t = op.terms[t]
-                 coeff += coeff_t * coeff_t
-             op = op/np.sqrt(coeff)
-             pool[i] = copy.copy(op)
+
 
         jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
 
