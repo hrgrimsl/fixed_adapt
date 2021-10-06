@@ -313,7 +313,6 @@ class Xiphos:
         j = 0
         print(f"{j:10d}                    {len(dets):10d}")
         for i in reversed(ansatz):
-           
             j += 1
             op = self.pool[i]
             op*= 1/np.linalg.norm((op@ref).todense())
@@ -349,9 +348,15 @@ class Xiphos:
                             o_mat[j,i] += 1
             o_mats.append(copy.copy(o_mat))
             cur_dets += new_dets
+        H_dets = np.zeros((len(dets), len(dets)))
+
         colors = [colorsys.hsv_to_rgb(float(i+1)/len(ansatz),1.0,1.0) for i in range(0, len(ansatz))]
         print(colors)
         G = nx.Graph()
+        for i in range(0, len(dets)):
+            for j in range(i, len(dets)):
+                H_dets[i,j] = H_dets[j,i] = (dets[i].T@(self.H_vqe)@dets[j]).todense()[0,0]
+        print(f"Accessible Space CI: {np.linalg.eigh(H_dets)[0][0]}")
         for i in range(0, len(dets)):
             G.add_node(i)
         for k in range(0, len(o_mats)):
@@ -370,6 +375,60 @@ class Xiphos:
         nx.draw(G, with_labels = True)
         plt.show()
         '''
+
+    def graph_nick(self, ansatz, ref):
+        import networkx as nx
+        import matplotlib.pyplot as plt
+        import colorsys
+        fci = self.ed_wfns[:,0]
+        fci_dets = []
+        fci_coeffs = []
+        for i in range(0, len(list(fci))):
+            if abs(fci[i])>1e-10:
+               fci_dets.append(i)
+               fci_coeffs.append(abs(fci[i]))
+        idx = np.argsort(fci_coeffs)[::-1]
+        fci_dets = list(np.array(fci_dets)[idx])
+        fci_coeffs = list(np.array(fci_coeffs)[idx])
+        color_map = [plt.cm.gray(1-i/fci_coeffs[0]) for i in fci_coeffs]
+        G = nx.Graph()
+        pos = nx.circular_layout(G)
+        N = len(fci_dets)
+        theta = 2*math.pi/N
+        for i in range(0, N):
+            G.add_node(fci_dets[i],pos=(np.cos(theta*i),np.sin(theta*i)))
+        pos=nx.get_node_attributes(G,'pos')
+        cur_dets = [fci_dets[0]]
+        print("Assuming ref is most important det.")
+        Adj = np.zeros(self.H_vqe.shape)
+        for i in reversed(range(0, len(ansatz))):
+            op = self.pool[ansatz[i]].todense()
+            new_dets = []
+            for j in cur_dets:
+                for k in fci_dets:
+                    if abs(op[j,k]) > .25:
+                       Adj[j,k] += .1
+                       if k not in new_dets and k not in cur_dets:
+                           new_dets.append(k)
+            cur_dets += new_dets
+
+        for i in range(0, self.H_vqe.shape[0]):
+            for j in range(0, self.H_vqe.shape[0]):
+                if Adj[i,j] != 0:      
+                    G.add_edge(i, j, weight = (0,0,0,Adj[i,j])) 
+
+        weights = nx.get_edge_attributes(G,'weight').values()
+        nx.draw(G, pos, edge_color = list(weights), width = [4 for i in list(weights)], node_color = color_map, with_labels = False, verticalalignment = 'top')
+
+        for i in range(0, N):
+            plt.text(1.2*np.cos(theta*i),1.2*np.sin(theta*i),s = str(fci_dets[i]))
+        ax = plt.gca()
+        ax.collections[0].set_edgecolor('black')
+        plt.xlim(-1.5,1.5)
+        plt.ylim(-1.5,1.5)
+        plt.axis('equal')
+        plt.savefig('testfig.pdf', bbox_inches = "tight")
+        plt.show()
     def is_in(self, det, dets):
         for det2 in dets:
             if abs((det.T@det2)[0,0]) > .9:
@@ -484,7 +543,7 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         param_list.append(math.pi*2*np.random.rand(len(params)))
         E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))])] 
-    with Pool(1) as p:
+    with Pool(126) as p:
         L = p.starmap(vqe, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
     params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
