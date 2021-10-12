@@ -1,5 +1,6 @@
 from sys import argv
 import os
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -8,7 +9,7 @@ params = 1
 Energies = []
 E0s = []
 Done = False
-
+df = pd.read_csv('h4_300/adapt.csv')
 os.system(f"grep -A1 \"^Reference information:$\" {fname} > temp.dat")
 with open("temp.dat", "r") as f:
    for line in f.readlines():
@@ -88,12 +89,15 @@ with open("temp.dat", "r") as f:
 
 plt.plot(xs, np.array(best_es)-ci, color = "blue", label = "Best Initialization")
 plt.plot(xs, np.array(recycled_es)-ci, color = "green", label = "Recycled Initialization")
+plt.plot(xs, np.array(df['Energy'])-ci, color = "red", label = "ADAPT-Style Optimization w/ Same Operators")
+plt.plot(xs, np.array(df['SED Energy'])-ci, color = "black", label = "Subspace ED")
 plt.scatter(xs, [float("NaN") for i in xs], color = "black", label = "Random Initializations")
+
 plt.legend()
 
 plt.xlabel("ADAPT Iterations")
 plt.ylabel("Error From ED (a.u.)")
-plt.yscale("log")
+plt.yscale("symlog", linthresh = 1e-13)
 plt.title("ADAPT's Local Minima")
 plt.show() 
 x0s = []

@@ -411,10 +411,15 @@ class Xiphos:
                        if k not in new_dets and k not in cur_dets:
                            new_dets.append(k)
             cur_dets += new_dets
-
+        
+        H = np.zeros((len(cur_dets),len(cur_dets)))
+        for i in range(0, len(cur_dets)):
+            for j in range(i, len(cur_dets)):
+                H[i,j] = H[j,i] = self.H_vqe[cur_dets[i],cur_dets[j]]
+        print(f"{len(cur_dets)}-determinant subspace ED Energy: {np.linalg.eigh(H)[0][0]}") 
         for i in range(0, self.H_vqe.shape[0]):
             for j in range(0, self.H_vqe.shape[0]):
-                if Adj[i,j] != 0:      
+                if i in fci_dets and j in fci_dets and i != j:
                     G.add_edge(i, j, weight = (0,0,0,Adj[i,j])) 
 
         weights = nx.get_edge_attributes(G,'weight').values()
@@ -427,8 +432,9 @@ class Xiphos:
         plt.xlim(-1.5,1.5)
         plt.ylim(-1.5,1.5)
         plt.axis('equal')
-        plt.savefig('testfig.pdf', bbox_inches = "tight")
+        plt.savefig(f'img-{len(ansatz)}.pdf', bbox_inches = "tight")
         plt.show()
+
     def is_in(self, det, dets):
         for det2 in dets:
             if abs((det.T@det2)[0,0]) > .9:
@@ -513,9 +519,20 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "newton-cg", energy = None)
         hess = t_ucc_hess
 
     if strategy == "newton-cg":
-        res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-10})
+        res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-16})
     return res
 
+def adapt_vqe(ansatz, H_vqe, pool, ref):
+    params = []
+    ops = []
+    print("Params Energy")
+    for i in reversed(range(0, len(ansatz))):
+        params = [0] + params
+        ops = [ansatz[i]] + ops
+        res = vqe(np.array(params), ops, H_vqe, pool, ref)
+        params = list(res.x)
+        print(f"{len(params)} {res.fun}")
+ 
 def wfn_grid(op, pool, ref, xiphos):
     for i in range(0, 1001):
         x = 2*math.pi*i/1000
@@ -550,7 +567,7 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
     return params
 
     
-def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos):
+def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos, guess = 'recycled'):
     Es = [L[i].fun for i in range(0, len(L))]
     xs = [L[i].x for i in range(0, len(L))]
     gs = [t_ucc_grad(L[i].x, ansatz, H_vqe, pool, ref) for i in range(0, len(L))]
@@ -598,6 +615,9 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
             err = val - xiphos.ed_syms[0][key]
             print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
         print('\n')
-    return xs[idx[0]]
+    if guess = 'recycled':
+        return xs[0]
+    elif guess = 'best':
+        return xs[idx[0]]
 
 
