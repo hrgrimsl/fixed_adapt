@@ -1,0 +1,2 @@
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+/cm/local/apps/slurm/var/spool/job256740/slurm_script: line 13: h4_extended/log.dat: No such file or directory

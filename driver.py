@@ -205,6 +205,68 @@ class Xiphos:
         print(f"Eigenvalues of H_eff:")
         print(spec_string)
                 
+    def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):
+        #use preordained operator sequence
+
+        state = t_ucc_state(params, ansatz, self.pool, self.ref)
+        iteration = len(ansatz)
+        print(f"\nADAPT Iteration {iteration}")
+        print("Performing ADAPT:")
+        E = (state.T@(self.H@state))[0,0] 
+        Done = False
+        for op in reversed(order):
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op2@state)))[0,0]) for op2 in self.pool])
+            gnorm = np.linalg.norm(gradient)
+
+                 
+            E = (state.T@(self.H@state))[0,0] 
+            error = E - self.ed_energies[0]
+            fid = ((self.ed_wfns[:,0].T)@state)[0]**2
+            print(f"\nBest Initialization Information:")
+            print(f"Operator/ Expectation Value/ Error")
+
+            for key in self.sym_ops.keys():
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0]
+                err = val - self.ed_syms[0][key]
+                print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
+                
+            print(f"Next operator to be added: {self.v_pool[op]}")
+            print(f"Operator multiplicity {1+ansatz.count(op)}.")                
+            print(f"Associated gradient:       {gradient[op]:20.16f}")
+            print(f"Gradient norm:             {gnorm:20.16f}")
+            print(f"Fidelity to ED:            {fid:20.16f}")
+            print(f"Current ansatz:")
+            for i in range(0, len(ansatz)):
+                print(f"{i} {params[i]} {self.v_pool[ansatz[i]]}") 
+            print("|0>")  
+
+            iteration += 1
+            print(f"\nADAPT Iteration {iteration}")
+
+            params = np.array([0] + list(params))
+            ansatz = [op] + ansatz
+            H_vqe = copy.copy(self.H_vqe)
+            pool = copy.copy(self.pool)
+            ref = copy.copy(self.ref)
+            params = multi_vqe(params, ansatz, H_vqe, pool, ref, self, guesses = guesses)  
+
+            state = t_ucc_state(params, ansatz, self.pool, self.ref)
+            np.save(f"{self.system}/params", params)
+            np.save(f"{self.system}/ops", ansatz)
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
+            
+        print(f"\nConverged ADAPT energy:    {E:20.16f}")            
+        print(f"\nConverged ADAPT error:     {error:20.16f}")            
+        print(f"\nConverged ADAPT gnorm:     {gnorm:20.16f}")            
+        print(f"\nConverged ADAPT fidelity:  {fid:20.16f}")            
+        print("\n---------------------------\n")
+        print("\"Adapt.\" - Bear Grylls\n")
+        print("\"ADAPT.\" - Harper \"Grimsley Bear\" Grimsley\n")
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
     def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
@@ -527,7 +589,7 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "bfgs", energy = None):
     if strategy == "newton-cg":
         res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-16})
     if strategy == "bfgs":
-        res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, H_vqe, pool, ref), options = {'gtol': 1e-16})
+        res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, H_vqe, pool, ref), options = {'gtol': 1e-8})
     return res
 
 def adapt_vqe(ansatz, H_vqe, pool, ref):
@@ -567,6 +629,7 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         np.random.seed(seed)
         param_list.append(math.pi*2*np.random.rand(len(params)))
         E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
+
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))])] 
     with Pool(126) as p:
         L = p.starmap(vqe, iterable = iterable)
