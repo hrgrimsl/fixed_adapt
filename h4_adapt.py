@@ -20,10 +20,14 @@ if __name__ == '__main__':
     H, ref, N_qubits, S2, Sz, Nop = of_from_arrays(E_nuc, H_core, g, N_e)
     s = sm.system_data(H, ref, N_e, N_qubits)
     
-    pool, v_pool = s.uccsd_pool(approach = 'spin_complement')
-      
-    xiphos = Xiphos(H, ref, "h4_sc", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
-    params = np.array([])
-    ansatz = []
-    xiphos.adapt(params, ansatz, ref, max_depth = 40, guesses = 0)
+
+    pool, v_pool = s.uccsd_pool(spin_adapt = False)
+    
+    
+    xiphos = Xiphos(H, ref, "dummy", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
+
+    ansatz = list(np.load('h4_300/ops.npy'))
+    adapt_vqe(ansatz, xiphos.H_vqe, pool, ref)
+    
+
 

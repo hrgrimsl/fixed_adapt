@@ -92,12 +92,12 @@ plt.plot(xs, np.array(recycled_es)-ci, color = "green", label = "Recycled Initia
 #plt.plot(xs, np.array(df['Energy'])-ci, color = "red", label = "ADAPT-Style Optimization w/ Same Operators")
 #plt.plot(xs, np.array(df['SED Energy'])-ci, color = "black", label = "Subspace ED")
 plt.scatter(xs, [float("NaN") for i in xs], color = "black", label = "Random Initializations")
-
+plt.vlines(19, 0, 1, color = "black", label = "Last new operator before ansatz is repeated.")
 plt.legend()
 
 plt.xlabel("ADAPT Iterations")
 plt.ylabel("Error From ED (a.u.)")
-plt.yscale("symlog", linthresh = 1e-13)
+plt.yscale("symlog", linthresh = 1e-10)
 plt.title("ADAPT's Local Minima")
 plt.show()
 ''' 

@@ -341,6 +341,9 @@ class Xiphos:
             for i in cur_dets:
                 for j in range(0, len(dets)):
                     if abs((dets[i].T@op@dets[j]).todense()[0,0]) > .01:
+                            print(dets[i])
+                            print(dets[j])
+                            print('---')
                             new_dets.append(j)
                             a_mat[i,j] += 1
                             a_mat[j,i] += 1
@@ -399,19 +402,22 @@ class Xiphos:
             G.add_node(fci_dets[i],pos=(np.cos(theta*i),np.sin(theta*i)))
         pos=nx.get_node_attributes(G,'pos')
         cur_dets = [fci_dets[0]]
-        print("Assuming ref is most important det.")
+        #print("Assuming ref is most important det.")
         Adj = np.zeros(self.H_vqe.shape)
         for i in reversed(range(0, len(ansatz))):
-            op = self.pool[ansatz[i]].todense()
-            new_dets = []
-            for j in cur_dets:
-                for k in fci_dets:
-                    if abs(op[j,k]) > .25:
-                       Adj[j,k] += .1
-                       if k not in new_dets and k not in cur_dets:
-                           new_dets.append(k)
-            cur_dets += new_dets
-        
+            Done = False
+            while Done == False:
+                op = self.pool[ansatz[i]].todense()
+                new_dets = []
+                for j in cur_dets:
+                    for k in fci_dets:
+                        if abs(op[j,k]) > .01:
+                           Adj[j,k] += .1
+                           if k not in new_dets and k not in cur_dets:
+                                new_dets.append(k)
+                cur_dets += new_dets
+                if len(new_dets) == 0:
+                    Done = True
         H = np.zeros((len(cur_dets),len(cur_dets)))
         for i in range(0, len(cur_dets)):
             for j in range(i, len(cur_dets)):
@@ -512,7 +518,7 @@ def t_ucc_jac(params, ansatz, H_vqe, pool, ref):
     return J
 
 
-def vqe(params, ansatz, H_vqe, pool, ref, strategy = "newton-cg", energy = None):
+def vqe(params, ansatz, H_vqe, pool, ref, strategy = "bfgs", energy = None):
     if energy is None or energy == t_ucc_E:
         energy = t_ucc_E
         jac = t_ucc_grad
@@ -520,6 +526,8 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "newton-cg", energy = None)
 
     if strategy == "newton-cg":
         res = scipy.optimize.minimize(energy, params, jac = jac, hess = hess, method = "newton-cg", args = (ansatz, H_vqe, pool, ref), options = {'xtol': 1e-16})
+    if strategy == "bfgs":
+        res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, H_vqe, pool, ref), options = {'gtol': 1e-16})
     return res
 
 def adapt_vqe(ansatz, H_vqe, pool, ref):
@@ -615,9 +623,9 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
             err = val - xiphos.ed_syms[0][key]
             print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
         print('\n')
-    if guess = 'recycled':
+    if guess == 'recycled':
         return xs[0]
-    elif guess = 'best':
+    elif guess == 'best':
         return xs[idx[0]]
 
 

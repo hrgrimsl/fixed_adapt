@@ -45,6 +45,10 @@ class system_data:
             for let in ['X', 'Y', 'Z']:
                 self.choose_paulis(paulis, sub_list + [let], k)
                         
+    def tang_pool(self):
+        pass
+ 
+
 
     def full_qubit_pool(self):
         pool = []
@@ -153,12 +157,12 @@ class system_data:
         print(len(pool)) 
         return jw_pool, v_pool
 
-    def uccsd_pool(self, spin_adapt = False):
+    def uccsd_pool(self, approach = 'vanilla'):
         N_qubits = self.N_qubits
         N_e = self.N_e
         pool = []
         v_pool = []
-        if spin_adapt == False:
+        if approach == 'vanilla':
             for i in range(0, N_e):
                 for a in range(N_e, N_qubits):
                     if (i+a)%2 == 0:
@@ -169,7 +173,26 @@ class system_data:
                             if i%2+j%2 == a%2+b%2:
                                 pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
                                 v_pool.append(f"{i},{j}->{a},{b}")
-        elif spin_adapt == True:
+       
+        elif approach == 'spin_complement':
+           M = int(N_qubits/2)
+           N = int(N_e/2)
+           for i in range(0, N):
+               for a in range(N, M):
+                   pool.append(of.ops.FermionOperator(str(2*a)+'^ '+str(2*i), 1/np.sqrt(2))+of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*i+1), 1/np.sqrt(2)))
+                   v_pool.append(f"{i}->{a}")
+                   for j in range(i, N):
+                       for b in range(a, M):
+                               if i != j and a != b:
+                                   pool.append(of.ops.FermionOperator(str(2*b)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a+1)+'^ '+str(2*i+1)+' '+str(2*j+1), 1/np.sqrt(2)))
+                                   v_pool.append(f"{2*i}{2*j}->{2*a}{2*b}")                                               
+                               pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)))
+                               v_pool.append(f"{2*i}{2*j+1}->{2*a}{2*b+1}")
+                               if i != j and a != b:
+                                   pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
+                                   v_pool.append(f"{2*j}{2*i+1}->{2*a}{2*b+1}")
+                                    
+        elif approach == 'spin_adapt':
            M = int(N_qubits/2)
            N = int(N_e/2)
            for i in range(0, N):
@@ -179,10 +202,8 @@ class system_data:
                    for j in range(i, N):
                        for b in range(a, M):
                            if (i, j) != (a, b):
-
                                if i == j and a == b:
                                    pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1))
-
                                    v_pool.append(f"{i}{j}->{a}{b}")
                                elif i == j:
                                    pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)) + of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/np.sqrt(2)))
@@ -196,13 +217,12 @@ class system_data:
                                    pool.append(of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*b+1)+'^ '+str(2*a)+'^ '+str(2*j)+' '+str(2*i+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*i)+' '+str(2*j+1), 1/2)+ of.ops.FermionOperator(str(2*a+1)+'^ '+str(2*b)+'^ '+str(2*j)+' '+str(2*i+1), 1/2))
                                    v_pool.append(f"{i}{j}->{a}{b} (Type 2)")
             
-        #Adding normalization
+        #Normalized based on action on reference.
         for i in range(0, len(pool)):
              op = copy.copy(pool[i])
              op -= of.hermitian_conjugated(op)
              op = of.normal_ordered(op)
              assert(op.many_body_order() > 0)
-
 
         jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
 
