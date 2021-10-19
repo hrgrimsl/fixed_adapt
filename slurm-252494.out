@@ -1,7 +1,0 @@
-Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
-Traceback (most recent call last):
-  File "/home/hrgrimsl/xiphos/h4_test.py", line 2, in <module>
-    from driver import *
-  File "/home/hrgrimsl/xiphos/driver.py", line 10, in <module>
-    import git
-ModuleNotFoundError: No module named 'git'

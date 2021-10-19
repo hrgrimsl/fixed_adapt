@@ -10,7 +10,7 @@ import time
 import math
 import git
 import seaborn
-
+import random
 #Globals
 Eh = 627.5094740631
 
@@ -267,6 +267,84 @@ class Xiphos:
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
+
+
+    def random_adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0):
+        #Random operator adapt
+        state = t_ucc_state(params, ansatz, self.pool, self.ref)
+        iteration = len(ansatz)
+        print(f"\nADAPT Iteration {iteration}")
+        print("Performing ADAPT:")
+        E = (state.T@(self.H@state))[0,0] 
+        Done = False
+        while Done == False:
+
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool]).real
+            gnorm = np.linalg.norm(gradient)
+            if criteria == 'grad':
+                idx = np.argsort(abs(gradient))
+            random.seed(len(ansatz)) 
+            random.shuffle(idx)     
+            E = (state.T@(self.H@state))[0,0].real 
+            error = E - self.ed_energies[0]
+            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            print(f"\nBest Initialization Information:")
+            print(f"Operator/ Expectation Value/ Error")
+
+            for key in self.sym_ops.keys():
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
+                err = val - self.ed_syms[0][key]
+                print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
+                
+            print(f"Next operator to be added: {self.v_pool[idx[-1]]}")
+            print(f"Operator multiplicity {1+ansatz.count(idx[-1])}.")                
+            print(f"Associated gradient:       {gradient[idx[-1]]:20.16f}")
+            print(f"Gradient norm:             {gnorm:20.16f}")
+            print(f"Fidelity to ED:            {fid:20.16f}")
+            print(f"Current ansatz:")
+            for i in range(0, len(ansatz)):
+                print(f"{i} {params[i]} {self.v_pool[ansatz[i]]}") 
+            print("|0>")  
+            if gtol is not None and gnorm < gtol:
+                Done = True
+                print(f"\nADAPT finished.  (Gradient norm acceptable.)")
+                continue
+            if max_depth is not None and iteration+1 > max_depth:
+                Done = True
+                print(f"\nADAPT finished.  (Max depth reached.)")
+                continue
+            if Etol is not None and error < Etol:
+                Done = True
+                print(f"\nADAPT finished.  (Error acceptable.)")
+                continue
+            iteration += 1
+            print(f"\nADAPT Iteration {iteration}")
+
+            params = np.array([0] + list(params))
+            ansatz = [idx[-1]] + ansatz
+            H_vqe = copy.copy(self.H_vqe)
+            pool = copy.copy(self.pool)
+            ref = copy.copy(self.ref)
+            params = multi_vqe(params, ansatz, H_vqe, pool, ref, self, guesses = guesses)  
+
+            state = t_ucc_state(params, ansatz, self.pool, self.ref)
+            np.save(f"{self.system}/params", params)
+            np.save(f"{self.system}/ops", ansatz)
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
+            
+        print(f"\nConverged ADAPT energy:    {E:20.16f}")            
+        print(f"\nConverged ADAPT error:     {error:20.16f}")            
+        print(f"\nConverged ADAPT gnorm:     {gnorm:20.16f}")            
+        print(f"\nConverged ADAPT fidelity:  {fid:20.16f}")            
+        print("\n---------------------------\n")
+        print("\"Adapt.\" - Bear Grylls\n")
+        print("\"ADAPT.\" - Harper \"Grimsley Bear\" Grimsley\n")
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
+
     def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
