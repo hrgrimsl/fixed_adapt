@@ -105,7 +105,7 @@ class Xiphos:
             print(f"ED Solution {i+1}:")
             ed_dict = {}
             for key in self.sym_ops.keys():
-                val = (v[:,i].T@(self.sym_ops[key]@v[:,i]))
+                val = (v[:,i].T@(self.sym_ops[key]@v[:,i])).real
                 print(f"{key: >6}: {val:20.16f}")
                 ed_dict[key] = copy.copy(val)
             self.ed_syms.append(copy.copy(ed_dict))
@@ -142,7 +142,7 @@ class Xiphos:
         for i in range(1, len(ansatz)):
             G += params[i]*self.pool[ansatz[i]] 
         state = scipy.sparse.linalg.expm_multiply(G, self.ref)
-        E = ((state.T)@self.H@state).todense()[0,0]
+        E = ((state.T)@self.H@state).todense()[0,0].real
         return E
 
     def comm(self, A, B):
@@ -215,18 +215,18 @@ class Xiphos:
         E = (state.T@(self.H@state))[0,0] 
         Done = False
         for op in reversed(order):
-            gradient = 2*np.array([((state.T@(self.H_adapt@(op2@state)))[0,0]) for op2 in self.pool])
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op2@state)))[0,0]) for op2 in self.pool]).real
             gnorm = np.linalg.norm(gradient)
 
                  
-            E = (state.T@(self.H@state))[0,0] 
+            E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0]**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
             for key in self.sym_ops.keys():
-                val = ((state.T)@(self.sym_ops[key]@state))[0,0]
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
                 err = val - self.ed_syms[0][key]
                 print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
                 
@@ -294,20 +294,21 @@ class Xiphos:
         print("Performing ADAPT:")
         E = (state.T@(self.H@state))[0,0] 
         Done = False
-        while Done == False:           
-            gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool])
+        while Done == False:
+
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool]).real
             gnorm = np.linalg.norm(gradient)
             if criteria == 'grad':
                 idx = np.argsort(abs(gradient))
                  
-            E = (state.T@(self.H@state))[0,0] 
+            E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0]**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
             for key in self.sym_ops.keys():
-                val = ((state.T)@(self.sym_ops[key]@state))[0,0]
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
                 err = val - self.ed_syms[0][key]
                 print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
                 
@@ -520,7 +521,7 @@ def t_ucc_state(params, ansatz, pool, ref):
 
 def t_ucc_E(params, ansatz, H_vqe, pool, ref):
     state = t_ucc_state(params, ansatz, pool, ref)
-    E = (state.T@(H_vqe)@state).todense()[0,0]
+    E = (state.T@(H_vqe)@state).todense()[0,0].real
     return E       
 
 def t_ucc_grad(params, ansatz, H_vqe, pool, ref):
@@ -532,7 +533,7 @@ def t_ucc_grad(params, ansatz, H_vqe, pool, ref):
         hstack = scipy.sparse.linalg.expm_multiply(-params[i]*pool[ansatz[i]], hstack).tocsr()
         grad.append(2*((hstack[:,0].T)@pool[ansatz[i+1]]@hstack[:,1]).todense()[0,0])
     grad = np.array(grad)
-    return grad
+    return grad.real
 
 def t_ucc_hess(params, ansatz, H_vqe, pool, ref):
     J = copy.copy(ref)
@@ -569,7 +570,7 @@ def t_ucc_hess(params, ansatz, H_vqe, pool, ref):
     #for sv in w:
     #    spec_string += f"{sv},"
     #print(spec_string)
-    return hess
+    return hess.real
 
 def t_ucc_jac(params, ansatz, H_vqe, pool, ref):
     J = copy.copy(ref)
@@ -577,7 +578,7 @@ def t_ucc_jac(params, ansatz, H_vqe, pool, ref):
         J = scipy.sparse.hstack([pool[ansatz[i]]@J[:,-1], J]).tocsr()
         J = scipy.sparse.linalg.expm_multiply(pool[ansatz[i]]*params[i], J)
     J = J.tocsr()[:,:-1]
-    return J
+    return J.real
 
 
 def vqe(params, ansatz, H_vqe, pool, ref, strategy = "bfgs", energy = None):
@@ -631,7 +632,7 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
 
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))])] 
-    with Pool(126) as p:
+    with Pool(1) as p:
         L = p.starmap(vqe, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
     params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
@@ -658,7 +659,7 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
         w, v = np.linalg.eigh(hess[i])
         e_min = 1/np.min(w)
         state = t_ucc_state(xs[i], ansatz, pool, ref)
-        fid = ((xiphos.ed_wfns[:,0].T)@state)[0]**2
+        fid = ((xiphos.ed_wfns[:,0].T)@state)[0].real**2
         print(f"Parameters: {len(ansatz)}")
         print(f"Initialization: {seed}")
         print(f"Initial Energy: {E0:20.16f}")
@@ -682,7 +683,7 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
         print(spec_string)
         print(f"Operator/ Expectation Value/ Error")
         for key in xiphos.sym_ops.keys():
-            val = ((state.T)@(xiphos.sym_ops[key]@state))[0,0]
+            val = ((state.T)@(xiphos.sym_ops[key]@state))[0,0].real
             err = val - xiphos.ed_syms[0][key]
             print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
         print('\n')

@@ -22,11 +22,12 @@ if __name__ == '__main__':
     
 
     pool, v_pool = s.uccsd_pool(approach = 'vanilla')
-    
+    #pool, v_pool = s.tang_pool()
     
     xiphos = Xiphos(H, ref, "dummy", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
 
     ansatz = list(np.load('h4_300_doubling/ops.npy'))
+    #ansatz = list(np.load('h4_sc/ops.npy'))
     for i in range(1, len(ansatz)+1):
          xiphos.graph_nick(ansatz[-i:], ref)
 

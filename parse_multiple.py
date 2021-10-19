@@ -97,8 +97,8 @@ plt.legend()
 
 plt.xlabel("ADAPT Iterations")
 plt.ylabel("Error From ED (a.u.)")
-plt.yscale("symlog", linthresh = 1e-13)
-plt.title("ADAPT's Local Minima")
+plt.yscale("symlog", linthresh = 1e-10)
+plt.title("Random Fermionic Operator VQE on H$_4$")
 plt.show()
 ''' 
 x0s = []
