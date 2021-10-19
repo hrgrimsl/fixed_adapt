@@ -46,9 +46,139 @@ class system_data:
                 self.choose_paulis(paulis, sub_list + [let], k)
                         
     def tang_pool(self):
-        pass
- 
+        M = int(self.N_qubits/2)
+        N = int(self.N_e/2)
+        #build Spin-adapted GSD pool of fermionic ops
+        sq_pool = []
+        
+        for p in range(0, M):
+            pa = 2*p
+            pb = 2*p+1
+            for q in range(p+1, M):
+                qa = 2*q
+                qb = 2*q+1
+                sq_pool.append(1/np.sqrt(2)*of.ops.FermionOperator(((pa, 1), (qa, 0)))+1/np.sqrt(2)*of.ops.FermionOperator(((pb, 1), (qb, 0))))
+                sq_pool[-1] -= of.utils.hermitian_conjugated(sq_pool[-1])
+        
+        pq = -1
+        for p in range(0, M):
+            pa = 2*p
+            pb = 2*p+1
+            for q in range(p, M):
+                qa = 2*q
+                qb = 2*q+1
 
+                pq += 1
+
+                rs = -1
+                for r in range(0, M):
+                    ra = 2*r
+                    rb = 2*r+1
+                    for s in range(r, M):
+                        sa = 2*s
+                        sb = 2*s+1
+                        
+                        rs += 1
+                        
+                        if pq > rs: 
+                            continue
+                        
+                        termA = of.ops.FermionOperator(((ra, 1), (pa, 0), (sa, 1), (qa, 0)), 2 / np.sqrt(12))
+                        termA += of.ops.FermionOperator(((rb, 1), (pb, 0), (sb, 1), (qb, 0)), 2 / np.sqrt(12))
+                        termA += of.ops.FermionOperator(((ra, 1), (pa, 0), (sb, 1), (qb, 0)), 1 / np.sqrt(12))
+                        termA += of.ops.FermionOperator(((rb, 1), (pb, 0), (sa, 1), (qa, 0)), 1 / np.sqrt(12))
+                        termA += of.ops.FermionOperator(((ra, 1), (pb, 0), (sb, 1), (qa, 0)), 1 / np.sqrt(12))
+                        termA += of.ops.FermionOperator(((rb, 1), (pa, 0), (sa, 1), (qb, 0)), 1 / np.sqrt(12))
+
+                        termB = of.ops.FermionOperator(((ra, 1), (pa, 0), (sb, 1), (qb, 0)), 1 / 2.0)
+                        termB += of.ops.FermionOperator(((rb, 1), (pb, 0), (sa, 1), (qa, 0)), 1 / 2.0)
+                        termB += of.ops.FermionOperator(((ra, 1), (pb, 0), (sb, 1), (qa, 0)), -1 / 2.0)
+                        termB += of.ops.FermionOperator(((rb, 1), (pa, 0), (sa, 1), (qb, 0)), -1 / 2.0)
+                        
+                        termA -= of.utils.hermitian_conjugated(termA)
+                        termB -= of.utils.hermitian_conjugated(termB)
+                        
+                        termA = of.transforms.normal_ordered(termA)
+                        termB = of.transforms.normal_ordered(termB)
+                        if termA.many_body_order() > 0:
+                            sq_pool.append(termA)
+                        if termB.many_body_order() > 0:
+                            sq_pool.append(termB)
+        #normalization shouldn't matter here
+        print(f"{len(sq_pool)} operators in the UCCGSD pool.")
+        print(f"Extracting Pauli strings...")
+        n = 2*M
+        pool_vec = np.zeros((4 **n,))
+
+        for i in sq_pool:
+            pauli = of.transforms.jordan_wigner(i)
+            for line in pauli.terms:
+                line = str(line)
+                # print(line)
+                Bin = np.zeros((2 * n,), dtype=int)
+                X_pat_1 = re.compile("(\d{,2}), 'X'")
+                X_1 = X_pat_1.findall(line)
+                if X_1:
+                    for i in X_1:
+                        k = int(i)
+                        Bin[n + k] = 1
+                Y_pat_1 = re.compile("(\d{,2}), 'Y'")
+                Y_1 = Y_pat_1.findall(line)
+                if Y_1:
+                    for i in Y_1:
+                        k = int(i)
+                        Bin[n + k] = 1
+                        Bin[k] = 1
+                Z_pat_1 = re.compile("(\d{,2}), 'Z'")
+                Z_1 = Z_pat_1.findall(line)
+                if Z_1:
+                    for i in Z_1:
+                        k = int(i)
+                        Bin[k] = 1
+                # print(Bin)
+                index = int("".join(str(x) for x in Bin), 2)
+                # print("index", index)
+                pool_vec[index] = int(1)
+
+        nz = np.nonzero(pool_vec)[0]
+
+        print("Pauli Pool Size:", len(pool_vec[nz]))
+        fermi_ops = []
+
+        m = 2*n
+        jw_pool = []
+        for i in nz:
+            p = int(i)
+            bi = bin(p)
+            b_string = [int(j) for j in bi[2:].zfill(m)]
+            pauli_string = ''
+            flip = []
+            for k in range(n):
+                if b_string[k] == 0:
+                    if b_string[k + n] == 1:
+                        pauli_string += 'X%d ' % k
+                        flip.append(k)
+                if b_string[k] == 1:
+                    if b_string[k + n] == 1:
+                        pauli_string += 'Y%d ' % k
+                        flip.append(k)
+            flip.sort()
+            z_string = list(range(flip[0] + 1,flip[1]))
+            if len(flip) == 4:
+                for i in range(flip[2] + 1, flip[3]):
+                    z_string.append(i)
+            #print("Z string:", z_string)
+            for i in z_string:
+                b_string[i] += 1
+                b_string[i] = b_string[i] % 2
+            for k in range(n):
+                if b_string[k] == 1:
+                    if b_string[k + n] == 0:
+                        pauli_string += 'Z%d ' % k
+            A = of.ops.QubitOperator(pauli_string, 0 + 1j)
+            fermi_ops.append(A)
+            jw_pool.append(of.get_sparse_operator(A, self.N_qubits))
+        return jw_pool, fermi_ops
 
     def full_qubit_pool(self):
         pool = []
