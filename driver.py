@@ -345,7 +345,7 @@ class Xiphos:
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 
-    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0):
+    def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
         :type params: list 
@@ -420,7 +420,8 @@ class Xiphos:
             pool = copy.copy(self.pool)
             ref = copy.copy(self.ref)
             params = multi_vqe(params, ansatz, H_vqe, pool, ref, self, guesses = guesses)  
-
+            if square == True:
+                multi_vqe_square(params, ansatz, H_vqe, pool, ref, self, guesses = guesses)
             state = t_ucc_state(params, ansatz, self.pool, self.ref)
             np.save(f"{self.system}/params", params)
             np.save(f"{self.system}/ops", ansatz)
@@ -722,14 +723,14 @@ def multi_vqe_square(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, gu
         hess = t_ucc_hess
     param_list = [np.array(list(0*params)+list(copy.copy(params)))]
     seeds = ['Recycled']
-    E0s = [energy(params, ansatz, H_vqe, pool, ref)]
+
     for i in range(0, guesses):
-        seed = (.5+i+guesses*(len(params)-1))
+        seed = 10000000 + i + guesses*(len(params)-1)
         seeds.append(seed)
         np.random.seed(seed)
         param_list.append(math.pi*2*np.random.rand(2*len(params)))
 
-    iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], seeds, [xiphos for i in range(0, len(param_list))])]
+    iterable = [*zip(param_list, [ansatz + ansatz for i in range(0, len(param_list))], seeds, [xiphos for i in range(0, len(param_list))])]
     with Pool(126) as p:
         L = p.starmap(detailed_vqe_square, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
