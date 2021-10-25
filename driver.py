@@ -345,6 +345,104 @@ class Xiphos:
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 
+    def breadapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False, n = 1):
+        #Block Repetition Enhanced ADAPT
+        bre_ansatz = copy.copy(ansatz)
+        bre_params = list(params)
+        for i in range(1, n):
+            bre_ansatz += ansatz
+            bre_params = [0 for i in params] + bre_params
+        bre_params = np.array(bre_params)
+        
+        state = t_ucc_state(bre_params, bre_ansatz, self.pool, self.ref)
+        iteration = len(bre_ansatz)
+        print(f"\nADAPT Iteration {iteration}")
+        print("Performing ADAPT:")
+        E = (state.T@(self.H@state))[0,0] 
+        Done = False
+        while Done == False:
+
+            gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool]).real
+            gnorm = np.linalg.norm(gradient)
+            if criteria == 'grad':
+                idx = np.argsort(abs(gradient))
+                 
+            E = (state.T@(self.H@state))[0,0].real 
+            error = E - self.ed_energies[0]
+            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            print(f"\nBest Initialization Information:")
+            print(f"Operator/ Expectation Value/ Error")
+
+            for key in self.sym_ops.keys():
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
+                err = val - self.ed_syms[0][key]
+                print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
+                
+            print(f"Next operator to be added: {self.v_pool[idx[-1]]}")
+            print(f"Operator multiplicity {1+ansatz.count(idx[-1])}.")                
+            print(f"Associated gradient:       {gradient[idx[-1]]:20.16f}")
+            print(f"Gradient norm:             {gnorm:20.16f}")
+            print(f"Fidelity to ED:            {fid:20.16f}")
+            print(f"Current ansatz:")
+            for i in range(0, len(bre_ansatz)):
+                print(f"{i} {bre_params[i]} {self.v_pool[bre_ansatz[i]]}") 
+            print("|0>")  
+            if gtol is not None and gnorm < gtol:
+                Done = True
+                print(f"\nADAPT finished.  (Gradient norm acceptable.)")
+                continue
+            if max_depth is not None and len(bre_ansatz)+1 > max_depth:
+                Done = True
+                print(f"\nADAPT finished.  (Max depth reached.)")
+                continue
+            if Etol is not None and error < Etol:
+                Done = True
+                print(f"\nADAPT finished.  (Error acceptable.)")
+                continue
+            iteration += n
+            print(f"\nADAPT Iteration {iteration}")
+
+
+            bre_params2 = []
+            block = int(len(bre_params)/n)
+            for i in range(0, n):
+                bre_params2.append(0)
+                bre_params2 += list(bre_params[i*block:(i+1)*block])
+            
+            bre_params = np.array(bre_params2)
+
+
+              
+            ansatz = [idx[-1]] + ansatz
+            bre_ansatz = copy.copy(ansatz)
+            for i in range(1, n):
+                bre_ansatz += ansatz
+            print(f"Recycled ansatz:")
+            for i in range(0, len(bre_ansatz)):
+                print(f"{i} {bre_params[i]} {self.v_pool[bre_ansatz[i]]}") 
+            print("|0>")  
+
+            H_vqe = copy.copy(self.H_vqe)
+            pool = copy.copy(self.pool)
+            ref = copy.copy(self.ref)
+            bre_params = multi_vqe(bre_params, bre_ansatz, H_vqe, pool, ref, self, guesses = guesses)  
+            state = t_ucc_state(bre_params, bre_ansatz, self.pool, self.ref)
+            np.save(f"{self.system}/bre_params", bre_params)
+            np.save(f"{self.system}/bre_ops", bre_ansatz)
+        self.e_dict = {}
+        self.grad_dict = {}
+        self.state_dict = {}
+            
+        print(f"\nConverged ADAPT energy:    {E:20.16f}")            
+        print(f"\nConverged ADAPT error:     {error:20.16f}")            
+        print(f"\nConverged ADAPT gnorm:     {gnorm:20.16f}")            
+        print(f"\nConverged ADAPT fidelity:  {fid:20.16f}")            
+        print("\n---------------------------\n")
+        print("\"Adapt.\" - Bear Grylls\n")
+        print("\"ADAPT.\" - Harper \"Grimsley Bear\" Grimsley\n")
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
     def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
@@ -658,8 +756,6 @@ def t_ucc_jac(params, ansatz, H_vqe, pool, ref):
         J = scipy.sparse.linalg.expm_multiply(pool[ansatz[i]]*params[i], J)
     J = J.tocsr()[:,:-1]
     return J.real
-
-
 
 
 def adapt_vqe(ansatz, H_vqe, pool, ref):
