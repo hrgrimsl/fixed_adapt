@@ -10,7 +10,7 @@ module reset
 module load CMake/3.16.4-intel-2019b
 module load intel/2019b imkl/2019.5.281-iimpi-2019b
 
-python3 h4_benchmark.py &> h4_benchmark/log.dat
+python3 h4_scan.py &> h4_scan/log.dat
 
 
 

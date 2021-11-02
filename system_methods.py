@@ -203,7 +203,27 @@ class system_data:
         self.pool += pool 
         return [(of.get_sparse_operator(1j * of.ops.QubitOperator(i), self.N_qubits)).real for i in pool], pool
 
-
+    def kup_pool(self):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+        
+        M = int(N_qubits/2)
+        N = int(N_e/2)
+        for p in range(0, M):
+            for q in range(p+1, M):
+                pool.append(of.ops.FermionOperator(str(2*q)+'^ '+str(2*p), 1))
+                v_pool.append(f"{2*p}->{2*q}")
+                pool.append(of.ops.FermionOperator(str(2*q+1)+'^ '+str(2*p+1), 1))
+                v_pool.append(f"{2*p+1}->{2*q+1}")
+                pool.append(of.ops.FermionOperator(str(2*q+1)+'^ '+str(2*q)+'^ '+str(2*p)+' '+str(2*p+1), 1))
+                v_pool.append(f"{2*p},{2*p+1}->{2*q},{2*q+1}")
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+        print("Operators in k-Up pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+        
     def afi_pool(self):
         N_qubits = self.N_qubits
         N_e = self.N_e

@@ -145,6 +145,8 @@ class Xiphos:
         E = ((state.T)@self.H@state).todense()[0,0].real
         return E
 
+
+
     def comm(self, A, B):
         return A@B - B@A
 
@@ -204,7 +206,22 @@ class Xiphos:
             spec_string += f"{sv},"
         print(f"Eigenvalues of H_eff:")
         print(spec_string)
-                
+   
+
+         
+    def param_scan(self, params, ansatz, ref, a, b, save_file = "params.csv", gridpoints = 100):
+        #a and b are the two indices to scan over.
+        arr = np.zeros((gridpoints*gridpoints, 3))
+        for i in range(0, gridpoints):
+            for j in range(0, gridpoints):
+                test_params = copy.copy(params)
+                test_params[a] = i*2*math.pi/gridpoints               
+                test_params[b] = j*2*math.pi/gridpoints
+                arr[i*gridpoints+j,0] = test_params[a]
+                arr[i*gridpoints+j,1] = test_params[b]
+                arr[i*gridpoints+j,2] = t_ucc_E(test_params, ansatz, self.H_vqe, self.pool, self.ref)
+        np.savetxt(save_file, arr, delimiter = ",")
+
     def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):
         #use preordained operator sequence
 
@@ -443,6 +460,7 @@ class Xiphos:
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
+
     def adapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False):
         """Vanilla ADAPT algorithm for arbitrary reference.  No sampling, no tricks, no silliness.  
         :param params: Parameters associated with ansatz.
@@ -701,6 +719,17 @@ def t_ucc_E(params, ansatz, H_vqe, pool, ref):
     E = (state.T@(H_vqe)@state).todense()[0,0].real
     return E       
 
+def kup_E(params, k, H_vqe, pool, ref):
+    state = copy.copy(ref)
+    for j in reversed(range(0, k)):
+        G = 0*H_vqe
+        for i in range(0, len(pool)):
+            param_idx = j*len(pool) + i
+            G += params[param_idx]*pool[i]
+        state = scipy.sparse.linalg.expm_multiply(G, state)
+    E = (state.T@(H_vqe)@state).todense()[0,0].real
+    return E
+       
 def t_ucc_grad(params, ansatz, H_vqe, pool, ref):
     state = t_ucc_state(params, ansatz, pool, ref)
     hstate = H_vqe@state
@@ -786,8 +815,8 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         energy = t_ucc_E
         jac = t_ucc_grad
         hess = t_ucc_hess
-    param_list = [copy.copy(params)]
-    seeds = ['Recycled']
+    param_list = [copy.copy(params), 0*params]
+    seeds = ['Recycled', 'HF']
     E0s = [energy(params, ansatz, H_vqe, pool, ref)]
     for i in range(0, guesses):
         seed = i+guesses*(len(params)-1)
@@ -797,9 +826,43 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
         #E0s.append(energy(param_list[-1], ansatz, H_vqe, pool, ref))
 
     #iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))], E0s, [xiphos for i in range(0, len(param_list))]] 
-    iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], seeds, [xiphos for i in range(0, len(param_list))])]
+    iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], seeds, [xiphos for j in range(0, len(param_list))])]
     with Pool(126) as p:
         L = p.starmap(detailed_vqe, iterable = iterable)
+    print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
+    #params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
+    params = L[0][0].x
+    idx = np.argsort([L[i][0].fun for i in range(0, len(L))])
+    for i in idx:
+        print(L[i][1], flush = True)
+    return params
+
+def full_scan(ansatz, H_vqe, pool, ref, xiphos, gridpoints = 100):
+    from multiprocessing import Pool
+    params = np.zeros(len(ansatz))
+    grid_pts = [params]
+    one_d_grids = []
+    for i in range(0, len(ansatz)):
+       one_d_grids.append()
+    print(one_d_grids)   
+
+def multi_kup(H_vqe, ref, xiphos, k = 1, guesses = 0):
+    #does uccsd-type by default
+    from multiprocessing import Pool
+    start = time.time()
+    os.system('export OPENBLAS_NUM_THREADS=1')
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
+    param_list = []
+    seeds = []
+    for i in range(0, guesses):
+        seed = i+guesses*(k*len(xiphos.pool)-1)
+        seeds.append(seed)
+        np.random.seed(seed)
+        param_list.append(math.pi*2*np.random.rand(k*len(xiphos.pool)))
+    iterable = [*zip(param_list, seeds, [k for j in range(0, len(param_list))], [xiphos for j in range(0, len(param_list))])]
+    with Pool(126) as p:
+        L = p.starmap(detailed_kup, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
     #params = solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xiphos)
     params = L[0][0].x
@@ -826,7 +889,7 @@ def multi_vqe_square(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, gu
         np.random.seed(seed)
         param_list.append(math.pi*2*np.random.rand(2*len(params)))
 
-    iterable = [*zip(param_list, [ansatz + ansatz for i in range(0, len(param_list))], seeds, [xiphos for i in range(0, len(param_list))])]
+    iterable = [*zip(param_list, [ansatz + ansatz for j in range(0, len(param_list))], seeds, [xiphos for j in range(0, len(param_list))])]
     with Pool(126) as p:
         L = p.starmap(detailed_vqe_square, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
@@ -880,6 +943,19 @@ def detailed_vqe_square(params, ansatz, seed, xiphos):
     string += '\n\n'
     return [res, string]
 
+def detailed_kup(params, seed, k, xiphos):
+    energy = kup_E
+    x0 = params
+    E0 = energy(params, k, xiphos.H_vqe, xiphos.pool, xiphos.ref)
+    res = scipy.optimize.minimize(energy, params, method = "bfgs", args = (k, xiphos.H_vqe, xiphos.pool, xiphos.ref), options = {'gtol': 1e-8})
+    EF = res.fun
+    string = "\nSolution Analysis:\n\n"
+    string += f"Total Parameters: {len(params)}\n"
+    string += f"Initialization: {seed}\n"
+    string += f"Initial Energy: {E0:20.16f}\n"
+    string += f"Final Energy: {EF:20.16f}\n"
+    string += '\n\n'
+    return [res, string]
 
 def vqe(params, ansatz, H_vqe, pool, ref, strategy = "bfgs", energy = None):
     if energy is None or energy == t_ucc_E:
