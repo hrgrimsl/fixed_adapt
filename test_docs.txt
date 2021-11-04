@@ -1,0 +1,3 @@
+H6 ADAPT 3A, 300 Initializations: h6_3A_adapt.inp
+H4 ADAPT 3A, 1 Initialization: h4_3A_adapt.inp
+H4 ADAPT 3A, (Doubling h4_3A_adapt.inp result): h4_overparam.inp

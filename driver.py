@@ -363,6 +363,7 @@ class Xiphos:
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 
     def breadapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False, n = 1):
+        #probably doesn't restart a calculation correctly
         #Block Repetition Enhanced ADAPT
         bre_ansatz = copy.copy(ansatz)
         bre_params = list(params)
@@ -555,7 +556,7 @@ class Xiphos:
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
-#Stupid non-object methods because multiprocessing doesn't work with OOP for some reason
+
 
     def graph(self, ansatz, ref):
         import networkx as nx

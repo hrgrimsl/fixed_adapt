@@ -21,10 +21,9 @@ if __name__ == '__main__':
     s = sm.system_data(H, ref, N_e, N_qubits)
     
 
-    pool, v_pool = s.uccsd_pool(approach = 'vanilla')
+    pool, v_pool = s.uccsd_pool(approach = 'vanilla')    
     
-    
-    xiphos = Xiphos(H, ref, "h4_300_double_ansatz", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
+    xiphos = Xiphos(H, ref, "h4_300_doubling", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
 
     order = np.load("h4_300_recycled/ops.npy")
 
