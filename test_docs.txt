@@ -1,3 +1,30 @@
+No spin adaptation unless specified:
+
+
+11/2/21
+-------
 H6 ADAPT 3A, 300 Initializations: h6_3A_adapt.inp
+
+11/4/21
+-------
 H4 ADAPT 3A, 1 Initialization: h4_3A_adapt.inp
+
 H4 ADAPT 3A, (Doubling h4_3A_adapt.inp result): h4_overparam.inp
+
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp
+(Wanted version with HF guess contained in it so my parsing is more applicable)
+
+11/5/21
+-------
+H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point (no optimization of 15 parameters):
+Seed = 1: h6_3A_15_1.inp
+
+11/?/21
+H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point:
+Seed = 2: h6_3A_15_2.inp
+Seed = 3: h6_3A_15_3.inp
+Seed = 4: h6_3A_15_4.inp
+Seed = 5: h6_3A_15_5.inp
+
+
+

@@ -379,12 +379,10 @@ class Xiphos:
         E = (state.T@(self.H@state))[0,0] 
         Done = False
         while Done == False:
-
             gradient = 2*np.array([((state.T@(self.H_adapt@(op@state)))[0,0]) for op in self.pool]).real
             gnorm = np.linalg.norm(gradient)
             if criteria == 'grad':
-                idx = np.argsort(abs(gradient))
-                 
+                idx = np.argsort(abs(gradient))                 
             E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
             fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
@@ -428,8 +426,6 @@ class Xiphos:
                 bre_params2 += list(bre_params[i*block:(i+1)*block])
             
             bre_params = np.array(bre_params2)
-
-
               
             ansatz = [idx[-1]] + ansatz
             bre_ansatz = copy.copy(ansatz)
