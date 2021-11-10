@@ -220,9 +220,9 @@ class system_data:
                 pool.append(of.ops.FermionOperator(str(2*q+1)+'^ '+str(2*q)+'^ '+str(2*p)+' '+str(2*p+1), 1))
                 v_pool.append(f"{2*p},{2*p+1}->{2*q},{2*q+1}")
         jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
-        print("Operators in k-Up pool:")
-        print(len(pool)) 
-        return jw_pool, v_pool
+        jw_pool2 = [A-A.T.conjugate() for A in jw_pool]
+        print("Operators in k-Up pool:")        
+        return jw_pool2, v_pool
         
     def afi_pool(self):
         N_qubits = self.N_qubits

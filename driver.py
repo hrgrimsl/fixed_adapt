@@ -850,8 +850,8 @@ def multi_kup(H_vqe, ref, xiphos, k = 1, guesses = 0):
     os.system('export OPENBLAS_NUM_THREADS=1')
     os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
-    param_list = []
-    seeds = []
+    param_list = [k*np.zeros(len(xiphos.pool))]
+    seeds = ['HF']
     for i in range(0, guesses):
         seed = i+guesses*(k*len(xiphos.pool)-1)
         seeds.append(seed)

@@ -1,5 +1,5 @@
+November Experiment Notes:
 No spin adaptation unless specified:
-
 
 11/2/21
 -------
@@ -19,12 +19,21 @@ H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp
 H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point (no optimization of 15 parameters):
 Seed = 1: h6_3A_15_1.inp
 
-11/?/21
+11/8/22
+-------
+H6 ADAPT 3A, 300 Initializations, 1-|Psi><Psi| as objective function:  h6_3A_overlap.inp
+
 H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point:
 Seed = 2: h6_3A_15_2.inp
 Seed = 3: h6_3A_15_3.inp
 Seed = 4: h6_3A_15_4.inp
 Seed = 5: h6_3A_15_5.inp
 
+--------Git should contain all inputs/outputs up to here---------
 
+H6 1-Up 300 guesses: h6_1up.inp
+
+H6 2-Up 300 guesses: h6_2up.inp
+
+H6 3-Up 300 guesses: h6_3up.inp
 
