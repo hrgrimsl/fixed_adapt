@@ -362,15 +362,11 @@ class Xiphos:
         sha = repo.head.object.hexsha
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 
-    def breadapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, square = False, n = 1):
-        #probably doesn't restart a calculation correctly
+    def breadapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, n = 1, hf = True):
+        #Not sure if this loads right.  Needs testing.
         #Block Repetition Enhanced ADAPT
         bre_ansatz = copy.copy(ansatz)
-        bre_params = list(params)
-        for i in range(1, n):
-            bre_ansatz += ansatz
-            bre_params = [0 for i in params] + bre_params
-        bre_params = np.array(bre_params)
+        bre_params = np.array(params)
         
         state = t_ucc_state(bre_params, bre_ansatz, self.pool, self.ref)
         iteration = len(bre_ansatz)
@@ -439,7 +435,7 @@ class Xiphos:
             H_vqe = copy.copy(self.H_vqe)
             pool = copy.copy(self.pool)
             ref = copy.copy(self.ref)
-            bre_params = multi_vqe(bre_params, bre_ansatz, H_vqe, pool, ref, self, guesses = guesses)  
+            bre_params = multi_vqe(bre_params, bre_ansatz, H_vqe, pool, ref, self, guesses = guesses, hf = hf)  
             state = t_ucc_state(bre_params, bre_ansatz, self.pool, self.ref)
             np.save(f"{self.system}/bre_params", bre_params)
             np.save(f"{self.system}/bre_ops", bre_ansatz)
@@ -803,18 +799,21 @@ def wfn_grid(op, pool, ref, xiphos):
         print(f"{x} {c0}")
     exit()
 
-def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 0):
+def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 0, hf = True):
     from multiprocessing import Pool
-    start = time.time()
+
+
     os.system('export OPENBLAS_NUM_THREADS=1')
     os.environ['OPENBLAS_NUM_THREADS'] = '1'
     if energy is None or energy == t_ucc_E:
         energy = t_ucc_E
         jac = t_ucc_grad
         hess = t_ucc_hess
-    param_list = [copy.copy(params), 0*params]
-    seeds = ['Recycled', 'HF']
-    E0s = [energy(params, ansatz, H_vqe, pool, ref)]
+    param_list = [copy.copy(params)]
+    seeds = ['Recycled']
+    if hf == True:
+        seeds.append('HF')
+        param_list.append(0*params)
     for i in range(0, guesses):
         seed = i+guesses*(len(params)-1)
         seeds.append(seed)
@@ -824,6 +823,8 @@ def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses =
 
     #iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [H_vqe for i in range(0, len(param_list))], [pool for i in range(0, len(param_list))], [ref for i in range(0, len(param_list))], E0s, [xiphos for i in range(0, len(param_list))]] 
     iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], seeds, [xiphos for j in range(0, len(param_list))])]
+
+    start = time.time()
     with Pool(126) as p:
         L = p.starmap(detailed_vqe, iterable = iterable)
     print(f"Time elapsed over whole set of optimizations: {time.time() - start}")
@@ -966,7 +967,9 @@ def vqe(params, ansatz, H_vqe, pool, ref, strategy = "bfgs", energy = None):
     return res
 
 
-def detailed_vqe(params, ansatz, seed, xiphos):
+    
+
+def detailed_vqe(params, ansatz, seed, xiphos, jac_svd = False, hess_diag = False):
     energy = t_ucc_E
     jac = t_ucc_grad
     hess = t_ucc_hess
@@ -974,12 +977,9 @@ def detailed_vqe(params, ansatz, seed, xiphos):
     E0 = energy(params, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
     res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref), options = {'gtol': 1e-8})
     EF = res.fun
-    gradient = t_ucc_grad(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
-    jacobian = t_ucc_jac(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
-    hessian = t_ucc_hess(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
+    #gradient = t_ucc_grad(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
+    gradient = res.jac
     gnorm = np.linalg.norm(gradient)
-    u, s, vh = np.linalg.svd(jacobian.todense())
-    w, v = np.linalg.eigh(hessian)
     state = t_ucc_state(res.x, ansatz, xiphos.pool, xiphos.ref)
     fid = ((xiphos.ed_wfns[:,0].T)@state)[0].real**2
     string = "\nSolution Analysis:\n\n"
@@ -989,18 +989,27 @@ def detailed_vqe(params, ansatz, seed, xiphos):
     string += f"Final Energy: {EF:20.16f}\n"
     string += f"GNorm: {gnorm:20.16f}\n"
     string += f"Fidelity: {fid:20.16f}\n"
+    string += f"Success: {res.success}\n"
+    string += f"Energy Evals: {res.nfev+1}\n"
+    string += f"Gradient Evals: {res.njev}\n"
     string += f"Solution Parameters:\n"
     for x in res.x:
         string += f"{x},"
     string += "\n"
-    string += f"Jacobian Singular Values:\n"
-    for sv in s:
-        string += f"{sv},"
-    string += "\n"
-    string += f"Hessian Eigenvalues:\n"
-    for sv in w:
-        string += f"{sv},"
-    string += "\n"
+    if jac_svd == True:
+        jacobian = t_ucc_jac(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
+        u, s, vh = np.linalg.svd(jacobian.todense())
+        string += f"Jacobian Singular Values:\n"
+        for sv in s:
+            string += f"{sv},"
+        string += "\n"
+    if hess_diag == True:
+        hessian = t_ucc_hess(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
+        w, v = np.linalg.eigh(hessian)
+        string += f"Hessian Eigenvalues:\n"
+        for sv in w:
+            string += f"{sv},"
+        string += "\n"
     string += f"Operator/ Expectation Value/ Error:\n"
     for key in xiphos.sym_ops.keys():
         val = ((state.T)@(xiphos.sym_ops[key]@state))[0,0].real

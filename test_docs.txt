@@ -19,7 +19,7 @@ H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp
 H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point (no optimization of 15 parameters):
 Seed = 1: h6_3A_15_1.inp
 
-11/8/22
+11/8/21
 -------
 H6 ADAPT 3A, 300 Initializations, 1-|Psi><Psi| as objective function:  h6_3A_overlap.inp
 
@@ -37,3 +37,26 @@ H6 2-Up 300 guesses: h6_2up.inp
 
 H6 3-Up 300 guesses: h6_3up.inp
 
+11/10/21
+
+Geometry optimizers for LiH, BeH2 (B3LYP/6-31G*):  lih_optimizer.py, beh2_optimizer.py (Ran on my machine)
+
+LiH ADAPT 1.62A, 300 Initializations: lih.inp
+
+BeH2 ADAPT 1.33A, 300 Initializations: beh2.inp
+
+H4 ADAPT 1A, 300 Initializations: h4_1A_300.inp
+
+H4 ADAPT 3A, 300 Initializations: h4_3A_300.inp
+
+h6_spec.py on my machine used to get excited spectra for all these systems.
+
+11/11/21
+
+BeH2 ADAPT 1.33A, 1 Initialization, Spin-adapted (to compare to Nick's): lone_beh2.inp
+
+Restarted beh2.inp after cutting some analysis stuff that was slowing down my code
+
+11/12/21
+
+Restarted h4_3A_300.inp so that the log file would stop at Etol = 1e-10 instead of going on forever 
