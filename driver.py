@@ -222,6 +222,17 @@ class Xiphos:
                 arr[i*gridpoints+j,2] = t_ucc_E(test_params, ansatz, self.H_vqe, self.pool, self.ref)
         np.savetxt(save_file, arr, delimiter = ",")
 
+    def two_vec_interpolate(self, theta_a, theta_b, ansatz):
+        print("HF?")
+        E = t_ucc_E(0*theta_a, ansatz, self.H_vqe, self.pool, self.ref)
+        print(E)
+        print("alpha,E")
+        for i in range(0,101):
+            alpha = i*.01
+            theta = ((1-alpha) * theta_a) + (alpha * theta_b)
+            E = t_ucc_E(theta, ansatz, self.H_vqe, self.pool, self.ref)
+            print(f"{alpha},{E}", flush = True)
+        
     def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):
         #use preordained operator sequence
 
@@ -992,6 +1003,10 @@ def detailed_vqe(params, ansatz, seed, xiphos, jac_svd = False, hess_diag = Fals
     string += f"Success: {res.success}\n"
     string += f"Energy Evals: {res.nfev+1}\n"
     string += f"Gradient Evals: {res.njev}\n"
+    string += f"Initial Parameters:\n"
+    for x in x0:
+        string += f"{x},"
+    string += "\n"
     string += f"Solution Parameters:\n"
     for x in res.x:
         string += f"{x},"

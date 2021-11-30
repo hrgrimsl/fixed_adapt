@@ -59,4 +59,34 @@ Restarted beh2.inp after cutting some analysis stuff that was slowing down my co
 
 11/12/21
 
-Restarted h4_3A_300.inp so that the log file would stop at Etol = 1e-10 instead of going on forever 
+Restarted h4_3A_300.inp so that the log file would stop at Etol = 1e-10 instead of going on forever
+
+11/17/21
+
+1-D interpolation on h4_1A_300 at 20 parameters between two best CI solutions- h4_1A_interpolate.inp (ISSUE:  Alpha = 0 and alpha = 1 did not correspond to the FCI solution despite this being reported in h4_1A_300/log.dat)
+
+1-D interpolation on h4_3A_300 at 19 parameters between two CI solutions- h4_3A_interpolate.inp (Alpha = 0 and alpha = 1 DID correspond to FCI, consistent with log.  Possibly related to output changes made between 11/10 and 11/12.  Could also be contamination of h4_1A_300/bre_ops.npy, but this seems unlikely given that alpha = 0 and alpha = 1 still corresponded to minima on the curve.  Rerunning will fix either issue.) 
+
+Restarting h4_1A_300.inp to see if that fixes the h4_1A_interpolate discrepancy.
+
+Doubling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 38.)  - h4_300_doubling.inp
+
+1-D interpolation on h4_300_doubling at 38 params between two CI solutions.  (All solutions are CI.)
+
+Tripling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 57.)  - h4_300_tripling.inp
+
+1-D interpolation on h4_300_doubling at 57 params between two CI solutions.  (All solutions are CI.) - h4_A_triple_interpolate.inp (Gave weird results- rerunning h4_300_tripling to try to identify problem)
+
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp (Rerunning now that code is faster to get deeper.)
+
+11/18/21
+
+Tripling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 57.)  - h4_300_tripling.inp (Saving the HF chkfile)
+
+1-D interpolation on h4_300_doubling at 57 params between two CI solutions.  (All solutions are CI.) - h4_A_triple_interpolate.inp (Reading the HF chkfile)
+
+
+11/30/21
+
+Debugging random seeding - h4_debug.inp
+

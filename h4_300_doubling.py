@@ -25,11 +25,9 @@ if __name__ == '__main__':
     
     xiphos = Xiphos(H, ref, "h4_300_doubling", pool, v_pool, sym_ops = {"H": H, "S_z": Sz, "S^2": S2, "N": Nop}, verbose = "DEBUG")
 
-    order = np.load("h4_300_recycled/ops.npy")
+    ansatz = list(np.load("h4_3A_300/bre_ops.npy"))
+    params = np.load("h4_3A_300/bre_params.npy")
+    params = np.array(list(np.zeros(len(params)))+list(params))
+    multi_vqe(params, ansatz+ansatz, H, pool, ref, xiphos, guesses = 300, hf = True)
 
-    order = list(order)[-19:]
-
-    order = order + order
-
-    xiphos.pretend_adapt(np.array([]), [], ref, order, guesses = 300)
 
