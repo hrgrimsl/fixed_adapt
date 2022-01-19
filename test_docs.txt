@@ -90,3 +90,23 @@ Tripling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's fo
 
 Debugging random seeding - h4_debug.inp
 
+12/8/21
+
+Breadapt Calculations 1-4 - h4_breadapt1.inp - h4_breadapt4.inp (Switched to Etol so they all have to actually finish.)
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp (Rerunning now that code is faster to get deeper. (6 days))
+H6 ADAPT 3A, 300 Initializations: h6_3A_adapt.inp (Rerunning now that code is faster to get deeper. (6 days))
+Same for beh2.inp, lih.inp
+
+1/5/22
+
+H6 3A 60 params, 1000 guesses - h6_60.inp (Trying to confirm that the solutions look right if there are enough of them)
+
+1/11/22
+
+H6 3A, Recycled guess - h6_3A_adapt_only.inp (Running to completion but only for actual ADAPT.  Using h6_3A_adapt as jump-off point so that same ops are used.
+
+H6 1A, Recycled guess - h6_1A_adapt_only.inp (Running to completion but only for actual ADAPT.  Using h6_1A_adapt as jump-off point so that same ops are used.  Having some issues with getting it to start at same energy as before...  Got it fixed eventually so the jump-off was in sync.)
+
+1/12/22
+
+H6 1A, Recycled guess - h6_1A_adapt_only.inp (Restarting because I had it set to do 300 guesses.  Set read chkfile on to get the correct HF guess again.  Verified that this file starts where h6_1A_adapt ends.)
