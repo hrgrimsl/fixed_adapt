@@ -235,11 +235,10 @@ class Xiphos:
         
     def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):
         #use preordained operator sequence
-
         state = t_ucc_state(params, ansatz, self.pool, self.ref)
         iteration = len(ansatz)
         print(f"\nADAPT Iteration {iteration}")
-        print("Performing ADAPT:")
+        print("Performing (Pretend) ADAPT with Predetermined Operators:")
         E = (state.T@(self.H@state))[0,0] 
         Done = False
         for op in reversed(order):

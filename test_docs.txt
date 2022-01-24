@@ -110,3 +110,7 @@ H6 1A, Recycled guess - h6_1A_adapt_only.inp (Running to completion but only for
 1/12/22
 
 H6 1A, Recycled guess - h6_1A_adapt_only.inp (Restarting because I had it set to do 300 guesses.  Set read chkfile on to get the correct HF guess again.  Verified that this file starts where h6_1A_adapt ends.)
+
+1/24/22
+
+H6 1A, Sophia's idea of using random reorderings of the h6_1A_adapt ansatz.  Still doing 300 initial guesses, just with bad operator orderings to tease out the effect of burrowing vs. the effect of the parameter-at-a-time optimization. - h6_1A_reorder_1, h6_1A_reorder_2, h6_1A_reorder_3
