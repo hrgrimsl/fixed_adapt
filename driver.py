@@ -97,15 +97,18 @@ class Xiphos:
             self.ref_syms[key] = val
         self.hf = self.ref_syms['H']        
         print("\nED information:") 
-        w, v = scipy.sparse.linalg.eigsh(H, k = min(H.shape[0]-1,10), which = "SA")
-        self.ed_energies = w
-        self.ed_wfns = v
+        #w, v = scipy.sparse.linalg.eigsh(H, k = min(H.shape[0]-1,10), which = "SA")
+        w, v = np.linalg.eigh(H.todense())
+        k = min(H.shape[0]-1,10)
+        self.ed_energies = w[:k]
+        self.ed_wfns = v[:,:k]
+
         self.ed_syms = []
-        for i in range(0, len(w)):
+        for i in range(0, len(self.ed_energies)):
             print(f"ED Solution {i+1}:")
             ed_dict = {}
             for key in self.sym_ops.keys():
-                val = (v[:,i].T@(self.sym_ops[key]@v[:,i])).real
+                val = np.asscalar(v[:,i].T@(self.sym_ops[key]@v[:,i])).real
                 print(f"{key: >6}: {val:20.16f}")
                 ed_dict[key] = copy.copy(val)
             self.ed_syms.append(copy.copy(ed_dict))
@@ -248,12 +251,12 @@ class Xiphos:
                  
             E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0,0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
             for key in self.sym_ops.keys():
-                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
+                val = ((state.T)@(self.sym_ops[key]@state)).real
                 err = val - self.ed_syms[0][key]
                 print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
                 
@@ -280,9 +283,7 @@ class Xiphos:
             state = t_ucc_state(params, ansatz, self.pool, self.ref)
             np.save(f"{self.system}/params", params)
             np.save(f"{self.system}/ops", ansatz)
-        self.e_dict = {}
-        self.grad_dict = {}
-        self.state_dict = {}
+
             
         print(f"\nConverged ADAPT energy:    {E:20.16f}")            
         print(f"\nConverged ADAPT error:     {error:20.16f}")            
@@ -314,7 +315,7 @@ class Xiphos:
             random.shuffle(idx)     
             E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0,0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
@@ -391,7 +392,7 @@ class Xiphos:
                 idx = np.argsort(abs(gradient))                 
             E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0,0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
@@ -500,7 +501,7 @@ class Xiphos:
                  
             E = (state.T@(self.H@state))[0,0].real 
             error = E - self.ed_energies[0]
-            fid = ((self.ed_wfns[:,0].T)@state)[0].real**2
+            fid = ((self.ed_wfns[:,0].T)@state)[0,0].real**2
             print(f"\nBest Initialization Information:")
             print(f"Operator/ Expectation Value/ Error")
 
@@ -923,7 +924,7 @@ def detailed_vqe_square(params, ansatz, seed, xiphos):
     u, s, vh = np.linalg.svd(jacobian.todense())
     w, v = np.linalg.eigh(hessian)
     state = t_ucc_state(res.x, ansatz, xiphos.pool, xiphos.ref)
-    fid = ((xiphos.ed_wfns[:,0].T)@state)[0].real**2
+    fid = ((xiphos.ed_wfns[:,0].T)@state)[0,0].real**2
     string = "\nSolution Analysis:\n\n"
     string += f"Doubled Parameters: {len(ansatz)}\n"
     string += f"Initialization: {seed}\n"
@@ -991,7 +992,7 @@ def detailed_vqe(params, ansatz, seed, xiphos, jac_svd = False, hess_diag = Fals
     gradient = res.jac
     gnorm = np.linalg.norm(gradient)
     state = t_ucc_state(res.x, ansatz, xiphos.pool, xiphos.ref)
-    fid = ((xiphos.ed_wfns[:,0].T)@state)[0].real**2
+    fid = ((xiphos.ed_wfns[:,0].T)@state)[0,0].real**2
     string = "\nSolution Analysis:\n\n"
     string += f"Parameters: {len(ansatz)}\n"
     string += f"Initialization: {seed}\n"
@@ -1052,7 +1053,7 @@ def solution_analysis(L, ansatz, H_vqe, pool, ref, seeds, param_list, E0s, xipho
         w, v = np.linalg.eigh(hess[i])
         e_min = 1/np.min(w)
         state = t_ucc_state(xs[i], ansatz, pool, ref)
-        fid = ((xiphos.ed_wfns[:,0].T)@state)[0].real**2
+        fid = ((xiphos.ed_wfns[:,0].T)@state)[0,0].real**2
         print(f"Parameters: {len(ansatz)}")
         print(f"Initialization: {seed}")
         print(f"Initial Energy: {E0:20.16f}")

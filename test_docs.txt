@@ -114,3 +114,7 @@ H6 1A, Recycled guess - h6_1A_adapt_only.inp (Restarting because I had it set to
 1/24/22
 
 H6 1A, Sophia's idea of using random reorderings of the h6_1A_adapt ansatz.  Still doing 300 initial guesses, just with bad operator orderings to tease out the effect of burrowing vs. the effect of the parameter-at-a-time optimization. - h6_1A_reorder_1, h6_1A_reorder_2, h6_1A_reorder_3
+
+1/31/22
+
+H6 2A, 4A, 5A normal ADAPT calculations - h6_2A_adapt, h6_4A_adapt, h6_5A_adapt
