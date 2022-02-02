@@ -118,3 +118,7 @@ H6 1A, Sophia's idea of using random reorderings of the h6_1A_adapt ansatz.  Sti
 1/31/22
 
 H6 2A, 4A, 5A normal ADAPT calculations - h6_2A_adapt, h6_4A_adapt, h6_5A_adapt
+
+2/1/22
+
+H6 5A tight threshold ADAPT (1e-16 gtol) - h6_5A_tight; Changed gtol in source code.  May change back if this doesn't help.

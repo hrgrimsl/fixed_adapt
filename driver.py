@@ -374,7 +374,7 @@ class Xiphos:
         print(f"Git revision:\ngithub.com/hrgrimsl/fixed_adapt/commit/{sha}")
 
     def breadapt(self, params, ansatz, ref, gtol = None, Etol = None, max_depth = None, criteria = 'grad', guesses = 0, n = 1, hf = True):
-        #Not sure if this loads right.  Needs testing.
+        #Loading only really makes sense for n = 1
         #Block Repetition Enhanced ADAPT
         bre_ansatz = copy.copy(ansatz)
         bre_params = np.array(params)
@@ -987,6 +987,7 @@ def detailed_vqe(params, ansatz, seed, xiphos, jac_svd = False, hess_diag = Fals
     x0 = params
     E0 = energy(params, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
     res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref), options = {'gtol': 1e-8})
+    #res = scipy.optimize.minimize(energy, params, jac = jac, method = "bfgs", args = (ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref), options = {'gtol': 1e-16})
     EF = res.fun
     #gradient = t_ucc_grad(res.x, ansatz, xiphos.H_vqe, xiphos.pool, xiphos.ref)
     gradient = res.jac
