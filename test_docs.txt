@@ -122,3 +122,9 @@ H6 2A, 4A, 5A normal ADAPT calculations - h6_2A_adapt, h6_4A_adapt, h6_5A_adapt
 2/1/22
 
 H6 5A tight threshold ADAPT (1e-16 gtol) - h6_5A_tight; Changed gtol in source code.  May change back if this doesn't help.
+
+2/4/22 Dioxygen excited states for Joonho comparison.  (k = 6) o2_spec
+
+2/10/22 Computing gradient variances for H6, 1A at end of original calculation.  (H6_1A_adapt) h6_1A_grad_var.inp  Saved results as h6_1A_bp.csv on Drive/xiphos
+
+2/14/22 H6 1A Hamiltonian for Sam h6_1A_sam.inp

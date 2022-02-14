@@ -4,7 +4,7 @@ from pyscf.lib import logger
 import numpy as np
 from opt_einsum import contract
 
-def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', feed_C = False):    
+def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False, chkfile = 'chk', feed_C = False, scf_grad = 1e-14):    
     mol = gto.M(atom = geometry, basis = basis, spin = spin, charge = charge, verbose = True)
     mol.verbose = 4
     mol.symmetry = False
@@ -19,7 +19,7 @@ def get_integrals(geometry, basis, reference, charge = 0, spin = 0, read = False
     else:
         print('Reference not understood.')
     mf.chkfile = chkfile
-    mf.conv_tol_grad = 1e-14
+    mf.conv_tol_grad = scf_grad
     mf.max_cycle = 10000
     mf.verbose = 4
     mf.conv_check = True

@@ -307,6 +307,38 @@ class system_data:
         print(len(pool)) 
         return jw_pool, v_pool
 
+    def uccs_then_d_pool(self, approach = 'vanilla'):
+        N_qubits = self.N_qubits
+        N_e = self.N_e
+        pool = []
+        v_pool = []
+        if approach == 'vanilla':
+            for i in range(0, N_e):
+                for a in range(N_e, N_qubits):
+                    if (i+a)%2 == 0:
+                        pool.append(of.ops.FermionOperator(str(a)+'^ '+str(i), 1))
+                        v_pool.append(f"{i}->{a}")
+            for i in range(0, N_e):
+                for a in range(N_e, N_qubits):
+                    for j in range(i+1, N_e):
+                        for b in range(a+1, N_qubits):
+                            if i%2+j%2 == a%2+b%2:
+                                pool.append(of.ops.FermionOperator(str(b)+'^ '+str(a)+'^ '+str(i)+' '+str(j), 1))
+                                v_pool.append(f"{i},{j}->{a},{b}")
+
+        for i in range(0, len(pool)):
+             op = copy.copy(pool[i])
+             op -= of.hermitian_conjugated(op)
+             op = of.normal_ordered(op)
+             assert(op.many_body_order() > 0)
+
+        jw_pool = [scipy.sparse.csr.csr_matrix(of.linalg.get_sparse_operator(i, n_qubits = N_qubits).real) for i in pool]
+
+        self.pool = pool
+        print("Operators in pool:")
+        print(len(pool)) 
+        return jw_pool, v_pool
+    
     def uccsd_pool(self, approach = 'vanilla'):
         N_qubits = self.N_qubits
         N_e = self.N_e

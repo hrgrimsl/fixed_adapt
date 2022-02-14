@@ -21,6 +21,7 @@ def of_from_arrays(_0body, _1body, I, N_e, S_squared = None, S_z = None, unpaire
     #Build S^2 Operator for Internal Checks
     S2 = get_sparse_operator(of.hamiltonians.s_squared_operator(int(n_qubits/2)), n_qubits = n_qubits).real
     if S_squared != None:
+        print("WARNING: Adding S^2 penalty to Hamiltonian")
         hamiltonian += (S2.dot(S2) - 2*S_squared*S2 + S_squared**2*scipy.sparse.identity(S2.shape[0]))
                
     #Build S_z Operator for Internal Checks

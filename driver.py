@@ -3,6 +3,7 @@ os.environ["OPENBLAS_NUM_THREADS"] = '1'
 import numpy as np
 import system_methods as sm
 import computational_tools as ct
+from opt_einsum import contract
 import openfermion as of
 import scipy
 import copy
@@ -11,6 +12,7 @@ import math
 import git
 import seaborn
 import random
+from multiprocessing import Pool
 #Globals
 Eh = 627.5094740631
 
@@ -167,7 +169,8 @@ class Xiphos:
                     hess[i,j] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
                     hess[j,i] += .5*((self.ref.T)@(self.comm(self.comm(self.H, self.pool[ansatz[i]]), self.pool[ansatz[j]])@self.ref)).todense()[0,0]
         return hess
-                 
+    
+
     def ucc_diag_jerk_zero(self, ansatz):
         jerk = []
         for i in range(0, len(ansatz)):
@@ -177,6 +180,9 @@ class Xiphos:
         for i in range(0, len(jerk)):
             jmat[i,i,i] = jerk[i]
         return jmat
+
+    def cubic_energy(self, x, grad, hess, jerk):
+        return grad.T@x + .5*x.T@(hess@x) + (1/6)*contract('iii,i,i,i', jerk, x, x, x)
 
     def ucc_inf_d_E(self, params, ansatz, E0, grad, hess):
         E = E0 + grad.T@params + .5*params.T@hess@params
@@ -190,11 +196,11 @@ class Xiphos:
     def tucc_inf_d_E(self, params, ansatz, E0, grad, hess):
         E = E0 + grad.T@params + .5*params.T@hess@params
         for i in range(0, len(ansatz)):
-            E += self.t_ucc_E(np.array([params[i]]), [ansatz[i]])
+            E += t_ucc_E(np.array([params[i]]), [ansatz[i]], self.H_vqe, self.pool, self.ref)
             E -= params[i]*grad[i]
             E -= .5*params[i]*params[i]*hess[i,i] 
             E -= E0
-        return E[0,0]
+        return E
 
     def H_eff_analysis(self, params, ansatz):
         H_eff = copy.copy(self.H)
@@ -235,7 +241,35 @@ class Xiphos:
             theta = ((1-alpha) * theta_a) + (alpha * theta_b)
             E = t_ucc_E(theta, ansatz, self.H_vqe, self.pool, self.ref)
             print(f"{alpha},{E}", flush = True)
+    
+    def grad_variance(self, params, ansatz, ref, shots = 10, r = 2*math.pi, seed_base = 0):
+        #Compute variance of gradient norm
+        E = t_ucc_E(params, ansatz, self.H_vqe, self.pool, ref)
+        print(f"Origin energy: {E}", flush = True)
+        seeds = []
+        grads = []
+        param_list = []
+        for i in range(0, shots):
+            seed = i+seed_base
+            seeds.append(seed)
+            np.random.seed(seed)
+            param_list.append(params + r*(2*np.random.rand(len(params))-1))
+            #grads.append(t_ucc_grad(param_list[-1], ansatz, self.H_vqe, self.pool, ref))
+         
+
+        iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [self.H_vqe for j in range(0, len(param_list))], [self.pool for j in range(0, len(param_list))], [ref for j in range(0, len(param_list))])]
+        with Pool(126) as p:
+            grads = p.starmap(t_ucc_grad, iterable = iterable)
         
+        gnorms = [np.linalg.norm(np.array(g)) for g in grads]
+        var = np.var(gnorms)
+        #for i in range(0, len(param_list)):
+        #    print(f"Seed: {seeds[i]}")
+        #    print(f"Params:\n{param_list[i]}")
+        #    print(f"Gradient:\n{grads[i]}")
+        print(f"Gradient Norm Variance: {var}", flush = True)
+        return var
+
     def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):
         #use preordained operator sequence
         state = t_ucc_state(params, ansatz, self.pool, self.ref)
@@ -811,9 +845,6 @@ def wfn_grid(op, pool, ref, xiphos):
     exit()
 
 def multi_vqe(params, ansatz, H_vqe, pool, ref, xiphos, energy = None, guesses = 0, hf = True):
-    from multiprocessing import Pool
-
-
     os.system('export OPENBLAS_NUM_THREADS=1')
     os.environ['OPENBLAS_NUM_THREADS'] = '1'
     if energy is None or energy == t_ucc_E:
