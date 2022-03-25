@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SBATCH -p normal_q
+#SBATCH -t 72:00:00
+#SBATCH --account=nmayhall_group
+#SBATCH -N 1
+#SBATCH --cpus-per-task=128
+
+module reset
+module load CMake/3.16.4-intel-2019b
+module load intel/2019b imkl/2019.5.281-iimpi-2019b
+
+python3 h4_scan.py &> h4_scan/log.dat
+
+
+

@@ -1,0 +1,134 @@
+November Experiment Notes:
+No spin adaptation unless specified:
+
+11/2/21
+-------
+H6 ADAPT 3A, 300 Initializations: h6_3A_adapt.inp
+
+11/4/21
+-------
+H4 ADAPT 3A, 1 Initialization: h4_3A_adapt.inp
+
+H4 ADAPT 3A, (Doubling h4_3A_adapt.inp result): h4_overparam.inp
+
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp
+(Wanted version with HF guess contained in it so my parsing is more applicable)
+
+11/5/21
+-------
+H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point (no optimization of 15 parameters):
+Seed = 1: h6_3A_15_1.inp
+
+11/8/21
+-------
+H6 ADAPT 3A, 300 Initializations, 1-|Psi><Psi| as objective function:  h6_3A_overlap.inp
+
+H6 ADAPT 3A, Recycled ADAPT Starting from 15 operators at a random point:
+Seed = 2: h6_3A_15_2.inp
+Seed = 3: h6_3A_15_3.inp
+Seed = 4: h6_3A_15_4.inp
+Seed = 5: h6_3A_15_5.inp
+
+--------Git should contain all inputs/outputs up to here---------
+
+H6 1-Up 300 guesses: h6_1up.inp
+
+H6 2-Up 300 guesses: h6_2up.inp
+
+H6 3-Up 300 guesses: h6_3up.inp
+
+11/10/21
+
+Geometry optimizers for LiH, BeH2 (B3LYP/6-31G*):  lih_optimizer.py, beh2_optimizer.py (Ran on my machine)
+
+LiH ADAPT 1.62A, 300 Initializations: lih.inp
+
+BeH2 ADAPT 1.33A, 300 Initializations: beh2.inp
+
+H4 ADAPT 1A, 300 Initializations: h4_1A_300.inp
+
+H4 ADAPT 3A, 300 Initializations: h4_3A_300.inp
+
+h6_spec.py on my machine used to get excited spectra for all these systems.
+
+11/11/21
+
+BeH2 ADAPT 1.33A, 1 Initialization, Spin-adapted (to compare to Nick's): lone_beh2.inp
+
+Restarted beh2.inp after cutting some analysis stuff that was slowing down my code
+
+11/12/21
+
+Restarted h4_3A_300.inp so that the log file would stop at Etol = 1e-10 instead of going on forever
+
+11/17/21
+
+1-D interpolation on h4_1A_300 at 20 parameters between two best CI solutions- h4_1A_interpolate.inp (ISSUE:  Alpha = 0 and alpha = 1 did not correspond to the FCI solution despite this being reported in h4_1A_300/log.dat)
+
+1-D interpolation on h4_3A_300 at 19 parameters between two CI solutions- h4_3A_interpolate.inp (Alpha = 0 and alpha = 1 DID correspond to FCI, consistent with log.  Possibly related to output changes made between 11/10 and 11/12.  Could also be contamination of h4_1A_300/bre_ops.npy, but this seems unlikely given that alpha = 0 and alpha = 1 still corresponded to minima on the curve.  Rerunning will fix either issue.) 
+
+Restarting h4_1A_300.inp to see if that fixes the h4_1A_interpolate discrepancy.
+
+Doubling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 38.)  - h4_300_doubling.inp
+
+1-D interpolation on h4_300_doubling at 38 params between two CI solutions.  (All solutions are CI.)
+
+Tripling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 57.)  - h4_300_tripling.inp
+
+1-D interpolation on h4_300_doubling at 57 params between two CI solutions.  (All solutions are CI.) - h4_A_triple_interpolate.inp (Gave weird results- rerunning h4_300_tripling to try to identify problem)
+
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp (Rerunning now that code is faster to get deeper.)
+
+11/18/21
+
+Tripling the 19-parameter ansatz of h4_3A_300 using recycled guess of all 0's for the replica parameters.  (Not every operator, just the full set of 57.)  - h4_300_tripling.inp (Saving the HF chkfile)
+
+1-D interpolation on h4_300_doubling at 57 params between two CI solutions.  (All solutions are CI.) - h4_A_triple_interpolate.inp (Reading the HF chkfile)
+
+
+11/30/21
+
+Debugging random seeding - h4_debug.inp
+
+12/8/21
+
+Breadapt Calculations 1-4 - h4_breadapt1.inp - h4_breadapt4.inp (Switched to Etol so they all have to actually finish.)
+H6 ADAPT 1A, 300 Initializations: h6_1A_adapt.inp (Rerunning now that code is faster to get deeper. (6 days))
+H6 ADAPT 3A, 300 Initializations: h6_3A_adapt.inp (Rerunning now that code is faster to get deeper. (6 days))
+Same for beh2.inp, lih.inp
+
+1/5/22
+
+H6 3A 60 params, 1000 guesses - h6_60.inp (Trying to confirm that the solutions look right if there are enough of them)
+
+1/11/22
+
+H6 3A, Recycled guess - h6_3A_adapt_only.inp (Running to completion but only for actual ADAPT.  Using h6_3A_adapt as jump-off point so that same ops are used.
+
+H6 1A, Recycled guess - h6_1A_adapt_only.inp (Running to completion but only for actual ADAPT.  Using h6_1A_adapt as jump-off point so that same ops are used.  Having some issues with getting it to start at same energy as before...  Got it fixed eventually so the jump-off was in sync.)
+
+1/12/22
+
+H6 1A, Recycled guess - h6_1A_adapt_only.inp (Restarting because I had it set to do 300 guesses.  Set read chkfile on to get the correct HF guess again.  Verified that this file starts where h6_1A_adapt ends.)
+
+1/24/22
+
+H6 1A, Sophia's idea of using random reorderings of the h6_1A_adapt ansatz.  Still doing 300 initial guesses, just with bad operator orderings to tease out the effect of burrowing vs. the effect of the parameter-at-a-time optimization. - h6_1A_reorder_1, h6_1A_reorder_2, h6_1A_reorder_3
+
+1/31/22
+
+H6 2A, 4A, 5A normal ADAPT calculations - h6_2A_adapt, h6_4A_adapt, h6_5A_adapt
+
+2/1/22
+
+H6 5A tight threshold ADAPT (1e-16 gtol) - h6_5A_tight; Changed gtol in source code.  May change back if this doesn't help.
+
+2/4/22 Dioxygen excited states for Joonho comparison.  (k = 6) o2_spec
+
+2/10/22 Computing gradient variances for H6, 1A at end of original calculation.  (H6_1A_adapt) h6_1A_grad_var.inp  Saved results as h6_1A_bp.csv on Drive/xiphos
+
+2/14/22 H6 1A Hamiltonian for Sam h6_1A_sam.inp
+
+2/15/22
+
+H6 1A Sophia experiment from before, except making sure that 71 parameter energy is right.  h6_1A_reorder_1b, 2b, 3b
