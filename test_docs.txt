@@ -128,3 +128,7 @@ H6 5A tight threshold ADAPT (1e-16 gtol) - h6_5A_tight; Changed gtol in source c
 2/10/22 Computing gradient variances for H6, 1A at end of original calculation.  (H6_1A_adapt) h6_1A_grad_var.inp  Saved results as h6_1A_bp.csv on Drive/xiphos
 
 2/14/22 H6 1A Hamiltonian for Sam h6_1A_sam.inp
+
+2/15/22
+
+H6 1A Sophia experiment from before, except making sure that 71 parameter energy is right.  h6_1A_reorder_1b, 2b, 3b

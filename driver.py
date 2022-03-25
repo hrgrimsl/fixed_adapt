@@ -290,7 +290,7 @@ class Xiphos:
             print(f"Operator/ Expectation Value/ Error")
 
             for key in self.sym_ops.keys():
-                val = ((state.T)@(self.sym_ops[key]@state)).real
+                val = ((state.T)@(self.sym_ops[key]@state))[0,0].real
                 err = val - self.ed_syms[0][key]
                 print(f"{key:<6}:      {val:20.16f}      {err:20.16f}")
                 
