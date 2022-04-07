@@ -244,8 +244,9 @@ class Xiphos:
     
     def grad_variance(self, params, ansatz, ref, shots = 10, r = 2*math.pi, seed_base = 0):
         #Compute variance of gradient norm
-        E = t_ucc_E(params, ansatz, self.H_vqe, self.pool, ref)
-        print(f"Origin energy: {E}", flush = True)
+        if r == 0:
+            E = t_ucc_E(params, ansatz, self.H_vqe, self.pool, ref)
+            print(f"Origin energy: {E}", flush = True)
         seeds = []
         grads = []
         param_list = []
@@ -260,6 +261,8 @@ class Xiphos:
         iterable = [*zip(param_list, [ansatz for i in range(0, len(param_list))], [self.H_vqe for j in range(0, len(param_list))], [self.pool for j in range(0, len(param_list))], [ref for j in range(0, len(param_list))])]
         with Pool(126) as p:
             grads = p.starmap(t_ucc_grad, iterable = iterable)
+        with Pool(126) as p:
+            energies = p.starmap(t_ucc_E, iterable = iterable)
         
         gnorms = [np.linalg.norm(np.array(g)) for g in grads]
         var = np.var(gnorms)
@@ -267,7 +270,10 @@ class Xiphos:
         #    print(f"Seed: {seeds[i]}")
         #    print(f"Params:\n{param_list[i]}")
         #    print(f"Gradient:\n{grads[i]}")
-        print(f"Gradient Norm Variance: {var}", flush = True)
+        #print(f"Gradient Norm Variance: {var}", flush = True)
+
+        for i in energies:
+            print(str(r) + " " + str(i), flush = True)
         return var
 
     def pretend_adapt(self, params, ansatz, ref, order, guesses = 0):

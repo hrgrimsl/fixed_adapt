@@ -131,4 +131,12 @@ H6 5A tight threshold ADAPT (1e-16 gtol) - h6_5A_tight; Changed gtol in source c
 
 2/15/22
 
-H6 1A Sophia experiment from before, except making sure that 71 parameter energy is right.  h6_1A_reorder_1b, 2b, 3b
+H6 1A Sophia experiment from before, except making sure that 71 parameter energy is right.  h6_1A_reorder_1b, 2b, 3b (ABORTED)
+
+3/29/22
+
+Get N2 Hamiltonian at equilibrium (n2_optimizer.py on Drive) geometry.  n2_sam.inp
+
+4/7/22
+
+Check energies on gradient variance for H6 1A 71 params: grad_var.inp  "h6_1A_grad_vars.csv" on drive
